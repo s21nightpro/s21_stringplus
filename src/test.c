@@ -1,34 +1,34 @@
-#include <string.h>
-
+#include "s21_sscanf.h"
 #include "s21_string.h"
+#define buf 100
+#include <string.h>
+/*int main() {
+  char str[buf] = "I 5 bananas";
+  char str2[buf], ch;
+  int num;
+  sscanf(str, "%c %d %s", &ch, &num, str2);
+  printf("%c %d %s", ch, num, str2);
+}*/
+
+void var(const char *str, char *format, ...) {
+  va_list ap;
+  va_start(ap, format);
+  if (!strcmp(format, "%d")) {
+    int x = va_arg(ap, int);
+    printf("%s\n", str);
+    printf("You passed decimal object with value %d\n", x);
+  }
+
+  if (!strcmp(format, "%s")) {
+    char *p = va_arg(ap, char *);
+    printf("%s\n", str);
+    printf("You passed c-string \"%s\"\n", p);
+  }
+  va_end(ap);
+}
 
 int main() {
-  char str1[15] = "11191";
-  char str2[30] = "111012";
-  // char *str3 = str1 + 2;
-  //  char str3[3] = "h2";
-
-  // printf("%s\n", s21_strncat(str, str3, 1));
-  // s21_memset(str, '-', 15);
-  // memset(str2, '-', 15);
-  // char *p = s21_memchr(str, 'l', 5);
-  // printf("%s\n", p);
-  // char *p2 = memchr(str2, 'l', 5);
-  // printf("%s\n", p2);
-  // printf("%d\n", memcmp(str, str2, 3));
-  // printf("%d\n", s21_memcmp(str, str2, 3));
-  // memcpy(str1, str2, 4);
-  // s21_memcpy(str1, str2, 4);
-  // s21_memmove(str1, str3, 4);
-  // printf("%s\n", str1);
-  // printf("%s\n", s21_strpbrk(str1, str2));
-
-  // printf("%s\n", strpbrk(str1, str2));
-  // printf("%d\n", s21_strcmp(str1, str2));
-
-  // printf("%d\n", strcmp(str1, str2));
-
-  printf("%d\n", s21_strncmp(str1, str2, 4));
-
-  printf("%d\n", strncmp(str1, str2, 4));
+  char str1[buf] = "abcd";
+  var(str1, "%d", 255);
+  var(str1, "%s", "test string");
 }
