@@ -1,14 +1,17 @@
 #include "s21_sscanf.h"
 
+char *pars_format(char *format, flags_t *f) { return format; }
+char *pars_string(char *str, flags_t *f) { return str; }
+
 int s21_sscanf(const char *str, const char *format, ...) {
   va_list va;
   va_start(va, format);
-  int *p = va_arg(va, int *);
-  *p = 5;
-  p = va_arg(va, int *);
-  *p = 4;
-  p = va_arg(va, int *);
-  *p = 3;
+  flags_t flag_format = {0};
+  while (format) {
+    pars_format(format, &flag_format);
+
+    format++;
+  }
 
   va_end(va);
 
@@ -22,3 +25,16 @@ int main() {
   s21_sscanf(str, "%d %d %d", &num1, &num2, &num3);
   printf("%d %d %d", num1, num2, num3);
 }
+
+/*
+перевод аски в целые 4 функции
+перевод аски в дробные 3 функции
+
+перевод 16 ричной в десятичную (большие-маленькие)
+перевод 8 ричной в десятичную
+
+перевод из научной нотации
+
+
+
+*/
