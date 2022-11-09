@@ -13,7 +13,10 @@ s21_sscanf.c test.c
 all: build3 run  
 
 build3: 
-		gcc s21_sscanf.c -o test
+		gcc s21_sscanf.c -o test -g
+
+build4: 
+		$(CC) s21_sscanf.c -o test -g
 
 build: 
 		$(CC) $(SRC) -o test -g

@@ -1,28 +1,28 @@
 #include "s21_sscanf.h"
 
-#include <stdio.h>
-
-const char *parseFormat(const char *format, flags_t *f, va_list var);
+const char *parseFormat(const char **format, flags_t *f, va_list var);
 const char *parseWidth(const char *format, flags_t *f);
 const char *parseLength(const char *format, flags_t *f);
 const char *parseString(const char *str, flags_t *f);
-int parseSpecifier(const char **format, flags_t *f);
+int parseSpecifier(const char *format, flags_t *f);
 
 int s21_sscanf(const char *str, const char *format, ...) {
   va_list var;
   va_start(var, format);
-  flags_t flag_format = {0};
-  while (format) {
+  int success = 0;
+  while (*format != '\0') {
     if (*format == '%') {
-      parseFormat(format, &flag_format, var);
-      parseString(str, &flag_format);
+      flags_t flag_format = {0};
       format++;
+      parseFormat(&format, &flag_format, var);
+      parseString(str, &flag_format);
+      success++;
     }
+    format++;
   }
-
   va_end(var);
 
-  return 1;
+  return success;
 }
 
 const char *parseString(const char *str, flags_t *f) {
@@ -37,10 +37,10 @@ int main() {
   char str[50] = "5 4 3";
   char str2[50], ch;
   int num1, num2, num3;
-  printf("hi");
 
-  // s21_sscanf(str, "%d%d%d", &num1, &num2, &num3);
-  printf("hi");
+  printf("123");
+  s21_sscanf(str, "%*4ld%5d%ld", &num1, &num2, &num3);
+
   // printf("%d %d %d", num1, num2, num3);
 }
 
@@ -58,12 +58,12 @@ int main() {
 
 */
 
-const char *parseFormat(const char *format, flags_t *f, va_list var) {
-  format = parseWidth(format, f);
-  format = parseLength(format, f);
-  parseSpecifier(&format, f);
-  format++;
-  return format;
+const char *parseFormat(const char **format, flags_t *f, va_list var) {
+  *format = parseWidth(*format, f);
+  *format = parseLength(*format, f);
+  parseSpecifier(*format, f);
+  *format++;
+  return *format;
 }
 
 /*
@@ -76,13 +76,12 @@ const char *parseWidth(const char *format, flags_t *f) {
   int i = 0;
   while (*format == '*' || (*format >= 48 && *format <= 57)) {
     if (*format == '*') {
-      format++;
       f->asterics = 1;
     } else if (!f->asterics) {
       tempWidth[i] = *format;
       i++;
-      format++;
     }
+    format++;
   }
   if (i) f->width = atoi(tempWidth);
   return format;
@@ -106,16 +105,16 @@ const char *parseLength(const char *format, flags_t *f) {
   return format;
 }
 
-int parseSpecifier(const char **format, flags_t *f) {
+int parseSpecifier(const char *format, flags_t *f) {
   char specList[16] = "cdieEfgGosuxXpn";
   int unmatch = 1;
   for (int i = 0; i < 15; i++) {
-    if (**format == specList[i]) {
+    if (*format == specList[i]) {
       f->specifier = specList[i];
       unmatch = 0;
       break;
     }
   }
-  *format++;
+  format++;
   return unmatch;
 }
