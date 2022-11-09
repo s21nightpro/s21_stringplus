@@ -109,8 +109,20 @@ START_TEST(strcmp_Heloboba_) {
   if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
-END_TEST  // Assertion 'got == expected'
-// failed: got == 0, expected == 1
+END_TEST
+
+START_TEST(strcmp_empty_) {
+  char a[] = "";
+  char b[] = "";
+  int got = s21_strcmp(a, b);
+  int expected = strcmp(a, b);
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
+  ck_assert_int_eq(got, expected);
+}
+END_TEST
 
 START_TEST(strcmp__Heloboba) {
   char a[] = "";
@@ -123,8 +135,7 @@ START_TEST(strcmp__Heloboba) {
   if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
-END_TEST  // Assertion 'got == expected'
-// failed: got == 0, expected == 1
+END_TEST
 
 START_TEST(strcmp_Heloboba) {
   char a[] = "L(8)L";
@@ -175,6 +186,7 @@ Suite *suite_strcmp(void) {
   tcase_add_test(tc, strcmp_HEloboba_Heloboba);
   tcase_add_test(tc, strcmp_Hel0boba_Helob0ba);
   tcase_add_test(tc, strcmp_Heloboba_);
+  tcase_add_test(tc, strcmp_empty_);
   tcase_add_test(tc, strcmp__Heloboba);
   tcase_add_test(tc, strcmp_Heloboba);
   tcase_add_test(tc, strcmp_empty);

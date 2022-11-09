@@ -43,8 +43,7 @@ START_TEST(insert_test1) {
   ck_assert_str_eq(got, expected);
   if (got) free(got);
 }
-END_TEST  // Assertion 'got == expected' failed: got == (null),
-// expected == "I love my Shlepa. He is very kind!"
+END_TEST
 
 START_TEST(insert_test2) {
   char str[] = "Hello, ";
@@ -99,11 +98,9 @@ START_TEST(insert_str_null) {
   ck_assert_str_eq(got, expected);
   if (got) free(got);
 }
-END_TEST  // Assertion 'got == expected'
-          // failed: got == (null), expected == "Space  "
+END_TEST
 
-    Suite *
-    suite_insert(void) {
+Suite *suite_insert(void) {
   Suite *s = suite_create("suite_insert");
   TCase *tc = tcase_create("insert_tc");
   tcase_add_test(tc, insert1);

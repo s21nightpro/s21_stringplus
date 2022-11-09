@@ -23,15 +23,14 @@ START_TEST(strerror_3) {
   int err_num3 = 404;
   ck_assert_pstr_eq(strerror(err_num3), s21_strerror(err_num3));
 }
-END_TEST  // Assertion 'strerror(err_num3) == s21_strerror(err_num3)'
-// failed: strerror(err_num3) == "Unknown error: 404",
-// s21_strerror(err_num3) == "Unknown error 404"
+END_TEST
 
 START_TEST(strerror_4) {
   int err_num4 = 0;
   ck_assert_pstr_eq(strerror(err_num4), s21_strerror(err_num4));
 }
 END_TEST
+
 START_TEST(strerror_all_std_errors) {
   for (int i = -1000; i < 150; i++) {
     char *got = s21_strerror(i);
@@ -39,19 +38,16 @@ START_TEST(strerror_all_std_errors) {
     ck_assert_str_eq(got, expected);
   }
 }
-END_TEST  // Assertion 'got == expected' failed:
-// got =="Unknown error -1000", expected == "Unknown error: -1000"
+END_TEST
 
 START_TEST(strerror_negative_err_code) {
   const char *got = s21_strerror(-1);
   char *expected = strerror(-1);
   ck_assert_str_eq(got, expected);
 }
-END_TEST  // Assertion 'got == expected' failed:
-          // got == "Unknown error -1", expected == "Unknown error: -1"
+END_TEST
 
-    Suite *
-    suite_strerror(void) {
+Suite *suite_strerror(void) {
   Suite *s = suite_create("suite_strerror");
   TCase *tc = tcase_create("strerror_tc");
   tcase_add_test(tc, strerror_1);

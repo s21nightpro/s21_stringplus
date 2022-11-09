@@ -1,7 +1,5 @@
-insert
 memchr
-strcmp
-strerror
 strncpy
 strspn
 trim
+
