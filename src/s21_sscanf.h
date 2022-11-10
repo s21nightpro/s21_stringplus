@@ -8,6 +8,7 @@ typedef struct {
   int asterics;
   char length;     // h, l or L
   char specifier;  // just specifier
+  int error;
 } flags_t;
 
 int s21_sscanf(const char *str, const char *format, ...);

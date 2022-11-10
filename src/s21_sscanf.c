@@ -1,10 +1,14 @@
 #include "s21_sscanf.h"
 
-const char *parseFormat(const char **format, flags_t *f, va_list var);
+void parseFormat(const char **format, flags_t *f);
 const char *parseWidth(const char *format, flags_t *f);
 const char *parseLength(const char *format, flags_t *f);
-const char *parseString(const char *str, flags_t *f);
-int parseSpecifier(const char *format, flags_t *f);
+const char *parseSpecifier(const char *format, flags_t *f);
+
+void parseString(const char **str, flags_t *f, va_list var);
+
+int isDigit(char a);
+void assignInt(char *str, va_list var);
 
 int s21_sscanf(const char *str, const char *format, ...) {
   va_list var;
@@ -14,32 +18,86 @@ int s21_sscanf(const char *str, const char *format, ...) {
     if (*format == '%') {
       flags_t flag_format = {0};
       format++;
-      parseFormat(&format, &flag_format, var);
-      parseString(str, &flag_format);
+      parseFormat(&format, &flag_format);
+      parseString(&str, &flag_format, var);
+      if (flag_format.error) break;
       success++;
     }
-    format++;
   }
   va_end(var);
 
   return success;
 }
 
-const char *parseString(const char *str, flags_t *f) {
-  /*
-  идем по строке в соответствии с флагами
-  возвращаем указатель на конец считанной строки
-  */
-  return str;
+void parseString(const char **str, flags_t *f, va_list var) {
+  char str_temp[1024] = {0};
+  int i = 0;
+  switch (f->specifier) {
+    case 'd':
+      while (isDigit(**str)) {
+        str_temp[i] = **str;
+        (*str)++;
+        i++;
+      }
+      assignInt(str_temp, var);
+      break;
+  }
 }
 
+int isDigit(char a) { return (a >= '0' && a <= '9'); }
+
+void assignInt(char *str, va_list var) {
+  int x = 1123;  // s21_atoii(str);
+  int *y = va_arg(var, int *);
+  *y = x;
+}
+
+/*
+идем по строке в соответствии с флагами
+меняем указатель на конец считанной строки
+*/
+
+/*
+если нет флагов считываем первое число/строку до разделителя
+если есть звёздочка перемещаем указатель но не пишем переменную
+если есть
+
+*/
+
+/*
+что может считывать наша функция?
+целые числа
+дробные числа
+отрицательные
+символы строки
+
+c - считывает 1 символ
+s - считывает строку
+d - считывает 10тичное число
+i - знаковое 10тичное, 8ричное, 16ричное
+default:
+
+
+
+eEfgG - десятичное с плаваюшей или научная нотация
+o - беззнак 8ричное
+u - беззнак десятичное целое
+xX - беззнак 16ричное целое
+p - адрес указателя
+n - количество считанных символов
+
+*/
+
+// eturn str;
+
 int main() {
-  char str[50] = "5 4 3";
+  char str[50] = "1123";
   char str2[50], ch;
   int num1, num2, num3;
 
-  printf("123");
-  s21_sscanf(str, "%*4ld%5d%ld", &num1, &num2, &num3);
+  // printf("123");
+  s21_sscanf(str, "%d", &num1);
+  printf("%d", num1);
 
   // printf("%d %d %d", num1, num2, num3);
 }
@@ -58,12 +116,12 @@ int main() {
 
 */
 
-const char *parseFormat(const char **format, flags_t *f, va_list var) {
+void parseFormat(const char **format, flags_t *f) {
   *format = parseWidth(*format, f);
   *format = parseLength(*format, f);
-  parseSpecifier(*format, f);
-  *format++;
-  return *format;
+  *format = parseSpecifier(*format, f);
+
+  // return *format;
 }
 
 /*
@@ -105,7 +163,7 @@ const char *parseLength(const char *format, flags_t *f) {
   return format;
 }
 
-int parseSpecifier(const char *format, flags_t *f) {
+const char *parseSpecifier(const char *format, flags_t *f) {
   char specList[16] = "cdieEfgGosuxXpn";
   int unmatch = 1;
   for (int i = 0; i < 15; i++) {
@@ -115,6 +173,7 @@ int parseSpecifier(const char *format, flags_t *f) {
       break;
     }
   }
-  format++;
-  return unmatch;
+  f->error = unmatch;
+
+  return ++format;
 }
