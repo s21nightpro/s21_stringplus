@@ -188,21 +188,21 @@ size_t numsCount(int num) {
 }
 
 void specifier(const char **str, flags *flag, va_list var) {
-  if (flag->specifier == 'd' || flag->specifier == 'i') {
+  if (flag->specifier == 'd' || flag->specifier == 'i') {  // %d  %i
     // your code here
 
     int64_t num = va_arg(var, int64_t);
 
-    if (flag->width) {
-      if (flag->minus) {
+    if (flag->width && !(flag->precision)) {    // %3d
+      if (flag->minus) {  // %-3d  // fun 1
         itoa(num, *str);
 
         for (int i = numsCount(num); i < flags->width; i++) {
           **str++ = " ";
         }
 
-      } else {
-        if (flags->zero) {
+      } else {  // %3d 
+        if (flags->zero) {  // %03d
           for (int i = numsCount(num); i < flags->width; i++) {
             if (flags->plus && (i == (flags->width - 1))) {
               **str++ = num < 0 ? '-' : '+';
@@ -210,12 +210,12 @@ void specifier(const char **str, flags *flag, va_list var) {
             }
             **str++ = "0";
           }
-        }
-        itoa(num, *str);
-        else {
+
+          itoa(num, *str);
+        } else { // %3d
           for (int i = numsCount(num); i < flags->width; i++) {
             if (flags->plus && (i == (flags->width - 1))) {
-              **str++ = num < 0 ? '-' : '+';
+              **str++ = num > 0 ? '+': ;
               break;
             }
             **str++ = " ";
@@ -223,23 +223,16 @@ void specifier(const char **str, flags *flag, va_list var) {
           itoa(num, *str);
         }
       }
+    }  else if (flag->precision) {  // %.3d  // must check %3.3 too
     }
-    if (flag->minus && !(flag->)) {
-      itoa(num, *str);
-    }
-    // add to str some chars
-  } else if (flag->specifier == 'f') {
-  } else if (flag->specifier == 'ld') {
-  } else if (flag->specifier == 's') {
-  } else if (flag->specifier == 'c') {
   }
 }
 
 + bool minus;  // Left-justify within the given field width
-+bool plus;   // Forces to precede the result with a plus or minus sign (+ or -)
-             // even for positive numbers
-bool space;  // If no sign is going to be written, a blank space is inserted
-             // before the value
++ bool plus;  // Forces to precede the result with a plus or minus sign (+ or -)
+              // even for positive numbers
+bool space;   // If no sign is going to be written, a blank space is inserted
+              // before the value
 bool hashtag;   // Made some math things with some specifiers
 + bool zero;    // Left-pads the number with zeroes (0) instead of spaces
 + int width;    // (number) - minimum number of character to be printed   or *
