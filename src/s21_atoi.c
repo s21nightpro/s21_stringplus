@@ -1,7 +1,7 @@
 #include <math.h>
 
 #include "s21_sscanf.h"
-//#include "s21_string.h"
+
 int s21_atoii(const char *str) {
   int atoint = 0;
   int sign = 1;  //если подают отрицательное число
@@ -139,7 +139,6 @@ double s21_atod(const char *str) {
     atod = atod * 10 + (*str - '0');
     str++;
   }
-  //   printf("%f\n", atod);
   while (*str && *str >= '0' && *str <= '9' && n != 5) {
     n++;
     fraction = (*str - '0');
@@ -147,7 +146,6 @@ double s21_atod(const char *str) {
     str++;
     printf("%f\n", fraction / pow(10, n));
   }
-  //   atod += (fraction / n);
   if (sign < 0) atod *= sign;
   return (atod);
 }
@@ -172,7 +170,6 @@ long double s21_atold(const char *str) {
     atold = atold * 10 + (*str - '0');
     str++;
   }
-  //   printf("%f\n", atold);
   while (*str && *str >= '0' && *str <= '9' && n != 5) {
     n++;
     fraction = (*str - '0');
@@ -180,7 +177,6 @@ long double s21_atold(const char *str) {
     str++;
     printf("%Lf\n", fraction / pow(10, n));
   }
-  //   atold += (fraction / n);
   if (sign < 0) atold *= sign;
   return (atold);
 }
@@ -190,38 +186,36 @@ int s21_atohex(const char *str) {
   int degree = 0;
   int sign = 1;
   int short_pow = 0;
-  char *str1 = s21_to_lower(str);
-  if (*str1 == '-') {
+  if (*str == '-') {
     sign = -1;
-    str1++;
+    str++;
   }
-  if (*str1 == '+') {
-    str1++;
+  if (*str == '+') {
+    str++;
   }
-  degree = s21_strlen(str1) - 1;
-  printf(" str1: %s\n", str1);
-  while (*str1 &&
-         ((*str1 >= '0' && *str1 <= '9') || (*str1 >= 'a' && *str1 <= 'f')) &&
+  degree = s21_strlen(str) - 1;
+  while (*str &&
+         ((*str >= '0' && *str <= '9') ||
+          ((*str >= 'a' && *str <= 'f') || (*str >= 'A' && *str <= 'F'))) &&
          degree >= 0) {
     short_pow = (int)pow(16, degree);
-    if (*str1 == 'a') {
+    if (*str == 'a' || *str == 'A') {
       hex = hex + (10 * short_pow);
-    } else if (*str1 == 'b') {
+    } else if (*str == 'b' || *str == 'B') {
       hex = hex + (11 * short_pow);
-    } else if (*str1 == 'c') {
+    } else if (*str == 'c' || *str == 'C') {
       hex = hex + (12 * short_pow);
-    } else if (*str1 == 'd') {
+    } else if (*str == 'd' || *str == 'D') {
       hex = hex + (13 * short_pow);
-    } else if (*str1 == 'e') {
+    } else if (*str == 'e' || *str == 'E') {
       hex = hex + (14 * short_pow);
-    } else if (*str1 == 'f') {
+    } else if (*str == 'f' || *str == 'F') {
       hex = hex + (15 * short_pow);
     } else {
-      hex = hex + ((*str1 - '0') * short_pow);
+      hex = hex + ((*str - '0') * short_pow);
     }
-    printf(" short_pow: %d\n", short_pow);
     degree--;
-    str1++;
+    str++;
   }
   if (sign < 0) hex *= sign;
   return hex;
@@ -232,22 +226,19 @@ int s21_ato8(const char *str) {
   int degree = 0;
   int sign = 1;
   int short_pow = 0;
-  char *str1 = s21_to_lower(str);
-  if (*str1 == '-') {
+  if (*str == '-') {
     sign = -1;
-    str1++;
+    str++;
   }
-  if (*str1 == '+') {
-    str1++;
+  if (*str == '+') {
+    str++;
   }
-  degree = s21_strlen(str1) - 1;
-  printf(" str1: %s\n", str1);
-  while (*str1 && *str1 >= '0' && *str1 <= '7' && degree >= 0) {
+  degree = s21_strlen(str) - 1;
+  while (*str && (*str >= '0' && *str <= '7') && degree >= 0) {
     short_pow = (int)pow(8, degree);
-    hex = hex + ((*str1 - '0') * short_pow);
-    printf(" short_pow: %d\n", short_pow);
+    hex = hex + ((*str - '0') * short_pow);
     degree--;
-    str1++;
+    str++;
   }
   if (sign < 0) hex *= sign;
   return hex;
