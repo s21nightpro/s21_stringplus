@@ -31,7 +31,7 @@ const char *parseWidth(const char *format, flags *f, va_list var);
 const char *parsePrecision(const char *format, flags *f, va_list var);
 const char *parseLength(const char *format, flags *f);
 
-const char *specifier(const char *str, flags*, va_list);
+void specifier(const char **str, flags*, va_list);
 
 int main() {
   start();
@@ -61,7 +61,7 @@ int s21_sprintf(char *str, const char *format, ...) {
       format = parseFormat(format, &flag, var);
       // 2) В зависимости от спецификатора запускаем определенную функцию,
       // которая считает переменную нужного типа из va_list
-      specifier(str, &flag, var);
+      specifier(&str, &flag, var);
       // 3) Внутри функции выполнить преобразование переменной в char*
       // и сделать нужные действия в зависимости от флагов
 
@@ -177,7 +177,7 @@ const char *parseLength(const char *format, flags *f) {
   return format;
 }
 
-const char *specifier(const char *str, flags* flag, va_list var) {
+void specifier(const char **str, flags* flag, va_list var) {
   if (flag->specifier == 'd' || flag->specifier == 'i') {
     // code 
     // add to str some chars
@@ -190,5 +190,4 @@ const char *specifier(const char *str, flags* flag, va_list var) {
   } else if (flag->specifier == 'c') {
 
   }
-  return str;
 }
