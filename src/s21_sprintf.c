@@ -194,18 +194,18 @@ void specifier(const char **str, flags *flag, va_list var) {
     int64_t num = va_arg(var, int64_t);
 
     if (flag->width && !(flag->precision)) {    // %3d
-      if (flag->minus) {  // %-3d  // fun 1
+      if (flag->minus) {  // %-3d 
         itoa(num, *str);
 
         for (int i = numsCount(num); i < flags->width; i++) {
-          **str++ = " ";
+          **str++ = ' ';
         }
 
       } else {  // %3d 
         if (flags->zero) {  // %03d
           for (int i = numsCount(num); i < flags->width; i++) {
-            if (flags->plus && (i == (flags->width - 1))) {
-              **str++ = num < 0 ? '-' : '+';
+            if (flags->plus && (i == (flags->width - 1))) { // WET
+              **str++ = num > 0 ? '+' :;
               break;
             }
             **str++ = "0";
@@ -214,11 +214,11 @@ void specifier(const char **str, flags *flag, va_list var) {
           itoa(num, *str);
         } else { // %3d
           for (int i = numsCount(num); i < flags->width; i++) {
-            if (flags->plus && (i == (flags->width - 1))) {
+            if (flags->plus && (i == (flags->width - 1))) { // WET
               **str++ = num > 0 ? '+': ;
               break;
             }
-            **str++ = " ";
+            **str++ = ' ';
           }
           itoa(num, *str);
         }
@@ -226,16 +226,17 @@ void specifier(const char **str, flags *flag, va_list var) {
     }  else if (flag->precision) {  // %.3d  // must check %3.3 too
     }
   }
+
+
 }
 
 + bool minus;  // Left-justify within the given field width
 + bool plus;  // Forces to precede the result with a plus or minus sign (+ or -)
               // even for positive numbers
-bool space;   // If no sign is going to be written, a blank space is inserted
+? bool space;   // If no sign is going to be written, a blank space is inserted
               // before the value
-bool hashtag;   // Made some math things with some specifiers
+- bool hashtag;   // Made some math things with some specifiers
 + bool zero;    // Left-pads the number with zeroes (0) instead of spaces
 + int width;    // (number) - minimum number of character to be printed   or *
-int precision;  // Precision
+? int precision;  // Precision
 char length;    // h, l or L
-int specifier;  // just specifier
