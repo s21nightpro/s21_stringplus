@@ -29,9 +29,10 @@ const char *parseFormat(const char *format, flags *f, va_list var);
 const char *parseFlags(const char *format, flags *f);
 const char *parseWidth(const char *format, flags *f, va_list var);
 const char *parsePrecision(const char *format, flags *f, va_list var);
+size_t numsCount(int num);
 const char *parseLength(const char *format, flags *f);
 
-void specifier(const char **str, flags*, va_list);
+void specifier(const char **str, flags *, va_list);
 
 int main() {
   start();
@@ -177,17 +178,71 @@ const char *parseLength(const char *format, flags *f) {
   return format;
 }
 
-void specifier(const char **str, flags* flag, va_list var) {
+size_t numsCount(int num) {
+  size_t count = 1;
+  while (n != 0) {
+    num /= 10;
+    count++;
+  }
+  return count;
+}
+
+void specifier(const char **str, flags *flag, va_list var) {
   if (flag->specifier == 'd' || flag->specifier == 'i') {
-    // code 
+    // your code here
+
+    int64_t num = va_arg(var, int64_t);
+
+    if (flag->width) {
+      if (flag->minus) {
+        itoa(num, *str);
+
+        for (int i = numsCount(num); i < flags->width; i++) {
+          **str++ = " ";
+        }
+
+      } else {
+        if (flags->zero) {
+          for (int i = numsCount(num); i < flags->width; i++) {
+            if (flags->plus && (i == (flags->width - 1))) {
+              **str++ = num < 0 ? '-' : '+';
+              break;
+            }
+            **str++ = "0";
+          }
+        }
+        itoa(num, *str);
+        else {
+          for (int i = numsCount(num); i < flags->width; i++) {
+            if (flags->plus && (i == (flags->width - 1))) {
+              **str++ = num < 0 ? '-' : '+';
+              break;
+            }
+            **str++ = " ";
+          }
+          itoa(num, *str);
+        }
+      }
+    }
+    if (flag->minus && !(flag->)) {
+      itoa(num, *str);
+    }
     // add to str some chars
   } else if (flag->specifier == 'f') {
-
   } else if (flag->specifier == 'ld') {
-
   } else if (flag->specifier == 's') {
-
   } else if (flag->specifier == 'c') {
-
   }
 }
+
++ bool minus;  // Left-justify within the given field width
++bool plus;   // Forces to precede the result with a plus or minus sign (+ or -)
+             // even for positive numbers
+bool space;  // If no sign is going to be written, a blank space is inserted
+             // before the value
+bool hashtag;   // Made some math things with some specifiers
++ bool zero;    // Left-pads the number with zeroes (0) instead of spaces
++ int width;    // (number) - minimum number of character to be printed   or *
+int precision;  // Precision
+char length;    // h, l or L
+int specifier;  // just specifier
