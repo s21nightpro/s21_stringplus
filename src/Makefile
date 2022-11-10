@@ -8,9 +8,9 @@ s21_strpbrk.c s21_strcmp.c s21_strncmp.c s21_strcspn.c \
 s21_strstr.c s21_strchr.c  s21_strrchr.c s21_strncpy.c \
 s21_strcpy.c s21_strerror.c s21_strtok.c s21_insert.c \
 s21_trim.c s21_to_lower.c s21_to_upper.c s21_strspn.c \
-s21_sscanf.c test_s.c
+s21_sscanf.c s21_atoi.c test_s.c
 
-all: build4 run  
+all: build5 run  
 
 build3: 
 		gcc s21_sscanf.c -o test
@@ -34,6 +34,9 @@ linter:
 	cp ../materials/linters/.clang-format ..
 	clang-format -n *.c *.h
 	rm -rf ../.clang-format
+
+build5:
+	$(CC) s21_sscanf.c s21_atoi.c s21_to_lower.c s21_strlen.c s21_strcpy.c -o test -g
 
 run: 
 		./test
