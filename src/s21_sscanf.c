@@ -7,8 +7,15 @@ const char *parseSpecifier(const char *format, flags_t *f);
 
 void parseString(const char **str, flags_t *f, va_list var);
 
-int isDigit(char a);
-void assignInt(char *str, va_list var);
+int isDigit(int a);
+int isAscii(int a);
+int isSeporator(int a);
+int isHex(int a);
+int isOct(int a);
+
+void assignInt(char *str, va_list var, flags_t *f, int base);
+void assignChar(char ch, va_list var, flags_t *f);
+void assignString(char *str, va_list var, flags_t *f);
 
 int s21_sscanf(const char *str, const char *format, ...) {
   va_list var;
@@ -31,25 +38,108 @@ int s21_sscanf(const char *str, const char *format, ...) {
 
 void parseString(const char **str, flags_t *f, va_list var) {
   char str_temp[1024] = {0};
+  char ch = 0;
   int i = 0;
+  while (isSeporator(**str)) {
+    (*str)++;
+  }
+
   switch (f->specifier) {
     case 'd':
-      while (isDigit(**str)) {
+      while (isDigit(**str) && (f->width != 0)) {
         str_temp[i] = **str;
         (*str)++;
         i++;
+        f->width--;
       }
-      assignInt(str_temp, var);
+      if (!f->asterics) assignInt(str_temp, var, f, 10);
       break;
+    case 'c':
+      if (isAscii(**str)) {
+        ch = **str;
+        if (!f->asterics) assignChar(ch, var, f);
+        (*str)++;
+        break;
+      }
+    case 's':  // если нам важна длина, нам не важны пробелы
+      if (f->width != -1) {
+        while ((f->width != 0) && (**str)) {
+          str_temp[i] = **str;
+          (*str)++;
+          i++;
+          f->width--;
+        }
+      } else {
+        while (!isSeporator(**str) && (**str)) {
+          str_temp[i] = **str;
+          (*str)++;
+          i++;
+          f->width--;
+        }
+      }
+      if (!f->asterics) assignString(str_temp, var, f);
+      break;
+    case 'e':
+      if (**str == '0') {
+        (*str)++;
+        if ((**str) == 'x' || (**str) == 'X') {
+          (*str)++;
+          while (isHex(**str) && (f->width != 0)) {
+            ;
+          }
+        } else {
+          while (isOct(**str) && (f->width != 0)) {
+            ;
+          }
+        }
+      } else {
+        while (isDigit(**str) && (f->width != 0)) {
+          str_temp[i] = **str;
+          (*str)++;
+          i++;
+          f->width--;
+        }
+        if (!f->asterics) assignInt(str_temp, var, f, 10);
+      }
   }
 }
 
-int isDigit(char a) { return (a >= '0' && a <= '9'); }
+int isDigit(int a) { return (a >= '0' && a <= '9'); }
 
-void assignInt(char *str, va_list var) {
-  int x = 1123;  // s21_atoii(str);
-  int *y = va_arg(var, int *);
-  *y = x;
+int isAscii(int a) { return (a >= 0 && a <= 127); }
+
+int isSeporator(int a) { return ((a == '\n') || (a == 32) || (a == '\0')); }
+
+int isHex(int a) {
+  return (isDigit(a) || (a >= 'a' && a <= 'f') || (a >= 'A' && a <= 'F'));
+}
+
+int isOct(int a) { return (isDigit(a) && a < '8'); }
+
+void assignInt(char *str, va_list var, flags_t *f, int base) {
+  if (f->length == 'h') {
+    short num_short = s21_atos(str);
+    short *p_short = va_arg(var, short *);
+    *p_short = num_short;
+  } else if (f->length == 'l') {
+    long num_long = s21_atol(str);
+    long *p_long = va_arg(var, long *);
+    *p_long = num_long;
+  } else {
+    int num_int = s21_atoii(str);
+    int *p_int = va_arg(var, int *);
+    *p_int = num_int;
+  }
+}
+
+void assignChar(char ch, va_list var, flags_t *f) {
+  char *p_char = va_arg(var, char *);
+  *p_char = ch;
+}
+
+void assignString(char *str, va_list var, flags_t *f) {
+  char *p_char = va_arg(var, char *);
+  s21_strcpy(p_char, str);
 }
 
 /*
@@ -91,13 +181,14 @@ n - количество считанных символов
 // eturn str;
 
 int main() {
-  char str[50] = "1123";
+  char str[50] = "23334 234 abcdef";
   char str2[50], ch;
   int num1, num2, num3;
 
   // printf("123");
-  s21_sscanf(str, "%d", &num1);
-  printf("%d", num1);
+  s21_sscanf(str, "%4d%d%*d%s", &num1, &ch, str2);
+  // sscanf(str, "%0d", &num2);
+  printf("%d %d %s", num1, ch, str2);
 
   // printf("%d %d %d", num1, num2, num3);
 }
@@ -141,7 +232,8 @@ const char *parseWidth(const char *format, flags_t *f) {
     }
     format++;
   }
-  if (i) f->width = atoi(tempWidth);
+  if (i) f->width = s21_atoii(tempWidth);
+  if (f->width == 0) f->width = -1;
   return format;
 }
 
