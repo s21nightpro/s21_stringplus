@@ -29,6 +29,8 @@ void start();
 int s21_sprintf(char *str, const char *format, ...);
 void itoa(int n, char s[]);
 void reverse(char s[]);
+int numsCount(int num);
+
 const char *parseFormat(const char *format, flags *f, va_list var);
 const char *parseFlags(const char *format, flags *f);
 const char *parseWidth(const char *format, flags *f, va_list var);
@@ -40,6 +42,7 @@ void charSpecifier(char *buffer, flags *flag, va_list var);
 void widthCharSpecifier(char *buffer, flags *flag, va_list var);
 void stringSpecifier(char *buffer, flags *flag, va_list var);
 void widthStringSpecifier(char *buffer, flags *flag, va_list var);
+void integerSpecifier(char *buffer, flags *flag, va_list var);
 
 int main() {
   start();
@@ -197,7 +200,7 @@ char *specifier(char *str, flags* flag, va_list var) {
   // create buffer
   char buffer[BUFFER_SIZE] = "";
   if (flag->specifier == 'd' || flag->specifier == 'i') {
-
+    integerSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'f') {
 
   } else if (flag->specifier == 'd') {
@@ -309,4 +312,44 @@ void widthStringSpecifier(char *buffer, flags *flag, va_list var) {
   } else {
     strcpy(buffer, tempInput);
   }
+}
+
+void integerSpecifier(char *buffer, flags *flag, va_list var) {
+    int64_t num = va_arg(var, int64_t);
+    char temp[BUFFER_SIZE] = "";
+    if (flag->width && !(flag->precision)) {    // %3d
+      if (flag->minus) {  // %-3d
+        itoa(num, temp);
+        strcpy(buffer, temp);
+        for (int i = numsCount(num); i < flags->width; i++) {
+          buffer[i] = ' ';
+        }
+      } else {  // %3d
+        if (flags->zero) {  // %03d
+          for (int i = numsCount(num); i < flags->width; i++) {
+            if (flags->plus && (i == (flags->width - 1))) { // WET
+              **str++ = num > 0 ? '+' :;
+              break;
+            }
+            **str++ = "0";
+          }
+
+          itoa(num, *str);
+        } else { // %3d
+          for (int i = numsCount(num); i < flags->width; i++) {
+            if (flags->plus && (i == (flags->width - 1))) { // WET
+              **str++ = num > 0 ? '+': ;
+              break;
+            }
+            **str++ = ' ';
+          }
+          itoa(num, *str);
+        }
+      }
+    }  else if (flag->precision) {  // %.3d  // must check %3.3 too
+    }
+}
+
+int numsCount(int num) {
+  // count of digits in number
 }
