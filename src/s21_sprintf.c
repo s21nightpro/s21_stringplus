@@ -5,21 +5,24 @@
 #include <string.h>
 #include <stdbool.h>
 
+#define BUFFER_SIZE 1024
+
 // A format specifier for print functions follows this prototype:
 // %[flags][width][.precision][length]specifier
 
 typedef struct {
-  bool minus;  // Left-justify within the given field width
-  bool plus;  // Forces to precede the result with a plus or minus sign (+ or -)
-              // even for positive numbers
-  bool space;    // If no sign is going to be written, a blank space is inserted
-                 // before the value
-  bool hashtag;  // Made some math things with some specifiers
-  bool zero;     // Left-pads the number with zeroes (0) instead of spaces
-  int width;     // (number) - minimum number of character to be printed   or *
-  int precision;  // Precision
-  char length;    // h, l or L
-  int specifier;  // just specifier
+  bool minus;          // Left-justify within the given field width
+  bool plus;           // Forces to precede the result with a plus or minus sign (+ or -)
+                       // even for positive numbers
+  bool space;          // If no sign is going to be written, a blank space is inserted
+                       // before the value
+  bool hashtag;        // Made some math things with some specifiers
+  bool zero;           // Left-pads the number with zeroes (0) instead of spaces
+  int width;           // (number) - minimum number of character to be printed   or *
+  int precision;       // Precision
+  bool isPrecisionSet; // is precision set
+  char length;         // h, l or L
+  int specifier;       // just specifier
 } flags;
 
 void start();
@@ -35,6 +38,8 @@ const char *parseLength(const char *format, flags *f);
 char *specifier(char *str, flags*, va_list);
 void charSpecifier(char *buffer, flags *flag, va_list var);
 void widthCharSpecifier(char *buffer, flags *flag, va_list var);
+void stringSpecifier(char *buffer, flags *flag, va_list var);
+void widthStringSpecifier(char *buffer, flags *flag, va_list var);
 
 int main() {
   start();
@@ -43,13 +48,13 @@ int main() {
 
 void start() {
   char *stroka;
-  wchar_t wch = L'w';
   char ch = 'l';
+  wchar_t *wch = (wchar_t *)"world";
   stroka = (char *)malloc(300 * sizeof(char));
-  s21_sprintf(stroka, "%-05cH", wch);
-  printf("%s\n", stroka);
-  sprintf(stroka, "%-05cH", wch);
-  printf("%s\n", stroka);
+  s21_sprintf(stroka, "Hello, %20s", "Hello, world");
+  printf("%sEND\n", stroka);
+  sprintf(stroka, "Hello, %20s", "Hello, world");
+  printf("%sEND\n", stroka);
   free(stroka);
 }
 
@@ -143,7 +148,7 @@ const char *parseWidth(const char *format, flags *f, va_list var) {
     format++;
     f->width = va_arg(var, int);
   } else if (*format >= 48 && *format <= 57) {
-    char tempWidth[512] = "";
+    char tempWidth[BUFFER_SIZE] = "";
     for (int i = 0; *format >= 48 && *format <= 57; i++, format++) {
       tempWidth[i] = *format;
     }
@@ -154,12 +159,13 @@ const char *parseWidth(const char *format, flags *f, va_list var) {
 
 const char *parsePrecision(const char *format, flags *f, va_list var) {
   if (*format == '.') {
+    f->isPrecisionSet = true;
     format++;
     if (*format == '*') {
       format++;
       f->precision = va_arg(var, int);
     } else if (*format >= 48 && *format <= 57) {
-      char tempPrecision[512] = "";
+      char tempPrecision[BUFFER_SIZE] = "";
       for (int i = 0; *format >= 48 && *format <= 57; i++, format++) {
         tempPrecision[i] = *format;
       }
@@ -189,7 +195,7 @@ const char *parseLength(const char *format, flags *f) {
 
 char *specifier(char *str, flags* flag, va_list var) {
   // create buffer
-  char buffer[512] = "";
+  char buffer[BUFFER_SIZE] = "";
   if (flag->specifier == 'd' || flag->specifier == 'i') {
 
   } else if (flag->specifier == 'f') {
@@ -197,13 +203,19 @@ char *specifier(char *str, flags* flag, va_list var) {
   } else if (flag->specifier == 'd') {
 
   } else if (flag->specifier == 's') {
-
+    if (flag->length == 'l') {
+      widthStringSpecifier(buffer, flag, var);
+    } else {
+      stringSpecifier(buffer, flag, var);
+    }
   } else if (flag->specifier == 'c') {
     if (flag->length == 'l') {
       widthCharSpecifier(buffer, flag, var);
     } else {
       charSpecifier(buffer, flag, var);
     }
+  } else {
+    buffer[0] = flag->specifier;
   }
 
   // add buffer to str
@@ -237,18 +249,64 @@ void charSpecifier(char *buffer, flags *flag, va_list var) {
 void widthCharSpecifier(char *buffer, flags *flag, va_list var) {
   wchar_t ch = va_arg(var, wchar_t);
   if (flag->minus && flag->width) {
-    wcstombs(buffer, &ch, 512);
+    wcstombs(buffer, &ch, BUFFER_SIZE);
     for (int i = strlen(buffer); i < flag->width; i++) {
       buffer[i] = ' ';
     }
   } else if (flag->width) {
-    char temp[512] = "";
-    wcstombs(temp, &ch, 512);
+    char temp[BUFFER_SIZE] = "";
+    wcstombs(temp, &ch, BUFFER_SIZE);
     for (int i = 0; i < flag->width - strlen(temp); i++) {
       buffer[i] = ' ';
     }
     strcat(buffer, temp);
   } else {
-    wcstombs(buffer, &ch, 512);
+    wcstombs(buffer, &ch, BUFFER_SIZE);
+  }
+}
+
+void stringSpecifier(char *buffer, flags *flag, va_list var) {
+  char *input = va_arg(var, char *);
+  char tempInput[BUFFER_SIZE] = "";
+  strcpy(tempInput, input);
+  if (flag->isPrecisionSet) {
+    tempInput[flag->precision] = '\0';
+  }
+
+  int shift = flag->width - strlen(tempInput);
+  int lengthInput = strlen(tempInput);
+
+  if (flag->minus && shift > 0) {
+    strcpy(buffer, tempInput);
+    memset(buffer + lengthInput, ' ', shift);
+  } else if (shift > 0) {
+    memset(buffer, ' ', shift);
+    strcpy(buffer + shift, tempInput);
+  } else {
+    strcpy(buffer, tempInput);
+  }
+}
+
+void widthStringSpecifier(char *buffer, flags *flag, va_list var) {
+  wchar_t *input = va_arg(var, wchar_t *);
+  char tempInput[BUFFER_SIZE] = "";
+  char fromWcharToChar[BUFFER_SIZE] = "";
+  wcstombs(fromWcharToChar, input, BUFFER_SIZE);
+  strcpy(tempInput, fromWcharToChar);
+  if (flag->isPrecisionSet) {
+    tempInput[flag->precision] = '\0';
+  }
+
+  int shift = flag->width - strlen(tempInput);
+  int lengthInput = strlen(tempInput);
+
+  if (flag->minus && shift > 0) {
+    strcpy(buffer, tempInput);
+    memset(buffer + lengthInput, ' ', shift);
+  } else if (shift > 0) {
+    memset(buffer, ' ', shift);
+    strcpy(buffer + shift, tempInput);
+  } else {
+    strcpy(buffer, tempInput);
   }
 }
