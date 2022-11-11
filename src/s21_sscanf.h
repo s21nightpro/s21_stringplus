@@ -11,4 +11,12 @@ typedef struct {
   int error;
 } flags_t;
 
+typedef struct {
+  int sign_before_e;
+  int sign_after_e;
+  int dot;
+  int e;
+  int digit;
+} float_flags_t;
+
 int s21_sscanf(const char *str, const char *format, ...);

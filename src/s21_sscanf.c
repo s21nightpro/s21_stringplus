@@ -5,28 +5,59 @@ const char *parseWidth(const char *format, flags_t *f);
 const char *parseLength(const char *format, flags_t *f);
 const char *parseSpecifier(const char *format, flags_t *f);
 
-void parseString(const char **str, flags_t *f, va_list var);
+void parseString(const char **str, const s21_size_t str_len, flags_t *f,
+                 va_list var);
 
 int isDigit(int a);
 int isAscii(int a);
 int isSeporator(int a);
 int isHex(int a);
 int isOct(int a);
+int isFloat(int a, float_flags_t *fl);
 
-void assignInt(char *str, va_list var, flags_t *f, int base);
 void assignChar(char ch, va_list var, flags_t *f);
 void assignString(char *str, va_list var, flags_t *f);
+void assignFloat(char *str, va_list var, flags_t *f);
+void assignN(int n, va_list var, flags_t *f);
+void assignInt(char *str, va_list var, flags_t *f);
+void assignHex(char *str, va_list var, flags_t *f);
+void assignOct(char *str, va_list var, flags_t *f);
+void assignIntUnsigned(char *str, va_list var, flags_t *f);
+void assignOctUnsigned(char *str, va_list var, flags_t *f);
+void assignHexUnsigned(char *str, va_list var, flags_t *f);
+void assignVoid(char *str, va_list var, flags_t *f);
+
+int main() {
+  char str[50] = "0x12a2";
+  char str2[50], ch;
+
+  int num1, num2, num3;
+  unsigned int unum1, unum2;
+  double fnum1, fnum2, fnum3;
+  void* pvoid , *pvoid1;
+
+  // printf("123");
+  // s21_sscanf(str, "%2d%n%*d%3s", &num1, &ch, str2, &fnum1);
+  // sscanf(str, "%0d", &num2);
+  // printf("%d %d %s %lf", num1, ch, str2, fnum1);
+  s21_sscanf("1231231", "%p", &pvoid);
+  sscanf("1231231", "%p", &pvoid1);
+  printf("%p\n%p", pvoid, pvoid1);
+  //printf("%d", num1, unum2);
+  // printf("%d %d %d", num1, num2, num3);
+}
 
 int s21_sscanf(const char *str, const char *format, ...) {
   va_list var;
   va_start(var, format);
   int success = 0;
+  const s21_size_t str_len = s21_strlen(str);
   while (*format != '\0') {
     if (*format == '%') {
       flags_t flag_format = {0};
       format++;
       parseFormat(&format, &flag_format);
-      parseString(&str, &flag_format, var);
+      parseString(&str, str_len, &flag_format, var);
       if (flag_format.error) break;
       success++;
     }
@@ -36,23 +67,39 @@ int s21_sscanf(const char *str, const char *format, ...) {
   return success;
 }
 
-void parseString(const char **str, flags_t *f, va_list var) {
-  char str_temp[1024] = {0};
+void parseString(const char **str, const s21_size_t str_len, flags_t *f,
+                 va_list var) {
+  char str_temp[1024] = {'\0'};
   char ch = 0;
   int i = 0;
-  while (isSeporator(**str)) {
+  int n = 0;
+  int sign = 0;
+  float_flags_t float_struct = {0};
+  while (isSeporator(**str) && f->specifier != 'c') {
     (*str)++;
   }
 
   switch (f->specifier) {
     case 'd':
+      while ((isDigit(**str) || ((**str == '-' || **str == '+') && !sign)) &&
+             (f->width != 0)) {
+        str_temp[i] = **str;
+        (*str)++;
+        i++;
+        sign++;
+        f->width--;
+      }
+      if (!f->asterics) assignInt(str_temp, var, f);
+      break;
+    case 'u':
       while (isDigit(**str) && (f->width != 0)) {
         str_temp[i] = **str;
         (*str)++;
         i++;
+        sign++;
         f->width--;
       }
-      if (!f->asterics) assignInt(str_temp, var, f, 10);
+      if (!f->asterics) assignIntUnsigned(str_temp, var, f);
       break;
     case 'c':
       if (isAscii(**str)) {
@@ -61,48 +108,145 @@ void parseString(const char **str, flags_t *f, va_list var) {
         (*str)++;
         break;
       }
-    case 's':  // если нам важна длина, нам не важны пробелы
-      if (f->width != -1) {
-        while ((f->width != 0) && (**str)) {
-          str_temp[i] = **str;
-          (*str)++;
-          i++;
-          f->width--;
-        }
-      } else {
-        while (!isSeporator(**str) && (**str)) {
-          str_temp[i] = **str;
-          (*str)++;
-          i++;
-          f->width--;
-        }
+    case 's':
+      while ((f->width != 0 && !isSeporator(**str))) {
+        str_temp[i] = **str;
+        (*str)++;
+        i++;
+        f->width--;
       }
       if (!f->asterics) assignString(str_temp, var, f);
       break;
-    case 'e':
+    case 'i':
       if (**str == '0') {
         (*str)++;
         if ((**str) == 'x' || (**str) == 'X') {
           (*str)++;
-          while (isHex(**str) && (f->width != 0)) {
-            ;
+          while ((isHex(**str) || ((**str == '-' || **str == '+') && !sign)) &&
+                 (f->width != 0)) {
+            str_temp[i] = **str;
+            (*str)++;
+            i++;
+            f->width--;
+            sign++;
           }
+          if (!f->asterics) assignHex(str_temp, var, f);
         } else {
-          while (isOct(**str) && (f->width != 0)) {
-            ;
+          while ((isOct(**str) || ((**str == '-' || **str == '+') && !sign)) &&
+                 (f->width != 0)) {
+            str_temp[i] = **str;
+            (*str)++;
+            i++;
+            f->width--;
+            sign++;
           }
+          if (!f->asterics) assignOct(str_temp, var, f);
         }
       } else {
-        while (isDigit(**str) && (f->width != 0)) {
+        while ((isDigit(**str) || ((**str == '-' || **str == '+') && !sign)) &&
+               (f->width != 0)) {
           str_temp[i] = **str;
           (*str)++;
           i++;
           f->width--;
+          sign++;
         }
-        if (!f->asterics) assignInt(str_temp, var, f, 10);
+        if (!f->asterics) assignInt(str_temp, var, f);
       }
+      break;
+
+    case 'o':
+      while (isOct(**str) && (f->width != 0)) {
+        str_temp[i] = **str;
+        (*str)++;
+        i++;
+        f->width--;
+      }
+      if (!f->asterics) assignOctUnsigned(str_temp, var, f);
+      break;
+
+    case 'x':
+    case 'X':
+      while ((isHex(**str)) && (f->width != 0)) {
+        str_temp[i] = **str;
+        (*str)++;
+        i++;
+        f->width--;
+      }
+      if (!f->asterics) assignHexUnsigned(str_temp, var, f);
+      break;
+
+    case 'e':
+    case 'E':
+    case 'f':
+    case 'g':
+    case 'G':
+      while (isFloat(**str, &float_struct) && (f->width != 0)) {
+        str_temp[i] = **str;
+        (*str)++;
+        i++;
+        f->width--;
+      }
+      if (!f->asterics) assignFloat(str_temp, var, f);
+      break;
+
+    case 'n':
+      n = str_len - s21_strlen(*str);
+      if (!f->asterics) assignN(n, var, f);
+      break;
+
+      case 'p':
+       while ((isHex(**str)) && (f->width != 0)) {
+        str_temp[i] = **str;
+        (*str)++;
+        i++;
+        f->width--;
+      }
+      if (!f->asterics) assignVoid(str_temp, var, f);
+      break;
+
+      break;
   }
 }
+
+int isFloat(int a, float_flags_t *fl) {
+  int flag = 1;
+  if (isDigit(a)) {
+    fl->digit = 1;
+  } else if ((fl->digit == 0 && fl->sign_before_e == 0 && fl->e == 0 &&
+              fl->dot == 0 && (a == '-' || a == '+'))) {
+    fl->sign_before_e++;
+  } else if (fl->sign_before_e == 1 && fl->e == 0 && (a == '-' || a == '+')) {
+    flag = 0;
+  } else if (fl->sign_after_e == 0 && fl->digit && fl->e == 1 &&
+             (a == '-' || a == '+')) {
+    fl->sign_after_e++;
+  } else if (fl->e == 1 && (a == '-' || a == '+') &&
+             (fl->sign_after_e == 1 && !fl->digit)) {
+    flag = 0;
+  } else if (fl->digit == 1 && fl->e == 0 && (a == 'e' || a == 'E')) {
+    fl->e++;
+  } else if (fl->e == 0 && fl->dot == 0 && (a == '.')) {
+    fl->dot++;
+  } else {
+    flag = 0;
+  }
+  return flag;
+}
+
+/*
+c - считывает 1 символ
+s - считывает строку
+d - считывает 10тичное число
+i - знаковое 10тичное, 8ричное, 16ричное
+
+eEfgG - десятичное с плаваюшей или научная нотация
+o - беззнак 8ричное
+u - беззнак десятичное целое
+xX - беззнак 16ричное целое
+p - адрес указателя
+n - количество считанных символов
+*/
 
 int isDigit(int a) { return (a >= '0' && a <= '9'); }
 
@@ -116,109 +260,106 @@ int isHex(int a) {
 
 int isOct(int a) { return (isDigit(a) && a < '8'); }
 
-void assignInt(char *str, va_list var, flags_t *f, int base) {
+void assignHex(char *str, va_list var, flags_t *f) {
   if (f->length == 'h') {
-    short num_short = s21_atos(str);
-    short *p_short = va_arg(var, short *);
-    *p_short = num_short;
+    *va_arg(var, short *) = (short)s21_atohex(str);
   } else if (f->length == 'l') {
-    long num_long = s21_atol(str);
-    long *p_long = va_arg(var, long *);
-    *p_long = num_long;
+    *va_arg(var, long *) = s21_atohex(str);
   } else {
-    int num_int = s21_atoii(str);
-    int *p_int = va_arg(var, int *);
-    *p_int = num_int;
+    *va_arg(var, int *) = (int)s21_atohex(str);
   }
 }
 
-void assignChar(char ch, va_list var, flags_t *f) {
-  char *p_char = va_arg(var, char *);
-  *p_char = ch;
+void assignHexUnsigned(char *str, va_list var, flags_t *f) {
+  if (f->length == 'h') {
+    *va_arg(var, unsigned short *) = (unsigned short)s21_usigned_atohex(str);
+  } else if (f->length == 'l') {
+    *va_arg(var, unsigned long *) = s21_usigned_atohex(str);
+  } else {
+    *va_arg(var, unsigned int *) = (unsigned int)s21_usigned_atohex(str);
+  }
 }
+
+void assignOct(char *str, va_list var, flags_t *f) {
+  if (f->length == 'h') {
+    *va_arg(var, short *) = (short)s21_ato8(str);
+  } else if (f->length == 'l') {
+    *va_arg(var, long *) = s21_ato8(str);
+  } else {
+    *va_arg(var, int *) = (int)s21_ato8(str);
+  }
+}
+
+void assignOctUnsigned(char *str, va_list var, flags_t *f) {
+  if (f->length == 'h') {
+    *va_arg(var, unsigned short *) = (unsigned short)s21_unsigned_ato8(str);
+  } else if (f->length == 'l') {
+    *va_arg(var, unsigned long *) = s21_unsigned_ato8(str);
+  } else {
+    *va_arg(var, unsigned int *) = (unsigned int)s21_unsigned_ato8(str);
+  }
+}
+
+void assignIntUnsigned(char *str, va_list var, flags_t *f) {
+  if (f->length == 'h') {
+    *va_arg(var, short *) =  (unsigned short) s21_atos(str);
+  } else if (f->length == 'l') {
+    *va_arg(var, long *) = s21_atol(str);
+  } else {
+    *va_arg(var, int *) = (unsigned int) s21_atoii(str);
+  }
+}
+
+void assignInt(char *str, va_list var, flags_t *f) {
+  if (f->length == 'h') {
+    *va_arg(var, short *) =  (short) s21_atos(str);
+  } else if (f->length == 'l') {
+    *va_arg(var, long *) = s21_atol(str);
+  } else {
+    *va_arg(var, int *) = (int) s21_atoii(str);
+  }
+}
+
+void assignVoid(char *str, va_list var, flags_t *f){
+
+   void **dest = va_arg(var, void **);
+   
+   *dest = (void *) (0x0 + s21_usigned_atohex(str));
+}
+
+
+void assignN(int n, va_list var, flags_t *f) {
+  if (f->length == 'h') {
+    *va_arg(var, short *) = n;
+  } else if (f->length == 'l') {
+    *va_arg(var, long *) = n;
+  } else {
+    *va_arg(var, int *) = n;
+  }
+}
+
+void assignFloat(char *str, va_list var, flags_t *f) {
+  if (f->length == 'l') {
+    *va_arg(var, double *) = (double)s21_atoE(str);
+    ;
+  } else if (f->length == 'L') {
+    *va_arg(var, long double *) = s21_atoE(str);
+  } else {
+    *va_arg(var, float *) = (float)s21_atoE(str);
+  }
+}
+
+void assignChar(char ch, va_list var, flags_t *f) { *va_arg(var, char *) = ch; }
 
 void assignString(char *str, va_list var, flags_t *f) {
-  char *p_char = va_arg(var, char *);
-  s21_strcpy(p_char, str);
+  s21_strcpy(va_arg(var, char *), str);
 }
-
-/*
-идем по строке в соответствии с флагами
-меняем указатель на конец считанной строки
-*/
-
-/*
-если нет флагов считываем первое число/строку до разделителя
-если есть звёздочка перемещаем указатель но не пишем переменную
-если есть
-
-*/
-
-/*
-что может считывать наша функция?
-целые числа
-дробные числа
-отрицательные
-символы строки
-
-c - считывает 1 символ
-s - считывает строку
-d - считывает 10тичное число
-i - знаковое 10тичное, 8ричное, 16ричное
-default:
-
-
-
-eEfgG - десятичное с плаваюшей или научная нотация
-o - беззнак 8ричное
-u - беззнак десятичное целое
-xX - беззнак 16ричное целое
-p - адрес указателя
-n - количество считанных символов
-
-*/
-
-// eturn str;
-
-int main() {
-  char str[50] = "23334 234 abcdef";
-  char str2[50], ch;
-  int num1, num2, num3;
-
-  // printf("123");
-  s21_sscanf(str, "%4d%d%*d%s", &num1, &ch, str2);
-  // sscanf(str, "%0d", &num2);
-  printf("%d %d %s", num1, ch, str2);
-
-  // printf("%d %d %d", num1, num2, num3);
-}
-
-/*
-получаю подстроку
-подстрока начинает с % и кончается спецификатором
-дальше идёт либо следующий процент или '/0'
-структура
-ширина:
-звездочка: звездочка отменяет ширину
-спецификатор:
-может быть любое количество чисел и звёздочек
-звёздочка отменяет число
-
-
-*/
 
 void parseFormat(const char **format, flags_t *f) {
   *format = parseWidth(*format, f);
   *format = parseLength(*format, f);
   *format = parseSpecifier(*format, f);
-
-  // return *format;
 }
-
-/*
-если звёздочка струячим
-если цифры и есть звездочка
-*/
 
 const char *parseWidth(const char *format, flags_t *f) {
   char tempWidth[512];
