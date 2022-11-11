@@ -250,6 +250,7 @@ float s21_atoE(const char *str) {
   int n = 0;  //кол-во знаков после запятой
   int sign = 1;
   int degree = 0;
+  int sign_degree = 1;
   int e = 0;
   if (*str == '-') {
     sign = -1;
@@ -280,11 +281,19 @@ float s21_atoE(const char *str) {
       str++;
     }
   }
+  if (*str == '-') {
+    sign_degree = -1;
+    str++;
+  }
+  if (*str == '+') {
+    str++;
+  }
   while (*str && *str >= '0' && *str <= '9') {
     // printf("%c", *str);
     degree = degree * 10 + (*str - '0');
     str++;
   }
+  if (sign_degree < 0) degree *= sign_degree;
   // printf("\n");
   // printf("atold:%f degree:%d\n", atold, degree);
   atold = atold * pow(10, degree);
