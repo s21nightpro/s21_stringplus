@@ -1,48 +1,7 @@
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-
-#define BUFFER_SIZE 1024
+#include "s21_sprintf.h"
 
 // A format specifier for print functions follows this prototype:
 // %[flags][width][.precision][length]specifier
-
-typedef struct {
-  bool minus;          // Left-justify within the given field width
-  bool plus;           // Forces to precede the result with a plus or minus sign (+ or -)
-                       // even for positive numbers
-  bool space;          // If no sign is going to be written, a blank space is inserted
-                       // before the value
-  bool hashtag;        // Made some math things with some specifiers
-  bool zero;           // Left-pads the number with zeroes (0) instead of spaces
-  int width;           // (number) - minimum number of character to be printed   or *
-  int precision;       // Precision
-  bool isPrecisionSet; // is precision set
-  char length;         // h, l or L
-  int specifier;       // just specifier
-} flags;
-
-void start();
-int s21_sprintf(char *str, const char *format, ...);
-void itoa(int n, char s[]);
-void reverse(char s[]);
-int numsCount(int num);
-
-const char *parseFormat(const char *format, flags *f, va_list var);
-const char *parseFlags(const char *format, flags *f);
-const char *parseWidth(const char *format, flags *f, va_list var);
-const char *parsePrecision(const char *format, flags *f, va_list var);
-const char *parseLength(const char *format, flags *f);
-
-char *specifier(char *str, flags*, va_list);
-void charSpecifier(char *buffer, flags *flag, va_list var);
-void widthCharSpecifier(char *buffer, flags *flag, va_list var);
-void stringSpecifier(char *buffer, flags *flag, va_list var);
-void widthStringSpecifier(char *buffer, flags *flag, va_list var);
-void integerSpecifier(char *buffer, flags *flag, va_list var);
 
 int main() {
   start();
@@ -51,12 +10,17 @@ int main() {
 
 void start() {
   char *stroka;
-  char ch = 'l';
-  wchar_t *wch = (wchar_t *)"world";
+//  char ch = 'l';
+//  wchar_t *wch = (wchar_t *)"world";
   stroka = (char *)malloc(300 * sizeof(char));
-  s21_sprintf(stroka, "Hello, %20s", "Hello, world");
+//  s21_sprintf(stroka, "Hello, %20s", "Hello, world");
+//  printf("%sEND\n", stroka);
+//  sprintf(stroka, "Hello, %20s", "Hello, world");
+//  printf("%sEND\n", stroka);
+
+  s21_sprintf(stroka, "Hello, %d", -13123);
   printf("%sEND\n", stroka);
-  sprintf(stroka, "Hello, %20s", "Hello, world");
+  sprintf(stroka, "Hello, %d", -0);
   printf("%sEND\n", stroka);
   free(stroka);
 }
@@ -316,6 +280,8 @@ void widthStringSpecifier(char *buffer, flags *flag, va_list var) {
 
 void integerSpecifier(char *buffer, flags *flag, va_list var) {
     int64_t num = va_arg(var, int64_t);
+  integerToString(buffer, num);
+    /*
     char temp[BUFFER_SIZE] = "";
     if (flag->width && !(flag->precision)) {    // %3d
       if (flag->minus) {  // %-3d
@@ -348,8 +314,64 @@ void integerSpecifier(char *buffer, flags *flag, va_list var) {
       }
     }  else if (flag->precision) {  // %.3d  // must check %3.3 too
     }
+    */
 }
 
-int numsCount(int num) {
+int numsCount(int64_t num) {
   // count of digits in number
+  int result = 0;
+  if (!num) {
+    result = 1;
+  } else {
+    while (num) {
+      num /= 10;
+      result++;
+    }
+  }
+  return result;
+}
+
+void integerToString(char *buffer, int64_t num) {
+  num  = (int32_t) num;
+  char temp[BUFFER_SIZE] = "";
+  int sign = 0;
+//  bool negative = false;
+  printf("NUM : %ld\n", num);
+  bool negative = num < 0 ? true : false;
+  num = negative ? -num : num;
+
+  printf("NUM : %ld\n", num);
+
+  if (!num) {
+    buffer[0] = '0';
+//    printf("ZERO\n");
+  }
+  while (num) {
+    temp[sign] = "0123456789abcdef"[num % 10];
+    num /= 10;
+    sign++;
+  }
+  if (negative) {
+    temp[sign++] = '-';
+  }
+//  temp[sign] = '\0';
+  int len = strlen(temp);
+  // test
+  printf("TEMP:\n");
+  for (int i = 0; i < strlen(temp); i++) {
+    printf("%c", temp[i]);
+  }
+  printf("\n\n");
+
+  for (int i = 0, j = len - 1; i < len; i++, j--)  {
+    buffer[i] = temp[j];
+  }
+
+
+  // test
+  printf("BUFFER:\n");
+  for (int i = 0; i < strlen(buffer); i++) {
+    printf("%c", buffer[i]);
+  }
+  printf("\n\n");
 }
