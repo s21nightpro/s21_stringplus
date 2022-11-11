@@ -5,11 +5,10 @@
 int s21_atoii(const char *str) {
   int atoint = 0;
   int sign = 1;  //если подают отрицательное число
-  if (*str == '-') {
+  if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
     str++;
-  }
-  if (*str == '+') {
+  } else if (*str == '+') {
     sign = 1;
     str++;
   }
@@ -25,11 +24,10 @@ long s21_atol(const char *str) {
   long atol = 0;
   int sign = 1;  //если подают отрицательное число
 
-  if (*str == '-') {
+  if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
     str++;
-  }
-  if (*str == '+') {
+  } else if (*str == '+') {
     sign = 1;
     str++;
   }
@@ -48,11 +46,10 @@ long long s21_atoll(const char *str) {
 
   //   while (*str != ' ') {
   //   }
-  if (*str == '-') {
+  if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
     str++;
-  }
-  if (*str == '+') {
+  } else if (*str == '+') {
     sign = 1;
     str++;
   }
@@ -67,11 +64,10 @@ long long s21_atoll(const char *str) {
 short s21_atos(const char *str) {
   short atos = 0;
   int sign = 1;  //если подают отрицательное число
-  if (*str == '-') {
+  if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
     str++;
-  }
-  if (*str == '+') {
+  } else if (*str == '+') {
     sign = 1;
     str++;
   }
@@ -89,11 +85,10 @@ float s21_atof(const char *str) {
   float fraction = 0;
   int n = 0;  //кол-во знаков после запятой
   int sign = 1;
-  if (*str == '-') {
+  if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
     str++;
-  }
-  if (*str == '+') {
+  } else if (*str == '+') {
     str++;
   }
   while (*str && ((*str >= '0' && *str <= '9') || *str == '.')) {
@@ -123,11 +118,10 @@ double s21_atod(const char *str) {
   double fraction = 0;
   int n = 0;  //кол-во знаков после запятой
   int sign = 1;
-  if (*str == '-') {
+  if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
     str++;
-  }
-  if (*str == '+') {
+  } else if (*str == '+') {
     str++;
   }
   while (*str && ((*str >= '0' && *str <= '9') || *str == '.')) {
@@ -155,11 +149,10 @@ long double s21_atold(const char *str) {
   long double fraction = 0;
   int n = 0;  //кол-во знаков после запятой
   int sign = 1;
-  if (*str == '-') {
+  if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
     str++;
-  }
-  if (*str == '+') {
+  } else if (*str == '+') {
     str++;
   }
   while (*str && ((*str >= '0' && *str <= '9') || *str == '.')) {
@@ -186,12 +179,14 @@ int s21_atohex(const char *str) {
   int degree = 0;
   int sign = 1;
   int short_pow = 0;
-  if (*str == '-') {
+  if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
     str++;
-  }
-  if (*str == '+') {
+  } else if (*str == '+') {
     str++;
+  }
+  if (*str == '0' && (*(str + 1) == 'x' || *(str + 1) == 'X')) {
+    str += 2;
   }
   degree = s21_strlen(str) - 1;
   while (*str &&
@@ -226,11 +221,10 @@ int s21_ato8(const char *str) {
   int degree = 0;
   int sign = 1;
   int short_pow = 0;
-  if (*str == '-') {
+  if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
     str++;
-  }
-  if (*str == '+') {
+  } else if (*str == '+') {
     str++;
   }
   degree = s21_strlen(str) - 1;
@@ -252,11 +246,10 @@ float s21_atoE(const char *str) {
   int degree = 0;
   int sign_degree = 1;
   int e = 0;
-  if (*str == '-') {
+  if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
     str++;
-  }
-  if (*str == '+') {
+  } else if (*str == '+') {
     str++;
   }
   while (*str && ((*str >= '0' && *str <= '9') || *str == '.')) {
@@ -281,7 +274,7 @@ float s21_atoE(const char *str) {
       str++;
     }
   }
-  if (*str == '-') {
+  if (*str == '-' && *(str + 1) != '+') {
     sign_degree = -1;
     str++;
   }
