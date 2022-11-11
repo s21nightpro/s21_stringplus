@@ -18,9 +18,9 @@ void start() {
 //  sprintf(stroka, "Hello, %20s", "Hello, world");
 //  printf("%sEND\n", stroka);
 
-  s21_sprintf(stroka, "Hello, %-5.d", 123);
+  s21_sprintf(stroka, "Hello, %+6d", 123);
   printf("%sEND\n", stroka);
-  sprintf(stroka, "Hello, %06d", 123);
+  sprintf(stroka, "Hello, %+6d", 123);
   printf("%sEND\n", stroka);
   free(stroka);
 }
@@ -289,7 +289,7 @@ void integerSpecifier(char *buffer, flags *flag, va_list var) {
 
   integerToString(buffer, num);
   formatPrecision(buffer, flag);
-
+  formatFlags(buffer, flag);
 }
 
 int numsCount(int64_t num) {
@@ -361,5 +361,25 @@ void formatPrecision(char *buffer, flags *flag) {
 }
 
 void formatFlags(char *buffer, flags *flag) {
-
+  char temp[BUFFER_SIZE] = "";
+  if (flag->plus) {
+    temp[0] = buffer[0] == '-' ? '-' : '+';
+    strcpy(temp + 1, buffer[0] == '-' ? buffer + 1 : buffer);
+    strcpy(buffer, temp);
+  } else if (flag->space && buffer[0] != '-') {
+    temp[0] = ' ';
+    strcpy(temp + 1, buffer);
+    strcpy(buffer, temp);
+  }
+  if (flag->width > (int) strlen(buffer)) {
+    int diff = flag->width - strlen(buffer);
+    if (flag->minus) {
+      strcpy(temp, buffer);
+      memset(temp + strlen(buffer), ' ', diff);
+    } else {
+      memset(temp, flag->zero ? '0' : ' ', diff);
+      strcpy(temp + diff, buffer);
+    }
+    strcpy(buffer, temp);
+  }
 }
