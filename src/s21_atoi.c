@@ -111,7 +111,7 @@ float s21_atof(const char *str) {
     fraction = (*str - '0');
     atof = atof + (fraction / pow(10, n));
     str++;
-    printf("%f\n", fraction / pow(10, n));
+    // printf("%f\n", fraction / pow(10, n));
   }
   //   atof += (fraction / n);
   if (sign < 0) atof *= sign;
@@ -139,12 +139,12 @@ double s21_atod(const char *str) {
     atod = atod * 10 + (*str - '0');
     str++;
   }
-  while (*str && *str >= '0' && *str <= '9' && n != 5) {
+  while (*str && *str >= '0' && *str <= '9') {
     n++;
     fraction = (*str - '0');
     atod = atod + (fraction / pow(10, n));
     str++;
-    printf("%f\n", fraction / pow(10, n));
+    // printf("%f\n", fraction / pow(10, n));
   }
   if (sign < 0) atod *= sign;
   return (atod);
@@ -170,12 +170,12 @@ long double s21_atold(const char *str) {
     atold = atold * 10 + (*str - '0');
     str++;
   }
-  while (*str && *str >= '0' && *str <= '9' && n != 5) {
+  while (*str && *str >= '0' && *str <= '9') {
     n++;
     fraction = (*str - '0');
     atold = atold + (fraction / pow(10, n));
     str++;
-    printf("%Lf\n", fraction / pow(10, n));
+    // printf("%Lf\n", fraction / pow(10, n));
   }
   if (sign < 0) atold *= sign;
   return (atold);
@@ -242,4 +242,52 @@ int s21_ato8(const char *str) {
   }
   if (sign < 0) hex *= sign;
   return hex;
+}
+
+float s21_atoE(const char *str) {
+  float atold = 0;
+  float fraction = 0;
+  int n = 0;  //кол-во знаков после запятой
+  int sign = 1;
+  int degree = 0;
+  int e = 0;
+  if (*str == '-') {
+    sign = -1;
+    str++;
+  }
+  if (*str == '+') {
+    str++;
+  }
+  while (*str && ((*str >= '0' && *str <= '9') || *str == '.')) {
+    if (*str == '.') {
+      str++;
+      break;
+    }
+    atold = atold * 10 + (*str - '0');
+    str++;
+  }
+  while (*str &&
+         ((*str >= '0' && *str <= '9') || (*str == 'e') || (*str == 'E')) &&
+         e == 0) {
+    if (*str == 'e' || *str == 'E') {
+      printf("atold %f\n", atold);
+      e = 1;
+      str++;
+    } else {
+      n++;
+      fraction = (*str - '0');
+      atold = atold + (fraction / pow(10, n));
+      str++;
+    }
+  }
+  while (*str && *str >= '0' && *str <= '9') {
+    printf("%c", *str);
+    degree = degree * 10 + (*str - '0');
+    str++;
+  }
+  printf("\n");
+  printf("atold:%f degree:%d\n", atold, degree);
+  atold = atold * pow(10, degree);
+  if (sign < 0) atold *= sign;
+  return (atold);
 }
