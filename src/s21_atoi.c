@@ -270,7 +270,7 @@ float s21_atoE(const char *str) {
          ((*str >= '0' && *str <= '9') || (*str == 'e') || (*str == 'E')) &&
          e == 0) {
     if (*str == 'e' || *str == 'E') {
-      printf("atold %f\n", atold);
+      // printf("atold %f\n", atold);
       e = 1;
       str++;
     } else {
@@ -281,12 +281,12 @@ float s21_atoE(const char *str) {
     }
   }
   while (*str && *str >= '0' && *str <= '9') {
-    printf("%c", *str);
+    // printf("%c", *str);
     degree = degree * 10 + (*str - '0');
     str++;
   }
-  printf("\n");
-  printf("atold:%f degree:%d\n", atold, degree);
+  // printf("\n");
+  // printf("atold:%f degree:%d\n", atold, degree);
   atold = atold * pow(10, degree);
   if (sign < 0) atold *= sign;
   return (atold);
