@@ -18,9 +18,9 @@ void start() {
 //  sprintf(stroka, "Hello, %20s", "Hello, world");
 //  printf("%sEND\n", stroka);
 
-  s21_sprintf(stroka, "Hello, %d", -13123);
+  s21_sprintf(stroka, "Hello, %-5.d", 123);
   printf("%sEND\n", stroka);
-  sprintf(stroka, "Hello, %d", -0);
+  sprintf(stroka, "Hello, %06d", 123);
   printf("%sEND\n", stroka);
   free(stroka);
 }
@@ -279,42 +279,17 @@ void widthStringSpecifier(char *buffer, flags *flag, va_list var) {
 }
 
 void integerSpecifier(char *buffer, flags *flag, va_list var) {
-    int64_t num = va_arg(var, int64_t);
-  integerToString(buffer, num);
-    /*
-    char temp[BUFFER_SIZE] = "";
-    if (flag->width && !(flag->precision)) {    // %3d
-      if (flag->minus) {  // %-3d
-        itoa(num, temp);
-        strcpy(buffer, temp);
-        for (int i = numsCount(num); i < flags->width; i++) {
-          buffer[i] = ' ';
-        }
-      } else {  // %3d
-        if (flags->zero) {  // %03d
-          for (int i = numsCount(num); i < flags->width; i++) {
-            if (flags->plus && (i == (flags->width - 1))) { // WET
-              **str++ = num > 0 ? '+' :;
-              break;
-            }
-            **str++ = "0";
-          }
+  int64_t num = va_arg(var, int64_t);
 
-          itoa(num, *str);
-        } else { // %3d
-          for (int i = numsCount(num); i < flags->width; i++) {
-            if (flags->plus && (i == (flags->width - 1))) { // WET
-              **str++ = num > 0 ? '+': ;
-              break;
-            }
-            **str++ = ' ';
-          }
-          itoa(num, *str);
-        }
-      }
-    }  else if (flag->precision) {  // %.3d  // must check %3.3 too
-    }
-    */
+  if (flag->length == 0) {
+    num = (int32_t) num;
+  } else if (flag->length == 'h') {
+    num = (int16_t) num;
+  }
+
+  integerToString(buffer, num);
+  formatPrecision(buffer, flag);
+
 }
 
 int numsCount(int64_t num) {
@@ -335,16 +310,10 @@ void integerToString(char *buffer, int64_t num) {
   num  = (int32_t) num;
   char temp[BUFFER_SIZE] = "";
   int sign = 0;
-//  bool negative = false;
-  printf("NUM : %ld\n", num);
   bool negative = num < 0 ? true : false;
   num = negative ? -num : num;
-
-  printf("NUM : %ld\n", num);
-
   if (!num) {
     buffer[0] = '0';
-//    printf("ZERO\n");
   }
   while (num) {
     temp[sign] = "0123456789abcdef"[num % 10];
@@ -354,24 +323,43 @@ void integerToString(char *buffer, int64_t num) {
   if (negative) {
     temp[sign++] = '-';
   }
-//  temp[sign] = '\0';
   int len = strlen(temp);
-  // test
-  printf("TEMP:\n");
-  for (int i = 0; i < strlen(temp); i++) {
-    printf("%c", temp[i]);
-  }
-  printf("\n\n");
-
   for (int i = 0, j = len - 1; i < len; i++, j--)  {
     buffer[i] = temp[j];
   }
+}
 
-
-  // test
-  printf("BUFFER:\n");
-  for (int i = 0; i < strlen(buffer); i++) {
-    printf("%c", buffer[i]);
+void formatPrecision(char *buffer, flags *flag) {
+  char temp[BUFFER_SIZE] = "";
+  int len = strlen(buffer);
+  int sign = 0;
+  if (buffer[0] == '-') {
+    temp[0] = '-';
+    sign = 1;
+    len--;
   }
-  printf("\n\n");
+
+  if (flag->precision > len) {
+    int i;
+    for (i = sign; i < flag->precision - len + sign; i++) {
+      temp[i] = '0';
+    }
+    for (int j = sign; buffer[j]; j++, i++) {
+      temp[i] = buffer[j];
+    }
+    strcpy(buffer, temp);
+  }
+
+  bool isInteger = flag->specifier == 'd' || flag->specifier == 'i' ||
+          flag->specifier == 'o' || flag->specifier == 'u' ||
+          flag->specifier == 'x' || flag->specifier == 'X';
+
+  if (flag->isPrecisionSet && flag->precision == 0 && isInteger &&
+      buffer[0] == '0') {
+    buffer[0] = '\0';
+  }
+}
+
+void formatFlags(char *buffer, flags *flag) {
+
 }

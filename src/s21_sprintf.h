@@ -45,3 +45,4 @@ void widthStringSpecifier(char *buffer, flags *flag, va_list var);
 void integerSpecifier(char *buffer, flags *flag, va_list var);
 
 void integerToString(char *buffer, int64_t num);
+void formatPrecision(char *buffer, flags *flag);
