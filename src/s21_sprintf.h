@@ -27,8 +27,6 @@ typedef struct {
 
 void start();
 int s21_sprintf(char *str, const char *format, ...);
-void itoa(int n, char s[]);
-void reverse(char s[]);
 int numsCount(int64_t num);
 
 const char *parseFormat(const char *format, flags *f, va_list var);
