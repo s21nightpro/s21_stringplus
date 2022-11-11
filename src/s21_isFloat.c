@@ -11,10 +11,10 @@ int isDigit(int a) { return (a >= '0' && a <= '9'); }
 
 int isFloat(int a, float_t *fl) {
   int flag = 1;
-  if (isDigit(a)) fl->digit == 1;
-
-  if ((fl->digit == 0 && fl->sign_befor_e == 0 && fl->e == 0 && fl->dot == 0 &&
-       (a == '-' || a == '+'))) {
+  if (isDigit(a)) {
+    fl->digit == 1;
+  } else if ((fl->digit == 0 && fl->sign_befor_e == 0 && fl->e == 0 &&
+              fl->dot == 0 && (a == '-' || a == '+'))) {
     fl->sign_befor_e++;
   } else if (fl->sign_befor_e == 1 && fl->e == 0 && (a == '-' || a == '+')) {
     flag = 0;
