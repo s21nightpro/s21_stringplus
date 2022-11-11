@@ -174,8 +174,8 @@ long double s21_atold(const char *str) {
   return (atold);
 }
 
-int s21_atohex(const char *str) {
-  int hex = 0;
+long long s21_atohex(const char *str) {
+  long long hex = 0;
   int degree = 0;
   int sign = 1;
   int short_pow = 0;
@@ -216,8 +216,8 @@ int s21_atohex(const char *str) {
   return hex;
 }
 
-int s21_ato8(const char *str) {
-  int hex = 0;
+long long s21_ato8(const char *str) {
+  long long hex = 0;
   int degree = 0;
   int sign = 1;
   int short_pow = 0;
