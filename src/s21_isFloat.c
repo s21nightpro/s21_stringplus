@@ -4,6 +4,7 @@ typedef struct {
   int dot;
   int e;
   int digit;
+  int digit_hex;
 } float_t;
 int main() { float_t fl = {0}; }
 
