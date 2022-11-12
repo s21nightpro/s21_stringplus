@@ -271,47 +271,47 @@ unsigned long s21_usigned_atohex(const char *str) {
   return hex;
 }
 
-void *s21_usigned_void_atohex(const char *str) {
-  void *hex = 0;
-  int degree = 0;
-  int sign = 1;
-  int short_pow = 0;
-  if (*str == '-' && *(str + 1) != '+') {
-    sign = -1;
-    str++;
-  }
-  if (*str == '0' && (*(str + 1) == 'x' || *(str + 1) == 'X')) {
-    str += 2;
-  }
-  degree = s21_strlen(str) - 1;
-  while (*str &&
-         ((*str >= '0' && *str <= '9') ||
-          ((*str >= 'a' && *str <= 'f') || (*str >= 'A' && *str <= 'F'))) &&
-         degree >= 0) {
-    short_pow = (int)pow(16, degree);
-    if (*str == 'a' || *str == 'A') {
-      hex = hex + (10 * short_pow);
-    } else if (*str == 'b' || *str == 'B') {
-      hex = hex + (11 * short_pow);
-    } else if (*str == 'c' || *str == 'C') {
-      hex = hex + (12 * short_pow);
-    } else if (*str == 'd' || *str == 'D') {
-      hex = hex + (13 * short_pow);
-    } else if (*str == 'e' || *str == 'E') {
-      hex = hex + (14 * short_pow);
-    } else if (*str == 'f' || *str == 'F') {
-      hex = hex + (15 * short_pow);
-    } else {
-      hex = hex + ((*str - '0') * short_pow);
-    }
-    degree--;
-    str++;
-    printf("%p\n", hex);
-  }
-  printf("%p\n", hex);
-  if (sign < 0) hex = 0x0 - hex;
-  return hex;
-}
+// void *s21_usigned_void_atohex(const char *str) {
+//   void *hex = 0;
+//   int degree = 0;
+//   int sign = 1;
+//   int short_pow = 0;
+//   if (*str == '-' && *(str + 1) != '+') {
+//     sign = -1;
+//     str++;
+//   }
+//   if (*str == '0' && (*(str + 1) == 'x' || *(str + 1) == 'X')) {
+//     str += 2;
+//   }
+//   degree = s21_strlen(str) - 1;
+//   while (*str &&
+//          ((*str >= '0' && *str <= '9') ||
+//           ((*str >= 'a' && *str <= 'f') || (*str >= 'A' && *str <= 'F'))) &&
+//          degree >= 0) {
+//     short_pow = (int)pow(16, degree);
+//     if (*str == 'a' || *str == 'A') {
+//       hex = hex + (10 * short_pow);
+//     } else if (*str == 'b' || *str == 'B') {
+//       hex = hex + (11 * short_pow);
+//     } else if (*str == 'c' || *str == 'C') {
+//       hex = hex + (12 * short_pow);
+//     } else if (*str == 'd' || *str == 'D') {
+//       hex = hex + (13 * short_pow);
+//     } else if (*str == 'e' || *str == 'E') {
+//       hex = hex + (14 * short_pow);
+//     } else if (*str == 'f' || *str == 'F') {
+//       hex = hex + (15 * short_pow);
+//     } else {
+//       hex = hex + ((*str - '0') * short_pow);
+//     }
+//     degree--;
+//     str++;
+//     printf("%p\n", hex);
+//   }
+//   printf("%p\n", hex);
+//   if (sign < 0) hex = 0x0 - hex;
+//   return hex;
+// }
 
 long long s21_ato0ct(const char *str) {
   long long hex = 0;
@@ -405,4 +405,43 @@ float s21_atoE(const char *str) {
   atold = atold * pow(10, degree);
   if (sign < 0) atold *= sign;
   return (atold);
+}
+
+char digit_to_ascii(int a) {
+  char asc;
+  switch (a) {
+    case 0:
+      asc = '0';
+      break;
+    case 1:
+      asc = '1';
+      break;
+    case 2:
+      asc = '2';
+      break;
+    case 3:
+      asc = '3';
+      break;
+    case 4:
+      asc = '4';
+      break;
+    case 5:
+      asc = '5';
+      break;
+    case 6:
+      asc = '6';
+      break;
+    case 7:
+      asc = '7';
+      break;
+    case 8:
+      asc = '8';
+      break;
+    case 9:
+      asc = '9';
+      break;
+    default:
+      break;
+  }
+  return asc;
 }

@@ -19,15 +19,28 @@
 // }
 
 int main() {
-  char str[50] = "-12321";
-  char str2[50] = {0};
+  // char str[50] = "-12321";
+  // char str2[50] = {0};
+  char str3[70] = {0};
   // char str2[50], ch;
   // int num1, num2, num3;
   // unsigned int num1 = 0;
   // float num1 = 0;
-  void **num3;
-  void **num2;
-  int x;
+  // void **num3;
+  // void **num2;
+  // int x;
+  int y = 0;
+  int b = 0;
+  double a = 13434324234234234234242.2323213;
+  y = (int)a;
+  for (int i = ; i > 0; i--) {
+    str3[b] = digit_to_ascii(y % 10);
+    b++;
+    y = y / 10;
+    printf("char:%c  digit:%d\n", str3[b], b);
+  }
+  printf("\n");
+  printf("double to str:%s\n", str3);
   // int num3 = 0;
   //  char ch;
   //   long num3, num4;
@@ -35,13 +48,13 @@ int main() {
   //   long long num5, num6;
   //   short num7, num8;
   //   double num9, num10;
-  x = sscanf(str, "%p%s", &num2, str2);
-  printf("%d\n", x);
-  num3 = s21_usigned_void_atohex(str);
-  printf("str: %s\n", str);
-  // s21_sscanf(str, "%d %d %d", &num1, &num2, &num3);
-  // printf("%d %d %d", num1, num2, num3);
-  printf("num1: %p\nnum2: %p\nstr: %s\n", num3, num2, str2);
+  // x = sscanf(str, "%p%s", &num2, str2);
+  // printf("%d\n", x);
+  // // num3 = s21_usigned_void_atohex(str);
+  // printf("str: %s\n", str);
+  // // s21_sscanf(str, "%d %d %d", &num1, &num2, &num3);
+  // // printf("%d %d %d", num1, num2, num3);
+  // printf("num1: \nnum2: %p\nstr: %s\n", num2, str2);
 }
 
 /*
@@ -73,3 +86,5 @@ isHex;
 знак либо нет либо на нулевой
 из макс значения вычесть значения хекса
 */
+/*переводить в научную запись, посимвольно вытаскивать из нее
+ */

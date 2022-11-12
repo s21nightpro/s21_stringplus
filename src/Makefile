@@ -1,4 +1,4 @@
-CC = gcc -Wextra -Werror -Wall -std=c11
+CC = gcc
 
 
 
@@ -10,7 +10,7 @@ s21_strcpy.c s21_strerror.c s21_strtok.c s21_insert.c \
 s21_trim.c s21_to_lower.c s21_to_upper.c s21_strspn.c \
 s21_sscanf.c s21_atoi.c test_s.c
 
-all: build5 run  
+all: build6 run  
 
 build3: 
 		gcc s21_sscanf.c -o test
@@ -37,6 +37,9 @@ linter:
 
 build5:
 	$(CC) s21_sscanf.c s21_atoi.c s21_to_lower.c s21_strlen.c s21_strcpy.c -o test -g
+	
+build6:
+	$(CC) s21_sprintf.c -o test -g
 
 run: 
 		./test
