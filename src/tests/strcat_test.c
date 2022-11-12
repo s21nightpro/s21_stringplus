@@ -1,10 +1,4 @@
-#include <check.h>
-#include <locale.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "../s21_string.h"
-#include "../s21_strlen.c"
+#include "tests.h"
 
 START_TEST(strcat_1) {
   char b1[1024] = "";
@@ -105,20 +99,4 @@ Suite *suite_strcat(void) {
   tcase_add_test(tc, strcat_any_letters_with_register_and_num_and_sim);
   suite_add_tcase(s, tc);
   return s;
-}
-
-int main(void) {
-  setlocale(LC_ALL, "");
-  int nf;
-  Suite *s1;
-  SRunner *sr;
-  s1 = suite_strcat();
-  sr = srunner_create(s1);
-
-  srunner_set_fork_status(sr, CK_NOFORK);
-  srunner_run_all(sr, CK_VERBOSE);
-
-  nf = srunner_ntests_failed(sr);
-  srunner_free(sr);
-  return nf == 0 ? 0 : 1;
 }

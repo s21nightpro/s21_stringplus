@@ -1,10 +1,4 @@
-#include <check.h>
-#include <locale.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "../s21_string.h"
-#include "../s21_strlen.c"
+#include "tests.h"
 
 START_TEST(strrchr_1) {
   char str[] = "0163456769";
@@ -92,9 +86,9 @@ START_TEST(strrchr_find_zero) {
 }
 END_TEST
 
-Suite *suite_strchr(void) {
-  Suite *s = suite_create("suite_strchr");
-  TCase *tc = tcase_create("strchr_tc");
+Suite *suite_strrchr(void) {
+  Suite *s = suite_create("suite_strrchr");
+  TCase *tc = tcase_create("strrchr_tc");
   tcase_add_test(tc, strrchr_1);
   tcase_add_test(tc, strrchr_2);
   tcase_add_test(tc, strrchr_3);
@@ -111,20 +105,4 @@ Suite *suite_strchr(void) {
 
   suite_add_tcase(s, tc);
   return s;
-}
-
-int main(void) {
-  setlocale(LC_ALL, "");
-  int nf;
-  Suite *s1;
-  SRunner *sr;
-  s1 = suite_strchr();
-  sr = srunner_create(s1);
-
-  srunner_set_fork_status(sr, CK_NOFORK);
-  srunner_run_all(sr, CK_VERBOSE);
-
-  nf = srunner_ntests_failed(sr);
-  srunner_free(sr);
-  return nf == 0 ? 0 : 1;
 }

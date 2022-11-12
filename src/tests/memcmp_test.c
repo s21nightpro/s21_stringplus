@@ -1,9 +1,4 @@
-#include <check.h>
-#include <locale.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "../s21_string.h"
+#include "tests.h"
 
 START_TEST(memcmp_1) {
   s21_size_t n1 = 3;
@@ -116,30 +111,24 @@ START_TEST(memcmp_not_eq_long_string) {
 }
 END_TEST
 
-int main(void) {
-  Suite *s1 = suite_create("Core");
-  TCase *tc1_1 = tcase_create("Core");
-  SRunner *sr = srunner_create(s1);
-  int nf;
+Suite *suite_memcmp(void) {
+  Suite *s = suite_create("suite_memcmp");
+  TCase *tc = tcase_create("memcmp_tc");
+  tcase_add_test(tc, memcmp_1);
+  tcase_add_test(tc, memcmp_2);
+  tcase_add_test(tc, memcmp_3);
+  tcase_add_test(tc, memcmp_zero_byte);
+  tcase_add_test(tc, memcmp_first_byte_in_string);
+  tcase_add_test(tc, memcmp_register_test);
+  tcase_add_test(tc, memcmp_zero_byte_in_num);
+  tcase_add_test(tc, memcmp_first_byte_in_num);
+  tcase_add_test(tc, memcmp_two_byte_in_num);
+  tcase_add_test(tc, memcmp_two_byte_long_two_num);
+  tcase_add_test(tc, memcmp_two_byte_long_first_num);
+  tcase_add_test(tc, memcmp_eq_long_string);
+  tcase_add_test(tc, memcmp_not_eq_long_string);
 
-  suite_add_tcase(s1, tc1_1);
-  tcase_add_test(tc1_1, memcmp_1);
-  tcase_add_test(tc1_1, memcmp_2);
-  tcase_add_test(tc1_1, memcmp_3);
-  tcase_add_test(tc1_1, memcmp_zero_byte);
-  tcase_add_test(tc1_1, memcmp_first_byte_in_string);
-  tcase_add_test(tc1_1, memcmp_register_test);
-  tcase_add_test(tc1_1, memcmp_zero_byte_in_num);
-  tcase_add_test(tc1_1, memcmp_first_byte_in_num);
-  tcase_add_test(tc1_1, memcmp_two_byte_in_num);
-  tcase_add_test(tc1_1, memcmp_two_byte_long_two_num);
-  tcase_add_test(tc1_1, memcmp_two_byte_long_first_num);
-  tcase_add_test(tc1_1, memcmp_eq_long_string);
-  tcase_add_test(tc1_1, memcmp_not_eq_long_string);
+  suite_add_tcase(s, tc);
 
-  srunner_run_all(sr, CK_ENV);
-  nf = srunner_ntests_failed(sr);
-  srunner_free(sr);
-
-  return nf == 0 ? 0 : 1;
+  return s;
 }

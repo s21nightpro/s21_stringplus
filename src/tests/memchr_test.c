@@ -1,9 +1,4 @@
-#include <check.h>
-#include <locale.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "../s21_string.h"
+#include "tests.h"
 
 START_TEST(memchr_1) {
   char str[] = "Hello w\0orld\0";
@@ -75,10 +70,7 @@ START_TEST(memchr_find_num_in_array_num) {
   ck_assert_ptr_eq(s21_memchr(array, find_byte, n_byte),
                    memchr(array, find_byte, n_byte));
 }
-END_TEST  // Assertion 's21_memchr(array, find_byte, n_byte)
-// == memchr(array, find_byte, n_byte)' failed:
-// s21_memchr(array, find_byte, n_byte) == 0,
-// memchr(array, find_byte, n_byte) == 0x7ffee1dce89c
+END_TEST
 
 START_TEST(memchr_find_float_in_array) {
   float array[] = {1, 2, 3, 666, 5, 99, 100};
@@ -114,20 +106,4 @@ Suite *suite_memchr(void) {
   tcase_add_test(tc, memchr_easy_test_string);
   suite_add_tcase(s, tc);
   return s;
-}
-
-int main(void) {
-  setlocale(LC_ALL, "");
-  int nf;
-  Suite *s1;
-  SRunner *sr;
-  s1 = suite_memchr();
-  sr = srunner_create(s1);
-
-  srunner_set_fork_status(sr, CK_NOFORK);
-  srunner_run_all(sr, CK_VERBOSE);
-
-  nf = srunner_ntests_failed(sr);
-  srunner_free(sr);
-  return nf == 0 ? 0 : 1;
 }

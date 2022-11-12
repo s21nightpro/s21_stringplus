@@ -1,9 +1,4 @@
-#include <check.h>
-#include <locale.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "../s21_string.h"
+#include "tests.h"
 
 START_TEST(memmove_1) {
   s21_size_t n1 = 3;
@@ -342,20 +337,4 @@ Suite *suite_memmove(void) {
 
   suite_add_tcase(s, tc);
   return s;
-}
-
-int main(void) {
-  setlocale(LC_ALL, "");
-  int nf;
-  Suite *s1;
-  SRunner *sr;
-  s1 = suite_memmove();
-  sr = srunner_create(s1);
-
-  srunner_set_fork_status(sr, CK_NOFORK);
-  srunner_run_all(sr, CK_VERBOSE);
-
-  nf = srunner_ntests_failed(sr);
-  srunner_free(sr);
-  return nf == 0 ? 0 : 1;
 }

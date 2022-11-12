@@ -1,10 +1,4 @@
-#include <check.h>
-#include <locale.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "../s21_string.h"
-#include "../s21_strlen.c"
+#include "tests.h"
 
 START_TEST(strncmp_empty) {
   char str1[] = "";
@@ -161,20 +155,4 @@ Suite *suite_strncmp(void) {
   tcase_add_test(tc, strncmp_floppa_floppa_one_byte);
   suite_add_tcase(s, tc);
   return s;
-}
-
-int main(void) {
-  setlocale(LC_ALL, "");
-  int nf;
-  Suite *s1;
-  SRunner *sr;
-  s1 = suite_strncmp();
-  sr = srunner_create(s1);
-
-  srunner_set_fork_status(sr, CK_NOFORK);
-  srunner_run_all(sr, CK_VERBOSE);
-
-  nf = srunner_ntests_failed(sr);
-  srunner_free(sr);
-  return nf == 0 ? 0 : 1;
 }

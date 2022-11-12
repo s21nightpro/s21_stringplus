@@ -1,30 +1,7 @@
-#include <check.h>
-#include <locale.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "../s21_string.h"
-#include "../s21_strlen.c"
-
-// 6 FAILS
-// strncpy_1:0: Assertion '__builtin___strncpy_chk (b1, str_1_2, n1,
-// __builtin_object_size (b1, 2 > 1 ? 1 : 0)) == s21_strncpy(b11, str_1_2, n1)'
-// failed: __builtin___strncpy_chk (b1, str_1_2, n1, __builtin_object_size (b1,
-// 2 > 1 ? 1 : 0)) == "1231111111", s21_strncpy(b11, str_1_2, n1) == "123"
-// strncpy_2:0: Assertion '__builtin___strncpy_chk (b2, str_2_2, n2,
-// __builtin_object_size (b2, 2 > 1 ? 1 : 0)) == s21_strncpy(b22, str_2_2, n2)'
-// failed: __builtin___strncpy_chk (b2, str_2_2, n2, __builtin_object_size (b2,
-// 2 > 1 ? 1 : 0)) == "1234511111", s21_strncpy(b22, str_2_2, n2) == "12345"
-// strncpy_3:0: Passed
-// strncpy_empty:0: Passed
-// strncpy_zero_byte:0: Assertion 'res == exp' failed: res == "", exp == "123"
-// strncpy_empty_src:0: Assertion 'res == exp' failed: res == "", exp == "123"
-// strncpy_one_byte:0: Assertion 'res == exp' failed: res == "1", exp == "123"
-// strncpy_two_byte:0: Assertion 'res == exp' failed: res == "12", exp == "123"
-// strncpy_string:0: Passed
+#include "tests.h"
 
 START_TEST(strncpy_1) {
-  s21_size_t n1 = 3;
+  s21_size_t n1 = 30;
   char b1[1024] = "1111111111";
   char b11[1024] = "1111111111";
   char str_1_2[1024] = "123\0";
@@ -131,20 +108,4 @@ Suite *suite_strncpy(void) {
 
   suite_add_tcase(s, tc);
   return s;
-}
-
-int main(void) {
-  setlocale(LC_ALL, "");
-  int nf;
-  Suite *s1;
-  SRunner *sr;
-  s1 = suite_strncpy();
-  sr = srunner_create(s1);
-
-  srunner_set_fork_status(sr, CK_NOFORK);
-  srunner_run_all(sr, CK_VERBOSE);
-
-  nf = srunner_ntests_failed(sr);
-  srunner_free(sr);
-  return nf == 0 ? 0 : 1;
 }

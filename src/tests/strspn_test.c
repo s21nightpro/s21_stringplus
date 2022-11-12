@@ -1,42 +1,4 @@
-#include <check.h>
-#include <locale.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "../s21_string.h"
-#include "../s21_strlen.c"
-
-// strspn_1:0: Passed
-// strspn_2:0: Assertion 'strspn(str2, "shit
-// ") == s21_strspn(str2, "shit ")' failed: strspn(str2, "shit ") == 8,
-// s21_strspn(str2, "shit ") == 12
-// strspn_3:0: Passed
-// strspn_empty:0: Passed
-// strspn_gora_:0: Passed
-// strspn__gora:0: Passed
-// strspn_any_register:0: Assertion
-// 's21_strspn(res, src) == strspn(res, src)' failed: s21_strspn(res, src) == 3,
-// strspn(res, src) == 1 strspn_num_num:0:
-// Passed strspn_long_num_num:0: Passed
-// strspn_num_long_num:0: Passed
-// strspn_any_num:0: Passed
-// strspn_num_with_letter:0: Passed
-// strspn_num_with_letter2:0: Assertion
-// 's21_strspn(res, src) == strspn(res, src)' failed: s21_strspn(res, src) == 6,
-// strspn(res, src) == 3
-// :strspn_basic_test:0: Passed
-// :strspn_any_sim:0: Assertion
-// 's21_strspn(res, src) == strspn(res, src)' failed: s21_strspn(res, src) ==
-// 18, strspn(res, src) == 10
-// :strspn_upper_letter:0: Assertion
-// 's21_strspn(res, src) == strspn(res, src)' failed: s21_strspn(res, src) ==
-// 25, strspn(res, src) == 10
-// :strspn_lower_letter:0: Assertion
-// 's21_strspn(res, src) == strspn(res, src)' failed: s21_strspn(res, src) ==
-// 30, strspn(res, src) == 10
-// :strspn_not_uniq_sim:0: Assertion
-// 's21_strspn(res, src) == strspn(res, src)' failed: s21_strspn(res, src) ==
-// 86, strspn(res, src) == 0
+#include "tests.h"
 
 START_TEST(strspn_1) {
   char str[] = "12-years";
@@ -48,7 +10,7 @@ START_TEST(strspn_2) {
   char str2[] = "this is a test";
   ck_assert_int_eq(strspn(str2, "shit "), s21_strspn(str2, "shit "));
 }
-END_TEST  // FAIL
+END_TEST
 
 START_TEST(strspn_3) {
   char str3[] = {'q', 'r', 's', 't', 'w', 's', 'a', 's'};
@@ -82,7 +44,7 @@ START_TEST(strspn_any_register) {
   char res[] = "gOra";
   ck_assert_int_eq(s21_strspn(res, src), strspn(res, src));
 }
-END_TEST  // FAIL
+END_TEST
 
 START_TEST(strspn_num_num) {
   char src[] = "123";
@@ -131,7 +93,7 @@ START_TEST(strspn_basic_test) {
   char res[] = "aD";
   ck_assert_int_eq(s21_strspn(res, src), strspn(res, src));
 }
-END_TEST  // FAIL
+END_TEST
 
 START_TEST(strspn_any_sim) {
   char src[] = "32ASDASDPare[0g9jf m07y271234567890";
@@ -145,14 +107,14 @@ START_TEST(strspn_upper_letter) {
   char res[] = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
   ck_assert_int_eq(s21_strspn(res, src), strspn(res, src));
 }
-END_TEST  // FAIL
+END_TEST
 
 START_TEST(strspn_lower_letter) {
   char src[] = "32jersASDASDPare[0g9jf m07y271234567890";
   char res[] = "1234567890qwertyuiopasdfghjklczxcvbnm";
   ck_assert_int_eq(s21_strspn(res, src), strspn(res, src));
 }
-END_TEST  // FAIL
+END_TEST
 
 START_TEST(strspn_not_uniq_sim) {
   char src[] =
@@ -163,10 +125,9 @@ START_TEST(strspn_not_uniq_sim) {
       "11111111111113";
   ck_assert_int_eq(s21_strspn(res, src), strspn(res, src));
 }
-END_TEST  // FAIL
+END_TEST
 
-    Suite *
-    suite_strspn(void) {
+Suite *suite_strspn(void) {
   Suite *s = suite_create("suite_strspn");
   TCase *tc = tcase_create("strspn_tc");
   tcase_add_test(tc, strspn_1);
@@ -190,20 +151,4 @@ END_TEST  // FAIL
 
   suite_add_tcase(s, tc);
   return s;
-}
-
-int main(void) {
-  setlocale(LC_ALL, "");
-  int nf;
-  Suite *s1;
-  SRunner *sr;
-  s1 = suite_strspn();
-  sr = srunner_create(s1);
-
-  srunner_set_fork_status(sr, CK_NOFORK);
-  srunner_run_all(sr, CK_VERBOSE);
-
-  nf = srunner_ntests_failed(sr);
-  srunner_free(sr);
-  return nf == 0 ? 0 : 1;
 }

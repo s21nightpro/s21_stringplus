@@ -1,9 +1,4 @@
-#include <check.h>
-#include <locale.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "../s21_string.h"
+#include "tests.h"
 
 START_TEST(memcpy_1) {
   s21_size_t n1 = 3;
@@ -173,13 +168,10 @@ START_TEST(memcpy_long_string_with_register_and_num_and_simbol) {
 }
 END_TEST
 
-int main(void) {
-  Suite *s1 = suite_create("Core");
-  TCase *tc = tcase_create("Core");
-  SRunner *sr = srunner_create(s1);
-  int nf;
-
-  suite_add_tcase(s1, tc);
+Suite *suite_memcpy(void) {
+  Suite *s = suite_create("suite_memcpy");
+  TCase *tc = tcase_create("memcpy_tc");
+  suite_add_tcase(s, tc);
   tcase_add_test(tc, memcpy_1);
   tcase_add_test(tc, memcpy_2);
   tcase_add_test(tc, memcpy_3);
@@ -197,9 +189,7 @@ int main(void) {
   tcase_add_test(tc, memcpy_long_string_with_register_and_num);
   tcase_add_test(tc, memcpy_long_string_with_register_and_num_and_simbol);
 
-  srunner_run_all(sr, CK_ENV);
-  nf = srunner_ntests_failed(sr);
-  srunner_free(sr);
+  suite_add_tcase(s, tc);
 
-  return nf == 0 ? 0 : 1;
+  return s;
 }
