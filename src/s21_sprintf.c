@@ -516,7 +516,8 @@ void eToString(double num, char *buffer, flags *flag) {
   tempNum = round(tempNum);
   tempNum = tempNum / pow(10, flag->precision);
   // buffer[index++] = '.';
-  for (int p = 0; p < (flag->precision - degree + 1); index++, p++) {
+  for (int p = 0; p < (flag->precision - degree + 1 + degree_mimus);
+       index++, p++) {
     tempNum *= 10;
     long double ten = 10;
     double res = fmod(tempNum, ten);
