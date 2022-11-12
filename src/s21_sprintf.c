@@ -11,26 +11,15 @@ int main() {
 void start() {
   char *stroka;
   char *stroka2;
-//  char ch = 'l';
-//  wchar_t *wch = (wchar_t *)"world";
   stroka = (char *)malloc(300 * sizeof(char));
   stroka2 = (char *)malloc(300 * sizeof(char));
-//  s21_sprintf(stroka, "Hello, %20s", "Hello, world");
-//  printf("%sEND\n", stroka);
-//  sprintf(stroka, "Hello, %20s", "Hello, world");
-//  printf("%sEND\n", stroka);
-
-//
-//  while (num > (int) num) {
-//    num *= 10;
-//  }
-//  printf("%f\n", num);
-  long double num = 123;
-  s21_sprintf(stroka, "Hello, %Lf", num);
+  long double num = 85734980;
+  s21_sprintf(stroka, "Hello, %#.0Lf", num);
   printf("%sEND\n", stroka);
-  sprintf(stroka2, "Hello, %Lf", num);
-  printf("%sEND\n", stroka);
+  sprintf(stroka2, "Hello, %p", num);
+  printf("%sEND\n", stroka2);
   free(stroka);
+  free(stroka2);
 }
 
 int s21_sprintf(char *str, const char *format, ...) {
@@ -149,6 +138,12 @@ char *specifier(char *str, flags* flag, va_list var) {
     unsignedSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'f') {
     floatSpecifier(buffer, flag, var);
+  } else if (flag->specifier == 'e' || flag->specifier == 'E') {
+
+  } else if (flag->specifier == 'g' || flag->specifier == 'G') {
+
+  } else if (flag->specifier == 'x' || flag->specifier == 'X') {
+
   } else if (flag->specifier == 's') {
     if (flag->length == 'l') {
       widthStringSpecifier(buffer, flag, var);
@@ -415,7 +410,6 @@ void floatSpecifier(char *buffer, flags *flag, va_list var) {
 
 void doubleToString(long double num, char *buffer, flags *flag) {
   char temp[BUFFER_SIZE] = "";
-  printf("DOUBLE%.30Lf\n", num);
   int sign = 0;
   int notation = 10;
   bool negative = num < 0 ? true : false;
@@ -427,7 +421,6 @@ void doubleToString(long double num, char *buffer, flags *flag) {
     }
     temp[sign] = digitToAscii((int)fmod(tempNum,notation));
     tempNum /= notation;
-    printf("D@%.30Lf\n", tempNum);
     sign++;
   }
   if (negative) {
@@ -436,19 +429,22 @@ void doubleToString(long double num, char *buffer, flags *flag) {
   int len = strlen(temp);
   int index = 0;
   for (int j = len - 1; index < len; index++, j--)  {
-//    printf("%c", temp[j]);
     buffer[index] = temp[j];
   }
+  if (index == 0 || negative && index == 1) {
+    buffer[index++] = '0';
+  }
+  int tempIndex = index;
   buffer[index++] = '.';
 
   for (int p = 0; p < flag->precision; index++, p++) {
     num *= 10;
-    printf("NUM%Lf\n", num);
     long double ten = 10;
     double res = fmod(num,ten);
-//    res = round(res);
-    printf("%f\n", res);
     buffer[index] = digitToAscii((int)res);
+  }
+  if (tempIndex == index - 1 && !flag->hashtag) {
+    buffer[tempIndex] = '\0';
   }
 }
 
