@@ -8,21 +8,27 @@ s21_strpbrk.c s21_strcmp.c s21_strncmp.c s21_strcspn.c \
 s21_strstr.c s21_strchr.c  s21_strrchr.c s21_strncpy.c \
 s21_strcpy.c s21_strerror.c s21_strtok.c s21_insert.c \
 s21_trim.c s21_to_lower.c s21_to_upper.c s21_strspn.c \
-s21_sscanf.c test.c
 
-all: build3 run  
+all: build5 run  
 
 build3: 
-		gcc s21_sscanf.c -o test -g
+		gcc s21_sscanf.c s21_atoi.c -o test -g
 
 build4: 
 		$(CC) s21_sscanf.c -o test -g
 
-build: 
-		$(CC) $(SRC) -o test -g
+build: build6 run 
+		
+		
+build6: 
+		$(CC) $(SRC) s21_sscanf.c s21_atoi.c -o test -g
 
 build2: 
 		gcc $(SRC) -o test -g
+
+build5:
+		gcc -Wall -Wextra -lcheck $(SRC) s21_sscanf.c s21_atoi.c tests/sscanf_test.c -o test -g
+ 
 
 cppcheck:
 	cppcheck --enable=all --suppress=missingIncludeSystem  /Users/suzibill/projects/C2_s21_stringplus-0/src/
@@ -32,7 +38,7 @@ leak:
 
 linter:
 	cp ../materials/linters/.clang-format ..
-	clang-format -n *.c *.h
+	clang-format -i *.c *.h
 	rm -rf ../.clang-format
 
 run: 

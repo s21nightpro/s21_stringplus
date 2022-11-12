@@ -6,8 +6,9 @@ const char *parseLength(const char *format, flags_t *f);
 const char *parseSpecifier(const char *format, flags_t *f);
 
 void parseString(const char **str, const s21_size_t str_len, flags_t *f,
-                 va_list var);
+                 va_list var, char skip);
 
+int isSign(int a);
 int isDigit(int a);
 int isAscii(int a);
 int isSeporator(int a);
@@ -28,184 +29,232 @@ void assignHexUnsigned(char *str, va_list var, flags_t *f);
 void assignVoid(char *str, va_list var, flags_t *f);
 
 int main() {
-  char str[50] = "0x12a2";
-  char str2[50], ch;
+  int num1, num2;
 
-  int num1, num2, num3;
-  unsigned int unum1, unum2;
-  double fnum1, fnum2, fnum3;
-  void* pvoid , *pvoid1;
+  // char a1 = 0, a2 = 5, b1 = 0, b2 = 5, c1 = 0, c2 = 5;
 
-  // printf("123");
-  // s21_sscanf(str, "%2d%n%*d%3s", &num1, &ch, str2, &fnum1);
-  // sscanf(str, "%0d", &num2);
-  // printf("%d %d %s %lf", num1, ch, str2, fnum1);
-  s21_sscanf("1231231", "%p", &pvoid);
-  sscanf("1231231", "%p", &pvoid1);
-  printf("%p\n%p", pvoid, pvoid1);
-  //printf("%d", num1, unum2);
-  // printf("%d %d %d", num1, num2, num3);
+  // num1 = s21_sscanf("ABCD", "%c%*c%c%c", &a1, &b1, &c1);
+  // num2 = sscanf("ABCD", "%c%*c%c%c", &a2, &b2, &c2);
+  // printf("%d\n%d", num1, num2);
+
+  long double a1 = 1, a2 = 0, b1 = 1, b2 = 0, c1 = 1, c2 = 0, d1 = 1, d2 = 0;
+
+  const char str[] = "53.1 -4.1135 41.3333 +2.0001";
+  const char fstr[] = "%Lf %Lf %Lf %Lf";
+
+  num1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
+  num2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
+
+  printf("%d %d", num1, num2);
+  //  printf("%d %d %d", num1, num2, num3);
 }
 
 int s21_sscanf(const char *str, const char *format, ...) {
+  int success = 0;
+  int convertions = 0;
   va_list var;
   va_start(var, format);
-  int success = 0;
   const s21_size_t str_len = s21_strlen(str);
+  char skip = '\0';
   while (*format != '\0') {
     if (*format == '%') {
       flags_t flag_format = {0};
       format++;
       parseFormat(&format, &flag_format);
-      parseString(&str, str_len, &flag_format, var);
+      parseString(&str, str_len, &flag_format, var, skip);
+      if (flag_format.convertions || flag_format.asterics) convertions++;
       if (flag_format.error) break;
-      success++;
+      if (!flag_format.asterics) success++;
+      skip = '\0';
+    } else if (skip == '\0' || skip == *format) {
+      skip = *format;
+      format++;
+    } else {
+      break;
     }
   }
   va_end(var);
 
-  return success;
+  return convertions ? success : -1;
 }
 
 void parseString(const char **str, const s21_size_t str_len, flags_t *f,
-                 va_list var) {
+                 va_list var, char skip) {
   char str_temp[1024] = {'\0'};
   char ch = 0;
   int i = 0;
   int n = 0;
   int sign = 0;
   float_flags_t float_struct = {0};
-  while (isSeporator(**str) && f->specifier != 'c') {
+
+  while ((isSeporator(**str) && f->specifier != 'c' && **str != '\0') ||
+         (**str == skip && **str != '\0')) {
     (*str)++;
   }
-
-  switch (f->specifier) {
-    case 'd':
-      while ((isDigit(**str) || ((**str == '-' || **str == '+') && !sign)) &&
-             (f->width != 0)) {
-        str_temp[i] = **str;
-        (*str)++;
-        i++;
-        sign++;
-        f->width--;
-      }
-      if (!f->asterics) assignInt(str_temp, var, f);
-      break;
-    case 'u':
-      while (isDigit(**str) && (f->width != 0)) {
-        str_temp[i] = **str;
-        (*str)++;
-        i++;
-        sign++;
-        f->width--;
-      }
-      if (!f->asterics) assignIntUnsigned(str_temp, var, f);
-      break;
-    case 'c':
-      if (isAscii(**str)) {
-        ch = **str;
-        if (!f->asterics) assignChar(ch, var, f);
-        (*str)++;
-        break;
-      }
-    case 's':
-      while ((f->width != 0 && !isSeporator(**str))) {
-        str_temp[i] = **str;
-        (*str)++;
-        i++;
-        f->width--;
-      }
-      if (!f->asterics) assignString(str_temp, var, f);
-      break;
-    case 'i':
-      if (**str == '0') {
-        (*str)++;
-        if ((**str) == 'x' || (**str) == 'X') {
+  if (**str != '\0') {
+    switch (f->specifier) {
+      case 'd':
+        while (
+            (isDigit(**str) || (isSign(**str) && !sign &&
+                                (isDigit(*((*str) + 1))) && f->width != 1)) &&
+            (f->width != 0)) {
+          str_temp[i] = **str;
           (*str)++;
-          while ((isHex(**str) || ((**str == '-' || **str == '+') && !sign)) &&
-                 (f->width != 0)) {
-            str_temp[i] = **str;
-            (*str)++;
-            i++;
-            f->width--;
-            sign++;
-          }
-          if (!f->asterics) assignHex(str_temp, var, f);
-        } else {
-          while ((isOct(**str) || ((**str == '-' || **str == '+') && !sign)) &&
-                 (f->width != 0)) {
-            str_temp[i] = **str;
-            (*str)++;
-            i++;
-            f->width--;
-            sign++;
-          }
-          if (!f->asterics) assignOct(str_temp, var, f);
+          i++;
+          sign++;
+          f->width--;
         }
-      } else {
-        while ((isDigit(**str) || ((**str == '-' || **str == '+') && !sign)) &&
-               (f->width != 0)) {
+        if (!i) f->error = 1;
+        if (!f->asterics && i) assignInt(str_temp, var, f);
+        break;
+      case 'u':
+        while (isDigit(**str) && (f->width != 0)) {
+          str_temp[i] = **str;
+          (*str)++;
+          i++;
+          sign++;
+          f->width--;
+        }
+        if (!i)
+          f->error = 1;
+        else if (!f->asterics)
+          assignIntUnsigned(str_temp, var, f);
+        break;
+      case 'c':
+        if (isAscii(**str)) {
+          ch = **str;
+          if (!f->asterics) assignChar(ch, var, f);
+          (*str)++;
+          break;
+        } else {
+          f->error = 1;
+        }
+      case 's':
+        while ((f->width != 0 && !isSeporator(**str))) {
           str_temp[i] = **str;
           (*str)++;
           i++;
           f->width--;
-          sign++;
         }
-        if (!f->asterics) assignInt(str_temp, var, f);
-      }
-      break;
+        if (!i)
+          f->error = 1;
+        else if (!f->asterics)
+          assignString(str_temp, var, f);
+        break;
+      case 'i':
+        if (**str == '0') {
+          (*str)++;
+          if ((**str) == 'x' || (**str) == 'X') {
+            (*str)++;
+            while ((isHex(**str) || (isSign(**str) && isHex(*((*str) + 1)) &&
+                                     !sign && f->width != 1)) &&
+                   (f->width != 0)) {
+              str_temp[i] = **str;
+              (*str)++;
+              i++;
+              f->width--;
+              sign++;
+            }
+            if (!i)
+              f->error = 1;
+            else if (!f->asterics)
+              assignHex(str_temp, var, f);
+          } else {
+            while ((isOct(**str) || (isSign(**str) && isOct(*((*str) + 1)) &&
+                                     !sign && f->width != 1)) &&
+                   (f->width != 0)) {
+              str_temp[i] = **str;
+              (*str)++;
+              i++;
+              f->width--;
+              sign++;
+            }
+            if (!i)
+              f->error = 1;
+            else if (!f->asterics)
+              assignOct(str_temp, var, f);
+          }
+        } else {
+          while ((isDigit(**str) || (isSign(**str) && isDigit(*((*str) + 1)) &&
+                                     !sign && f->width != 1)) &&
+                 (f->width != 0)) {
+            str_temp[i] = **str;
+            (*str)++;
+            i++;
+            f->width--;
+            sign++;
+          }
+          if (!i)
+            f->error = 1;
+          else if (!f->asterics)
+            assignInt(str_temp, var, f);
+        }
+        break;
 
-    case 'o':
-      while (isOct(**str) && (f->width != 0)) {
-        str_temp[i] = **str;
-        (*str)++;
-        i++;
-        f->width--;
-      }
-      if (!f->asterics) assignOctUnsigned(str_temp, var, f);
-      break;
+      case 'o':
+        while (isOct(**str) && (f->width != 0)) {
+          str_temp[i] = **str;
+          (*str)++;
+          i++;
+          f->width--;
+        }
+        if (!i)
+          f->error = 1;
+        else if (!f->asterics)
+          assignOctUnsigned(str_temp, var, f);
+        break;
 
-    case 'x':
-    case 'X':
-      while ((isHex(**str)) && (f->width != 0)) {
-        str_temp[i] = **str;
-        (*str)++;
-        i++;
-        f->width--;
-      }
-      if (!f->asterics) assignHexUnsigned(str_temp, var, f);
-      break;
+      case 'x':
+      case 'X':
+        while ((isHex(**str)) && (f->width != 0)) {
+          str_temp[i] = **str;
+          (*str)++;
+          i++;
+          f->width--;
+        }
+        if (!i)
+          f->error = 1;
+        else if (!f->asterics)
+          assignHexUnsigned(str_temp, var, f);
+        break;
 
-    case 'e':
-    case 'E':
-    case 'f':
-    case 'g':
-    case 'G':
-      while (isFloat(**str, &float_struct) && (f->width != 0)) {
-        str_temp[i] = **str;
-        (*str)++;
-        i++;
-        f->width--;
-      }
-      if (!f->asterics) assignFloat(str_temp, var, f);
-      break;
+      case 'e':
+      case 'E':
+      case 'f':
+      case 'g':
+      case 'G':
+        while (isFloat(**str, &float_struct) && (f->width != 0)) {
+          str_temp[i] = **str;
+          (*str)++;
+          i++;
+          f->width--;
+        }
+        if (!i)
+          f->error = 1;
+        else if (!f->asterics)
+          assignFloat(str_temp, var, f);
+        break;
 
-    case 'n':
-      n = str_len - s21_strlen(*str);
-      if (!f->asterics) assignN(n, var, f);
-      break;
+      case 'n':
+        n = str_len - s21_strlen(*str);
+        if (!f->asterics) assignN(n, var, f);
+        break;
 
       case 'p':
-       while ((isHex(**str)) && (f->width != 0)) {
-        str_temp[i] = **str;
-        (*str)++;
-        i++;
-        f->width--;
-      }
-      if (!f->asterics) assignVoid(str_temp, var, f);
-      break;
-
-      break;
+        while ((isHex(**str)) && (f->width != 0)) {
+          str_temp[i] = **str;
+          (*str)++;
+          i++;
+          f->width--;
+        }
+        if (!i)
+          f->error = 1;
+        else if (!f->asterics)
+          assignVoid(str_temp, var, f);
+        break;
+    }
+  } else {
+    f->error++;
   }
 }
 
@@ -252,7 +301,9 @@ int isDigit(int a) { return (a >= '0' && a <= '9'); }
 
 int isAscii(int a) { return (a >= 0 && a <= 127); }
 
-int isSeporator(int a) { return ((a == '\n') || (a == 32) || (a == '\0')); }
+int isSeporator(int a) {
+  return ((a == '\n') || (a == 32) || (a == '\0' || (a == '\t')));
+}
 
 int isHex(int a) {
   return (isDigit(a) || (a >= 'a' && a <= 'f') || (a >= 'A' && a <= 'F'));
@@ -260,7 +311,10 @@ int isHex(int a) {
 
 int isOct(int a) { return (isDigit(a) && a < '8'); }
 
+int isSign(int a) { return (a == '+' || a == '-'); }
+
 void assignHex(char *str, va_list var, flags_t *f) {
+  f->convertions++;
   if (f->length == 'h') {
     *va_arg(var, short *) = (short)s21_atohex(str);
   } else if (f->length == 'l') {
@@ -271,6 +325,7 @@ void assignHex(char *str, va_list var, flags_t *f) {
 }
 
 void assignHexUnsigned(char *str, va_list var, flags_t *f) {
+  f->convertions++;
   if (f->length == 'h') {
     *va_arg(var, unsigned short *) = (unsigned short)s21_usigned_atohex(str);
   } else if (f->length == 'l') {
@@ -281,6 +336,7 @@ void assignHexUnsigned(char *str, va_list var, flags_t *f) {
 }
 
 void assignOct(char *str, va_list var, flags_t *f) {
+  f->convertions++;
   if (f->length == 'h') {
     *va_arg(var, short *) = (short)s21_ato8(str);
   } else if (f->length == 'l') {
@@ -291,6 +347,7 @@ void assignOct(char *str, va_list var, flags_t *f) {
 }
 
 void assignOctUnsigned(char *str, va_list var, flags_t *f) {
+  f->convertions++;
   if (f->length == 'h') {
     *va_arg(var, unsigned short *) = (unsigned short)s21_unsigned_ato8(str);
   } else if (f->length == 'l') {
@@ -301,34 +358,36 @@ void assignOctUnsigned(char *str, va_list var, flags_t *f) {
 }
 
 void assignIntUnsigned(char *str, va_list var, flags_t *f) {
+  f->convertions++;
   if (f->length == 'h') {
-    *va_arg(var, short *) =  (unsigned short) s21_atos(str);
+    *va_arg(var, short *) = (unsigned short)s21_atos(str);
   } else if (f->length == 'l') {
     *va_arg(var, long *) = s21_atol(str);
   } else {
-    *va_arg(var, int *) = (unsigned int) s21_atoii(str);
+    *va_arg(var, int *) = (unsigned int)s21_atoii(str);
   }
 }
 
 void assignInt(char *str, va_list var, flags_t *f) {
+  f->convertions++;
   if (f->length == 'h') {
-    *va_arg(var, short *) =  (short) s21_atos(str);
+    *va_arg(var, short *) = (short)s21_atos(str);
   } else if (f->length == 'l') {
     *va_arg(var, long *) = s21_atol(str);
   } else {
-    *va_arg(var, int *) = (int) s21_atoii(str);
+    *va_arg(var, int *) = (int)s21_atoii(str);
   }
 }
 
-void assignVoid(char *str, va_list var, flags_t *f){
+void assignVoid(char *str, va_list var, flags_t *f) {
+  f->convertions++;
+  void **dest = va_arg(var, void **);
 
-   void **dest = va_arg(var, void **);
-   
-   *dest = (void *) (0x0 + s21_usigned_atohex(str));
+  *dest = (void *)(0x0 + s21_usigned_atohex(str));
 }
 
-
 void assignN(int n, va_list var, flags_t *f) {
+  f->convertions++;
   if (f->length == 'h') {
     *va_arg(var, short *) = n;
   } else if (f->length == 'l') {
@@ -339,6 +398,7 @@ void assignN(int n, va_list var, flags_t *f) {
 }
 
 void assignFloat(char *str, va_list var, flags_t *f) {
+  f->convertions++;
   if (f->length == 'l') {
     *va_arg(var, double *) = (double)s21_atoE(str);
     ;
@@ -349,9 +409,13 @@ void assignFloat(char *str, va_list var, flags_t *f) {
   }
 }
 
-void assignChar(char ch, va_list var, flags_t *f) { *va_arg(var, char *) = ch; }
+void assignChar(char ch, va_list var, flags_t *f) {
+  f->convertions++;
+  *va_arg(var, char *) = ch;
+}
 
 void assignString(char *str, va_list var, flags_t *f) {
+  f->convertions++;
   s21_strcpy(va_arg(var, char *), str);
 }
 
@@ -387,6 +451,7 @@ const char *parseLength(const char *format, flags_t *f) {
     case 'l':
       f->length = 'l';
       format++;
+      if ((*format) == 'l') format++;
       break;
     case 'L':
       f->length = 'L';

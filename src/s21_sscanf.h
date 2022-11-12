@@ -9,6 +9,7 @@ typedef struct {
   char length;     // h, l or L
   char specifier;  // just specifier
   int error;
+  int convertions;
 } flags_t;
 
 typedef struct {
@@ -18,5 +19,3 @@ typedef struct {
   int e;
   int digit;
 } float_flags_t;
-
-int s21_sscanf(const char *str, const char *format, ...);
