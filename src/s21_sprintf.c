@@ -468,6 +468,7 @@ char digitToAscii(int a) { return 48 + a; }
 void eToString(double num, char *buffer, flags *flag) {
   char temp[BUFFER_SIZE] = "";
   int sign = 0;
+  int degree_mimus = 0;
   int sign_mimus = 0;
   int index = 0;
   int sign_degree = 1;
@@ -481,18 +482,19 @@ void eToString(double num, char *buffer, flags *flag) {
   while (tempNum) {
     if (tempNum < 1 && degree == 0) {
       sign_degree = -1;
+      degree_mimus++;
+      tempNum *= 10;
       // degree = 1;
+    } else if (tempNum < 1) {
       break;
+    } else {
+      temp[sign] = digitToAscii((int)fmod(tempNum, notation));
+      degree++;
+      tempNum /= notation;
+      sign++;
     }
-    if (tempNum < 1) {
-      break;
-    }
-    temp[sign] = digitToAscii((int)fmod(tempNum, notation));
-    degree++;
-    tempNum /= notation;
-    sign++;
   }
-
+  if (degree_mimus) degree += degree_mimus;
   if (negative) {
     buffer[index] = '-';
     // flag->precision++;
@@ -500,13 +502,8 @@ void eToString(double num, char *buffer, flags *flag) {
     sign_mimus = 1;
   }
   len += strlen(temp);
-  if (index == 0 || negative && index == 1) {
-    buffer[index] = '0';
-    degree == index++;
-  } else {
-    buffer[index] = temp[len - 1];
-    index++;
-  }
+  buffer[index] = temp[len - 1];
+  index++;
   buffer[index] = '.';
   index++;
 
