@@ -18,9 +18,15 @@ void start() {
 //  sprintf(stroka, "Hello, %20s", "Hello, world");
 //  printf("%sEND\n", stroka);
 
-  s21_sprintf(stroka, "Hello, %+6d", 123);
+//
+//  while (num > (int) num) {
+//    num *= 10;
+//  }
+//  printf("%f\n", num);
+  long double num = 4345.159;
+  s21_sprintf(stroka, "Hello, %Lf", num);
   printf("%sEND\n", stroka);
-  sprintf(stroka, "Hello, %+6d", 123);
+  sprintf(stroka, "Hello, %Lf", num);
   printf("%sEND\n", stroka);
   free(stroka);
 }
@@ -34,17 +40,13 @@ int s21_sprintf(char *str, const char *format, ...) {
     if (*format != '%') {
       *str++ = *format++;
     } else {
-      format++;  // check symbol after '%'
-
-      // 1) Строка распарсена, флаги расставлены, спецификатор получен
+      format++;
       format = parseFormat(format, &flag, var);
-      // 2) В зависимости от спецификатора запускаем определенную функцию,
-      // которая считает переменную нужного типа из va_list
       str = specifier(str, &flag, var);
-      // 3) Внутри функции выполнить преобразование переменной в char*
-      // и сделать нужные действия в зависимости от флагов
-
-      // 4) Вернуть char* и добавить его к str
+      if (flag.specifier == 'n') {
+        int *pointer = va_arg(var, int *);
+        *pointer = str - strStart;
+      }
     }
   }
   va_end(var);
@@ -141,10 +143,10 @@ char *specifier(char *str, flags* flag, va_list var) {
   char buffer[BUFFER_SIZE] = "";
   if (flag->specifier == 'd' || flag->specifier == 'i') {
     integerSpecifier(buffer, flag, var);
+  } else if (flag->specifier == 'u') {
+    unsignedSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'f') {
-
-  } else if (flag->specifier == 'd') {
-
+    floatSpecifier(buffer, flag, var);
   } else if (flag->specifier == 's') {
     if (flag->length == 'l') {
       widthStringSpecifier(buffer, flag, var);
@@ -263,11 +265,12 @@ void integerSpecifier(char *buffer, flags *flag, va_list var) {
     num = (int16_t) num;
   }
 
-  integerToString(buffer, num);
+  integerToString(buffer, num, 10);
   formatPrecision(buffer, flag);
   formatFlags(buffer, flag);
 }
 
+/// ?DELETE?
 int numsCount(int64_t num) {
   // count of digits in number
   int result = 0;
@@ -281,9 +284,9 @@ int numsCount(int64_t num) {
   }
   return result;
 }
+/// ?DELETE?
 
-void integerToString(char *buffer, int64_t num) {
-  num  = (int32_t) num;
+void integerToString(char *buffer, int64_t num, int notation) {
   char temp[BUFFER_SIZE] = "";
   int sign = 0;
   bool negative = num < 0 ? true : false;
@@ -292,12 +295,29 @@ void integerToString(char *buffer, int64_t num) {
     buffer[0] = '0';
   }
   while (num) {
-    temp[sign] = "0123456789abcdef"[num % 10];
-    num /= 10;
+    temp[sign] = "0123456789abcdef"[num % notation];
+    num /= notation;
     sign++;
   }
   if (negative) {
-    temp[sign++] = '-';
+    temp[sign] = '-';
+  }
+  int len = strlen(temp);
+  for (int i = 0, j = len - 1; i < len; i++, j--)  {
+    buffer[i] = temp[j];
+  }
+}
+
+void unsignedToString(char *buffer, uint64_t num, int notation) {
+  char temp[BUFFER_SIZE] = "";
+  int sign = 0;
+  if (!num) {
+    buffer[0] = '0';
+  }
+  while (num) {
+    temp[sign] = "0123456789abcdef"[num % notation];
+    num /= notation;
+    sign++;
   }
   int len = strlen(temp);
   for (int i = 0, j = len - 1; i < len; i++, j--)  {
@@ -338,11 +358,12 @@ void formatPrecision(char *buffer, flags *flag) {
 
 void formatFlags(char *buffer, flags *flag) {
   char temp[BUFFER_SIZE] = "";
-  if (flag->plus) {
+  if (flag->plus && flag->specifier != 'u') {
     temp[0] = buffer[0] == '-' ? '-' : '+';
     strcpy(temp + 1, buffer[0] == '-' ? buffer + 1 : buffer);
     strcpy(buffer, temp);
-  } else if (flag->space && buffer[0] != '-') {
+  } else if (flag->space && buffer[0] != '-' &&
+             flag->specifier != 'u') {
     temp[0] = ' ';
     strcpy(temp + 1, buffer);
     strcpy(buffer, temp);
@@ -358,4 +379,77 @@ void formatFlags(char *buffer, flags *flag) {
     }
     strcpy(buffer, temp);
   }
+}
+
+void unsignedSpecifier(char *buffer, flags *flag, va_list var) {
+  uint64_t num = va_arg(var, uint64_t);
+
+  if (flag->length == 0) {
+    num = (uint32_t) num;
+  } else if (flag->length == 'h') {
+    num = (uint16_t) num;
+  }
+
+  unsignedToString(buffer, num, 10);
+  formatPrecision(buffer, flag);
+  formatFlags(buffer, flag);
+}
+
+void floatSpecifier(char *buffer, flags *flag, va_list var) {
+  long double num;
+  if (flag->length == 'L') {
+    num = va_arg(var, long double);
+  } else {
+    num = va_arg(var, double);
+  }
+
+  if (!flag->isPrecisionSet) {
+    flag->precision = 6;
+  }
+
+  doubleToString(num, buffer, flag);
+  formatFlags(buffer, flag);
+}
+
+void doubleToString(long double num, char *buffer, flags *flag) {
+  char temp[BUFFER_SIZE] = "";
+  printf("DOUBLE%.30Lf\n", num);
+  int sign = 0;
+  int notation = 10;
+  bool negative = num < 0 ? true : false;
+  num = negative ? -num : num;
+  long double tempNum = num;
+  while (tempNum) {
+    if (tempNum < 1) {
+      break;
+    }
+    temp[sign] = digitToAscii((int)fmod(tempNum,notation));
+    tempNum /= notation;
+    printf("D@%.30Lf\n", tempNum);
+    sign++;
+  }
+  if (negative) {
+    temp[sign] = '-';
+  }
+  int len = strlen(temp);
+  int index = 0;
+  for (int j = len - 1; index < len; index++, j--)  {
+//    printf("%c", temp[j]);
+    buffer[index] = temp[j];
+  }
+  buffer[index++] = '.';
+
+  for (int p = 0; p < flag->precision; index++, p++) {
+    num *= 10;
+    printf("NUM%Lf\n", num);
+    long double ten = 10;
+    double res = fmod(num,ten);
+//    res = round(res);
+    printf("%f\n", res);
+    buffer[index] = digitToAscii((int)res);
+  }
+}
+
+char digitToAscii(int a) {
+  return 48 + a;
 }

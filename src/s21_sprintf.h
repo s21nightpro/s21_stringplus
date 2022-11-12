@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
+#include <float.h>
 
 #define BUFFER_SIZE 1024
 
@@ -41,7 +43,14 @@ void widthCharSpecifier(char *buffer, flags *flag, va_list var);
 void stringSpecifier(char *buffer, flags *flag, va_list var);
 void widthStringSpecifier(char *buffer, flags *flag, va_list var);
 void integerSpecifier(char *buffer, flags *flag, va_list var);
+void unsignedSpecifier(char *buffer, flags *flag, va_list var);
+void floatSpecifier(char *buffer, flags *flag, va_list var);
 
-void integerToString(char *buffer, int64_t num);
+void integerToString(char *buffer, int64_t num, int notation);
+void unsignedToString(char *buffer, uint64_t num, int notation);
+void doubleToString(long double num, char *buffer, flags *flag);
+
 void formatPrecision(char *buffer, flags *flag);
 void formatFlags(char *buffer, flags *flag);
+
+char digitToAscii(int a);
