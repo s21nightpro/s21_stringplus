@@ -23,8 +23,7 @@ typedef struct {
   int precision;  // Precision
   bool isPrecisionSet;  // is precision set
   char length;          // h, l or L
-  int specifier;
-  int zero_digit;  // just specifier
+  int specifier;        // just specifier
 } flags;
 
 void start();
@@ -49,8 +48,6 @@ void floatSpecifier(char *buffer, flags *flag, va_list var);
 void integerToString(char *buffer, int64_t num, int notation);
 void unsignedToString(char *buffer, uint64_t num, int notation);
 void doubleToString(long double num, char *buffer, flags *flag);
-
+char digitToAscii(int a);
 void formatPrecision(char *buffer, flags *flag);
 void formatFlags(char *buffer, flags *flag);
-
-char digitToAscii(int a);

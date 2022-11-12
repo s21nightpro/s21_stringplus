@@ -1,5 +1,6 @@
 #include "s21_sprintf.h"
 
+#include "s21_sscanf.h"
 // A format specifier for print functions follows this prototype:
 // %[flags][width][.precision][length]specifier
 
@@ -9,28 +10,17 @@ int main() {
 }
 
 void start() {
-  char *stroka = {0};
-  char *stroka2 = {0};
-  //  char ch = 'l';
-  //  wchar_t *wch = (wchar_t *)"world";
+  char *stroka;
+  char *stroka2;
   stroka = (char *)malloc(300 * sizeof(char));
   stroka2 = (char *)malloc(300 * sizeof(char));
-  //  s21_sprintf(stroka, "Hello, %20s", "Hello, world");
-  //  printf("%sEND\n", stroka);
-  //  sprintf(stroka, "Hello, %20s", "Hello, world");
-  //  printf("%sEND\n", stroka);
-
-  //
-  //  while (num > (int) num) {
-  //    num *= 10;
-  //  }
-  //  printf("%f\n", num);
-  double num = -.12345653235329455645465456456454;
-  s21_sprintf(stroka, "Hello, %f", num);
-  printf("s21_sprintf: %s\n", stroka);
-  sprintf(stroka2, "Hello, %f", num);
-  printf("sprintf: %s\n", stroka2);
+  double num = -.047999982222;
+  s21_sprintf(stroka, "Hello, %e", num);
+  printf("%sEND\n", stroka);
+  sprintf(stroka2, "Hello, %e", num);
+  printf("%sEND\n", stroka2);
   free(stroka);
+  free(stroka2);
 }
 
 int s21_sprintf(char *str, const char *format, ...) {
@@ -142,13 +132,17 @@ const char *parseLength(const char *format, flags *f) {
 
 char *specifier(char *str, flags *flag, va_list var) {
   // create buffer
-  char buffer[BUFFER_SIZE] = {0};
+  char buffer[BUFFER_SIZE] = "";
   if (flag->specifier == 'd' || flag->specifier == 'i') {
     integerSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'u') {
     unsignedSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'f') {
     floatSpecifier(buffer, flag, var);
+  } else if (flag->specifier == 'e' || flag->specifier == 'E') {
+    eSpecifier(buffer, flag, var);
+  } else if (flag->specifier == 'g' || flag->specifier == 'G') {
+  } else if (flag->specifier == 'x' || flag->specifier == 'X') {
   } else if (flag->specifier == 's') {
     if (flag->length == 'l') {
       widthStringSpecifier(buffer, flag, var);
@@ -412,51 +406,152 @@ void floatSpecifier(char *buffer, flags *flag, va_list var) {
   formatFlags(buffer, flag);
 }
 
+void eSpecifier(char *buffer, flags *flag, va_list var) {
+  long double num;
+  if (flag->length == 'L') {
+    num = va_arg(var, long double);
+  } else {
+    num = va_arg(var, double);
+  }
+
+  if (!flag->isPrecisionSet) {
+    flag->precision = 6;
+  }
+
+  eToString(num, buffer, flag);
+
+  formatFlags(buffer, flag);
+}
+
 void doubleToString(long double num, char *buffer, flags *flag) {
   char temp[BUFFER_SIZE] = "";
-  // printf("DOUBLE%.30Lf\n", num);
   int sign = 0;
-  int zero_digit = 0;
   int notation = 10;
   bool negative = num < 0 ? true : false;
   num = negative ? -num : num;
   long double tempNum = num;
-  if (negative) {
-    temp[sign] = '-';
+  while (tempNum) {
+    if (tempNum < 1) {
+      break;
+    }
+    temp[sign] = digitToAscii((int)fmod(tempNum, notation));
+    tempNum /= notation;
     sign++;
   }
-  while (tempNum) {
-    if (tempNum < 1 && zero_digit > 0) {
-      break;
-    } else if (tempNum < 1 && zero_digit == 0) {
-      temp[sign] == '0';
-      sign++;
-    } else {
-      temp[sign] = digitToAscii((int)fmod(tempNum, notation));
-      tempNum /= notation;
-      zero_digit++;
-      // printf("D@%.30Lf\n", tempNum);
-      sign++;
-    }
+  if (negative) {
+    temp[sign] = '-';
   }
-
   int len = strlen(temp);
   int index = 0;
   for (int j = len - 1; index < len; index++, j--) {
-    //    printf("%c", temp[j]);
     buffer[index] = temp[j];
   }
+  if (index == 0 || negative && index == 1) {
+    buffer[index++] = '0';
+  }
+  int tempIndex = index;
   buffer[index++] = '.';
 
   for (int p = 0; p < flag->precision; index++, p++) {
     num *= 10;
-    // printf("NUM%Lf\n", num);
     long double ten = 10;
     double res = fmod(num, ten);
-    //    res = round(res);
-    // printf("%f\n", res);
     buffer[index] = digitToAscii((int)res);
+  }
+  if (tempIndex == index - 1 && !flag->hashtag) {
+    buffer[tempIndex] = '\0';
   }
 }
 
 char digitToAscii(int a) { return 48 + a; }
+
+void eToString(double num, char *buffer, flags *flag) {
+  char temp[BUFFER_SIZE] = "";
+  int sign = 0;
+  int sign_mimus = 0;
+  int index = 0;
+  int sign_degree = 1;
+  int degree = 0;
+  int dot = 0;
+  int len = 0;
+  int notation = 10;
+  bool negative = num < 0 ? true : false;
+  num = negative ? -num : num;
+  double tempNum = num;
+  while (tempNum) {
+    if (tempNum < 1 && degree == 0) {
+      sign_degree = -1;
+      // degree = 1;
+      break;
+    }
+    if (tempNum < 1) {
+      break;
+    }
+    temp[sign] = digitToAscii((int)fmod(tempNum, notation));
+    degree++;
+    tempNum /= notation;
+    sign++;
+  }
+
+  if (negative) {
+    buffer[index] = '-';
+    // flag->precision++;
+    index++;
+    sign_mimus = 1;
+  }
+  len += strlen(temp);
+  if (index == 0 || negative && index == 1) {
+    buffer[index] = '0';
+    degree == index++;
+  } else {
+    buffer[index] = temp[len - 1];
+    index++;
+  }
+  buffer[index] = '.';
+  index++;
+
+  for (int j = len - 2; index < len + 1 + sign_mimus; index++, j--) {
+    buffer[index] = temp[j];
+  }
+  int tempIndex = index;
+  tempNum = num - (int)num;
+  tempNum = tempNum * pow(10, flag->precision);
+  tempNum = round(tempNum);
+  tempNum = tempNum / pow(10, flag->precision);
+  // buffer[index++] = '.';
+  for (int p = 0; p < (flag->precision - degree + 1); index++, p++) {
+    tempNum *= 10;
+    long double ten = 10;
+    double res = fmod(tempNum, ten);
+    buffer[index] = digitToAscii((int)res);
+  }
+  buffer[index] = 'e';
+  index++;
+  // temp[sign] = {0};
+  if (sign_degree == 1) {
+    buffer[index] = '+';
+  } else {
+    buffer[index] = '-';
+  }
+  index++;
+  degree--;
+  if (degree > 10) {
+    sign = 0;
+    while (degree > 0) {
+      temp[sign] = digitToAscii((int)fmod(degree, notation));
+      degree /= notation;
+      sign++;
+    }
+    for (s21_size_t j = sign - 1; j > 0; j--) {
+      buffer[index] = temp[j];
+      index++;
+    }
+  } else {
+    buffer[index] = '0';
+    index++;
+    buffer[index] = digitToAscii((int)fmod(degree, notation));
+  }
+  if (index == index - 1 && !flag->hashtag) {
+    buffer[index] = '\0';
+  }
+}

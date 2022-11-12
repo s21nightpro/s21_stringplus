@@ -47,3 +47,5 @@ unsigned long s21_usigned_atohex(const char *str);
 unsigned long s21_unsigned_ato0ct(const char *str);
 // void *s21_usigned_void_atohex(const char *str);
 char digit_to_ascii(int a);
+void eToString(double num, char *buffer, flags *flag);
+void eSpecifier(char *buffer, flags *flag, va_list var);
