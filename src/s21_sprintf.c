@@ -555,3 +555,6 @@ void eToString(double num, char *buffer, flags *flag) {
     buffer[index] = '\0';
   }
 }
+
+//надо проверять на значения чтобы всегда было больше 1? если нет вызывать
+//другую функцию
