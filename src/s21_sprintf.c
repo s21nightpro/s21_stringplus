@@ -10,9 +10,11 @@ int main() {
 
 void start() {
   char *stroka;
+  char *stroka2;
 //  char ch = 'l';
 //  wchar_t *wch = (wchar_t *)"world";
   stroka = (char *)malloc(300 * sizeof(char));
+  stroka2 = (char *)malloc(300 * sizeof(char));
 //  s21_sprintf(stroka, "Hello, %20s", "Hello, world");
 //  printf("%sEND\n", stroka);
 //  sprintf(stroka, "Hello, %20s", "Hello, world");
@@ -23,10 +25,10 @@ void start() {
 //    num *= 10;
 //  }
 //  printf("%f\n", num);
-  long double num = 4345.159;
+  long double num = 123;
   s21_sprintf(stroka, "Hello, %Lf", num);
   printf("%sEND\n", stroka);
-  sprintf(stroka, "Hello, %Lf", num);
+  sprintf(stroka2, "Hello, %Lf", num);
   printf("%sEND\n", stroka);
   free(stroka);
 }
@@ -449,6 +451,7 @@ void doubleToString(long double num, char *buffer, flags *flag) {
     buffer[index] = digitToAscii((int)res);
   }
 }
+
 
 char digitToAscii(int a) {
   return 48 + a;
