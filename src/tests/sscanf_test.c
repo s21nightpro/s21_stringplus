@@ -1,10 +1,4 @@
-/*
-#include <check.h>
-#include <locale.h>
-#include <stdio.h>
-#include <string.h>
-
-#include "../s21_string.h"
+#include "tests.h"
 
 #define SIZE 512
 
@@ -2182,215 +2176,200 @@ START_TEST(sscanf_hard5) {
   ck_assert_int_eq(a1, a2);
   ck_assert_int_eq(b1, b2);
   ck_assert_int_eq(c1, c2);
+}
+END_TEST
 
-  Suite *suite_sscanf() {
-    Suite *s = suite_create("suite_sscanf");
-    TCase *tc = tcase_create("sscanf_tc");
-    // // Flags: do nothing (unapplicable to this specifier)
-    tcase_add_test(tc, sscanf_EOF1);
-    tcase_add_test(tc, sscanf_EOF2);
-    tcase_add_test(tc, sscanf_EOF3);
+Suite *suite_sscanf() {
+  Suite *s = suite_create("suite_sscanf");
+  TCase *tc = tcase_create("sscanf_tc");
+  // // Flags: do nothing (unapplicable to this specifier)
+  tcase_add_test(tc, sscanf_EOF1);
+  tcase_add_test(tc, sscanf_EOF2);
+  tcase_add_test(tc, sscanf_EOF3);
 
-    // // [%c]
-    // // Flags:
-    // // [Width] - N: 0, 1 - Do nothing; N > 1 - Undefined beh.
-    // //          * - skips chars
-    // // [Precision] - Any precision flag immediately stops sscanf (error)
-    // // [Length] - Does nothing
-    tcase_add_test(tc, sscanf_only_chars1);
-    tcase_add_test(tc, sscanf_only_chars2);
-    tcase_add_test(tc, sscanf_only_chars3);
-    tcase_add_test(tc, sscanf_only_chars4);
-    tcase_add_test(tc, sscanf_only_chars5);
-    tcase_add_test(tc, sscanf_special_symbols_as_chars1);
-    tcase_add_test(tc, sscanf_special_symbols_as_chars2);
-    tcase_add_test(tc, sscanf_special_symbols_as_chars3);
-    tcase_add_test(tc, sscanf_chars_flags1);  // Precision flags lead to fail
-    tcase_add_test(tc,
-                   sscanf_chars_flags2);  // Width flags do nothing (if <= 1)
-    tcase_add_test(tc, sscanf_chars_flags3);  // Demonstrates how (*) works. * -
-    tcase_add_test(tc, sscanf_chars_flags4);  // Length flags do
-    tcase_add_test(tc, sscanf_chars_flags5);  // * flags - ignores char
-    // // Test cases specifically for (%*c), as this is very important concept
-    tcase_add_test(tc, sscanf_chars_aster1);
-    tcase_add_test(tc, sscanf_chars_aster2);
+  // // [%c]
+  // // Flags:
+  // // [Width] - N: 0, 1 - Do nothing; N > 1 - Undefined beh.
+  // //          * - skips chars
+  // // [Precision] - Any precision flag immediately stops sscanf (error)
+  // // [Length] - Does nothing
+  tcase_add_test(tc, sscanf_only_chars1);
+  tcase_add_test(tc, sscanf_only_chars2);
+  tcase_add_test(tc, sscanf_only_chars3);
+  tcase_add_test(tc, sscanf_only_chars4);
+  tcase_add_test(tc, sscanf_only_chars5);
+  tcase_add_test(tc, sscanf_special_symbols_as_chars1);
+  tcase_add_test(tc, sscanf_special_symbols_as_chars2);
+  tcase_add_test(tc, sscanf_special_symbols_as_chars3);
+  tcase_add_test(tc, sscanf_chars_flags1);  // Precision flags lead to fail
+  tcase_add_test(tc,
+                 sscanf_chars_flags2);      // Width flags do nothing (if <= 1)
+  tcase_add_test(tc, sscanf_chars_flags3);  // Demonstrates how (*) works. * -
+  tcase_add_test(tc, sscanf_chars_flags4);  // Length flags do
+  tcase_add_test(tc, sscanf_chars_flags5);  // * flags - ignores char
+  // // Test cases specifically for (%*c), as this is very important concept
+  tcase_add_test(tc, sscanf_chars_aster1);
+  tcase_add_test(tc, sscanf_chars_aster2);
 
-    // // [%d]/[%i]
-    // // [Width]: * - skip token, (N) - read N chars as a number
-    // // [Precision]: Not applicable to int, considered as UB
+  // // [%d]/[%i]
+  // // [Width]: * - skip token, (N) - read N chars as a number
+  // // [Precision]: Not applicable to int, considered as UB
 
-    // // Length (h, l, ll)
-    tcase_add_test(tc, sscanf_only_ints1);
-    tcase_add_test(tc, sscanf_only_ints2);
-    tcase_add_test(tc, sscanf_only_ints3);
-    // // Width (N)
-    tcase_add_test(tc, sscanf_ints_nwidth1);
-    tcase_add_test(tc, sscanf_ints_nwidth2);
-    tcase_add_test(tc, sscanf_ints_nwidth3);
-    tcase_add_test(tc, sscanf_ints_nwidth4);
-    // // Width (*)
-    tcase_add_test(tc, sscanf_ints_astwidth1);
-    tcase_add_test(tc, sscanf_ints_astwidth2);
-    tcase_add_test(tc, sscanf_ints_astwidth3);
-    tcase_add_test(tc, sscanf_ints_astwidth4);
-    // // Negative & positive ints
-    tcase_add_test(tc, sscanf_signed_ints1);
-    tcase_add_test(tc, sscanf_signed_ints2);
-    tcase_add_test(tc, sscanf_signed_ints3);
-    tcase_add_test(tc, sscanf_signed_ints4);
+  // // Length (h, l, ll)
+  tcase_add_test(tc, sscanf_only_ints1);
+  tcase_add_test(tc, sscanf_only_ints2);
+  tcase_add_test(tc, sscanf_only_ints3);
+  // // Width (N)
+  tcase_add_test(tc, sscanf_ints_nwidth1);
+  tcase_add_test(tc, sscanf_ints_nwidth2);
+  tcase_add_test(tc, sscanf_ints_nwidth3);
+  tcase_add_test(tc, sscanf_ints_nwidth4);
+  // // Width (*)
+  tcase_add_test(tc, sscanf_ints_astwidth1);
+  tcase_add_test(tc, sscanf_ints_astwidth2);
+  tcase_add_test(tc, sscanf_ints_astwidth3);
+  tcase_add_test(tc, sscanf_ints_astwidth4);
+  // // Negative & positive ints
+  tcase_add_test(tc, sscanf_signed_ints1);
+  tcase_add_test(tc, sscanf_signed_ints2);
+  tcase_add_test(tc, sscanf_signed_ints3);
+  tcase_add_test(tc, sscanf_signed_ints4);
 
-    // // // [%i] Specifier. It may be INT, OCT, HEX
-    tcase_add_test(tc, sscanf_spec_i_int1);
-    tcase_add_test(tc, sscanf_spec_i_int2);
-    // // Mixed with chars & ints
-    tcase_add_test(tc, sscanf_spec_i_int3);
-    tcase_add_test(tc, sscanf_spec_i_int4);
+  // // // [%i] Specifier. It may be INT, OCT, HEX
+  tcase_add_test(tc, sscanf_spec_i_int1);
+  tcase_add_test(tc, sscanf_spec_i_int2);
+  // // Mixed with chars & ints
+  tcase_add_test(tc, sscanf_spec_i_int3);
+  tcase_add_test(tc, sscanf_spec_i_int4);
 
-    tcase_add_test(tc, sscanf_spec_i_oct1);
-    tcase_add_test(tc, sscanf_spec_i_oct2);
-    tcase_add_test(tc, sscanf_spec_i_hex1);
-    tcase_add_test(tc, sscanf_spec_i_hex2);
+  tcase_add_test(tc, sscanf_spec_i_oct1);
+  tcase_add_test(tc, sscanf_spec_i_oct2);
+  tcase_add_test(tc, sscanf_spec_i_hex1);
+  tcase_add_test(tc, sscanf_spec_i_hex2);
 
-    // // [%s]
-    // // Width: (N) - parses N chars, (*) - пропустить строку
-    // // OUT: res = 4 (корректно парсит все в разные строки)
-    // // int res = sscanf("abobashlepafloppakoppa", "%5s %6s %6s %4s", s1, s2,
-    // // s3,
-    // // s4); Precision, length - not applicable
-    tcase_add_test(tc, sscanf_strings1);
-    tcase_add_test(tc, sscanf_strings2);
-    tcase_add_test(tc, sscanf_strings3);
-    tcase_add_test(tc, sscanf_strings4);
-    tcase_add_test(tc, sscanf_strings5);
-    tcase_add_test(tc, sscanf_strings6);
-    tcase_add_test(tc, sscanf_uint1);
-    tcase_add_test(tc, sscanf_uint2);
-    tcase_add_test(tc, sscanf_uint3);
-    tcase_add_test(tc, sscanf_uint4);
-    tcase_add_test(tc, sscanf_uint5);
-    tcase_add_test(tc, sscanf_uint6);
-    tcase_add_test(tc, sscanf_strings_mixed1);
-    tcase_add_test(tc, sscanf_strings_mixed2);
-    tcase_add_test(tc, sscanf_strings_mixed3);
+  // // [%s]
+  // // Width: (N) - parses N chars, (*) - пропустить строку
+  // // OUT: res = 4 (корректно парсит все в разные строки)
+  // // int res = sscanf("abobashlepafloppakoppa", "%5s %6s %6s %4s", s1, s2,
+  // // s3,
+  // // s4); Precision, length - not applicable
+  tcase_add_test(tc, sscanf_strings1);
+  tcase_add_test(tc, sscanf_strings2);
+  tcase_add_test(tc, sscanf_strings3);
+  tcase_add_test(tc, sscanf_strings4);
+  tcase_add_test(tc, sscanf_strings5);
+  tcase_add_test(tc, sscanf_strings6);
+  tcase_add_test(tc, sscanf_uint1);
+  tcase_add_test(tc, sscanf_uint2);
+  tcase_add_test(tc, sscanf_uint3);
+  tcase_add_test(tc, sscanf_uint4);
+  tcase_add_test(tc, sscanf_uint5);
+  tcase_add_test(tc, sscanf_uint6);
+  tcase_add_test(tc, sscanf_strings_mixed1);
+  tcase_add_test(tc, sscanf_strings_mixed2);
+  tcase_add_test(tc, sscanf_strings_mixed3);
 
-    // // [%f] [%g] [%G]
-    // // Width: (N) - parses N chars, (*) - пропустить строку
-    // // Precision: take it into account while parsing AFTER (.)
-    // // Length - l - long
-    tcase_add_test(tc, sscanf_floats1);
-    tcase_add_test(tc, sscanf_floats2);
-    tcase_add_test(tc, sscanf_floats3);
-    tcase_add_test(tc, sscanf_floats4);
-    tcase_add_test(tc, sscanf_floats5);
+  // // [%f] [%g] [%G]
+  // // Width: (N) - parses N chars, (*) - пропустить строку
+  // // Precision: take it into account while parsing AFTER (.)
+  // // Length - l - long
+  tcase_add_test(tc, sscanf_floats1);
+  tcase_add_test(tc, sscanf_floats2);
+  tcase_add_test(tc, sscanf_floats3);
+  tcase_add_test(tc, sscanf_floats4);
+  tcase_add_test(tc, sscanf_floats5);
 
-    tcase_add_test(tc, sscanf_floats_sci1);
-    tcase_add_test(tc, sscanf_floats_sci2);
-    tcase_add_test(tc, sscanf_floats_sci3);
-    tcase_add_test(tc, sscanf_floats_sci4);
-    tcase_add_test(tc, sscanf_floats_sci5);
+  tcase_add_test(tc, sscanf_floats_sci1);
+  tcase_add_test(tc, sscanf_floats_sci2);
+  tcase_add_test(tc, sscanf_floats_sci3);
+  tcase_add_test(tc, sscanf_floats_sci4);
+  tcase_add_test(tc, sscanf_floats_sci5);
 
-    // // [%n] specifier
-    tcase_add_test(tc, sscanf_n1);
-    tcase_add_test(tc, sscanf_n2);
-    tcase_add_test(tc, sscanf_n3);
-    tcase_add_test(tc, sscanf_n4);
-    tcase_add_test(tc, sscanf_n5);
+  // // [%n] specifier
+  tcase_add_test(tc, sscanf_n1);
+  tcase_add_test(tc, sscanf_n2);
+  tcase_add_test(tc, sscanf_n3);
+  tcase_add_test(tc, sscanf_n4);
+  tcase_add_test(tc, sscanf_n5);
 
-    tcase_add_test(tc, sscanf_upeer_hex_base_version);
-    tcase_add_test(tc, sscanf_upeer_hex_overflow);
-    tcase_add_test(tc, sscanf_upeer_hex_0x);
-    tcase_add_test(tc, sscanf_upeer_hex_0X);
-    tcase_add_test(tc, sscanf_upeer_hex_empty);
-    tcase_add_test(tc, sscanf_upeer_hex_fail);
-    tcase_add_test(tc, sscanf_upeer_hex_spaces_tabs_sns);
-    tcase_add_test(tc, sscanf_upeer_hex_short);
-    tcase_add_test(tc, sscanf_upeer_hex_long);
-    tcase_add_test(tc, sscanf_upeer_hex_longlong);
-    tcase_add_test(tc, sscanf_upeer_hex_2x);
-    tcase_add_test(tc, sscanf_upeer_hex_star);
-    tcase_add_test(tc, sscanf_upeer_hex_nohex);
-    tcase_add_test(tc, sscanf_upeer_hex_lower);
-    tcase_add_test(tc, sscanf_upeer_hex_sign);
-    tcase_add_test(tc, upper_hex_len);
+  tcase_add_test(tc, sscanf_upeer_hex_base_version);
+  tcase_add_test(tc, sscanf_upeer_hex_overflow);
+  tcase_add_test(tc, sscanf_upeer_hex_0x);
+  tcase_add_test(tc, sscanf_upeer_hex_0X);
+  tcase_add_test(tc, sscanf_upeer_hex_empty);
+  tcase_add_test(tc, sscanf_upeer_hex_fail);
+  tcase_add_test(tc, sscanf_upeer_hex_spaces_tabs_sns);
+  tcase_add_test(tc, sscanf_upeer_hex_short);
+  tcase_add_test(tc, sscanf_upeer_hex_long);
+  tcase_add_test(tc, sscanf_upeer_hex_longlong);
+  tcase_add_test(tc, sscanf_upeer_hex_2x);
+  tcase_add_test(tc, sscanf_upeer_hex_star);
+  tcase_add_test(tc, sscanf_upeer_hex_nohex);
+  tcase_add_test(tc, sscanf_upeer_hex_lower);
+  tcase_add_test(tc, sscanf_upeer_hex_sign);
+  tcase_add_test(tc, upper_hex_len);
 
-    tcase_add_test(tc, sscanf_lower_hex_base_version);
-    tcase_add_test(tc, sscanf_lower_hex_overflow);
-    tcase_add_test(tc, sscanf_lower_hex_0x);
-    tcase_add_test(tc, sscanf_lower_hex_0X);
-    tcase_add_test(tc, sscanf_lower_hex_empty);
-    tcase_add_test(tc, sscanf_lower_hex_fail);
-    tcase_add_test(tc, sscanf_lower_hex_spaces_tabs_sns);
-    tcase_add_test(tc, sscanf_lower_hex_short);
-    tcase_add_test(tc, sscanf_lower_hex_long);
-    tcase_add_test(tc, sscanf_lower_hex_longlong);
-    tcase_add_test(tc, sscanf_lower_hex_2x);
-    tcase_add_test(tc, sscanf_lower_hex_star);
-    tcase_add_test(tc, sscanf_lower_hex_nohex);
-    tcase_add_test(tc, sscanf_lower_hex_lower);
-    tcase_add_test(tc, sscanf_lower_hex_sign);
-    tcase_add_test(tc, sscanf_lower_hex_len);
+  tcase_add_test(tc, sscanf_lower_hex_base_version);
+  tcase_add_test(tc, sscanf_lower_hex_overflow);
+  tcase_add_test(tc, sscanf_lower_hex_0x);
+  tcase_add_test(tc, sscanf_lower_hex_0X);
+  tcase_add_test(tc, sscanf_lower_hex_empty);
+  tcase_add_test(tc, sscanf_lower_hex_fail);
+  tcase_add_test(tc, sscanf_lower_hex_spaces_tabs_sns);
+  tcase_add_test(tc, sscanf_lower_hex_short);
+  tcase_add_test(tc, sscanf_lower_hex_long);
+  tcase_add_test(tc, sscanf_lower_hex_longlong);
+  tcase_add_test(tc, sscanf_lower_hex_2x);
+  tcase_add_test(tc, sscanf_lower_hex_star);
+  tcase_add_test(tc, sscanf_lower_hex_nohex);
+  tcase_add_test(tc, sscanf_lower_hex_lower);
+  tcase_add_test(tc, sscanf_lower_hex_sign);
+  tcase_add_test(tc, sscanf_lower_hex_len);
 
-    tcase_add_test(tc, sscanf_octal_base_version);
-    tcase_add_test(tc, sscanf_octal_overflow);
-    tcase_add_test(tc, sscanf_octal_0x);
-    tcase_add_test(tc, sscanf_octal_0X);
-    tcase_add_test(tc, sscanf_octal_empty);
-    tcase_add_test(tc, sscanf_octal_fail);
-    tcase_add_test(tc, sscanf_octal_spaces_tabs_sns);
-    tcase_add_test(tc, sscanf_octal_short);
-    tcase_add_test(tc, sscanf_octal_long);
-    tcase_add_test(tc, sscanf_octal_longlong);
-    tcase_add_test(tc, sscanf_octal_2x);
-    tcase_add_test(tc, sscanf_octal_star);
-    tcase_add_test(tc, sscanf_octal_nohex);
-    tcase_add_test(tc, sscanf_octal_lower);
-    tcase_add_test(tc, sscanf_octal_sign);
-    tcase_add_test(tc, sscanf_octal_len);
+  tcase_add_test(tc, sscanf_octal_base_version);
+  tcase_add_test(tc, sscanf_octal_overflow);
+  tcase_add_test(tc, sscanf_octal_0x);
+  tcase_add_test(tc, sscanf_octal_0X);
+  tcase_add_test(tc, sscanf_octal_empty);
+  tcase_add_test(tc, sscanf_octal_fail);
+  tcase_add_test(tc, sscanf_octal_spaces_tabs_sns);
+  tcase_add_test(tc, sscanf_octal_short);
+  tcase_add_test(tc, sscanf_octal_long);
+  tcase_add_test(tc, sscanf_octal_longlong);
+  tcase_add_test(tc, sscanf_octal_2x);
+  tcase_add_test(tc, sscanf_octal_star);
+  tcase_add_test(tc, sscanf_octal_nohex);
+  tcase_add_test(tc, sscanf_octal_lower);
+  tcase_add_test(tc, sscanf_octal_sign);
+  tcase_add_test(tc, sscanf_octal_len);
 
-    tcase_add_test(tc, sscanf_pointer1);
-    tcase_add_test(tc, sscanf_pointer2);
-    tcase_add_test(tc, sscanf_pointer3);
-    tcase_add_test(tc, sscanf_pointer4);
+  tcase_add_test(tc, sscanf_pointer1);
+  tcase_add_test(tc, sscanf_pointer2);
+  tcase_add_test(tc, sscanf_pointer3);
+  tcase_add_test(tc, sscanf_pointer4);
 
-    tcase_add_test(tc, sscanf_buff1);
-    tcase_add_test(tc, sscanf_buff2);
-    tcase_add_test(tc, sscanf_buff3);
+  tcase_add_test(tc, sscanf_buff1);
+  tcase_add_test(tc, sscanf_buff2);
+  tcase_add_test(tc, sscanf_buff3);
 
-    tcase_add_test(tc, sscanf_perc1);
-    tcase_add_test(tc, sscanf_perc2);
-    tcase_add_test(tc, sscanf_perc3);
-    tcase_add_test(tc, sscanf_perc4);
-    tcase_add_test(tc, sscanf_perc5);
+  tcase_add_test(tc, sscanf_perc1);
+  tcase_add_test(tc, sscanf_perc2);
+  tcase_add_test(tc, sscanf_perc3);
+  tcase_add_test(tc, sscanf_perc4);
+  tcase_add_test(tc, sscanf_perc5);
 
-    tcase_add_test(tc, sscanf_mixed_ptrs1);
-    tcase_add_test(tc, sscanf_mixed_ptrs2);
-    tcase_add_test(tc, sscanf_mixed_ptrs3);
-    tcase_add_test(tc, sscanf_mixed_ptrs4);
-    tcase_add_test(tc, sscanf_mixed_ptrs5);
+  tcase_add_test(tc, sscanf_mixed_ptrs1);
+  tcase_add_test(tc, sscanf_mixed_ptrs2);
+  tcase_add_test(tc, sscanf_mixed_ptrs3);
+  tcase_add_test(tc, sscanf_mixed_ptrs4);
+  tcase_add_test(tc, sscanf_mixed_ptrs5);
 
-    // // Hard mixed tests
-    tcase_add_test(tc, sscanf_hard1);
-    tcase_add_test(tc, sscanf_hard3);
-    tcase_add_test(tc, sscanf_hard4);
-    tcase_add_test(tc, sscanf_hard5);
+  // // Hard mixed tests
+  tcase_add_test(tc, sscanf_hard1);
+  tcase_add_test(tc, sscanf_hard3);
+  tcase_add_test(tc, sscanf_hard4);
+  tcase_add_test(tc, sscanf_hard5);
 
-    suite_add_tcase(s, tc);
-    return s;
-  }
-
-  int main() {
-    setlocale(LC_ALL, "");
-    int nf;
-    Suite *s1;
-    SRunner *sr;
-    s1 = suite_sscanf();
-    sr = srunner_create(s1);
-
-    srunner_set_fork_status(sr, CK_NOFORK);
-    srunner_run_all(sr, CK_VERBOSE);
-
-    nf = srunner_ntests_failed(sr);
-    srunner_free(sr);
-    return nf == 0 ? 0 : 1;
-  }
-  */
+  suite_add_tcase(s, tc);
+  return s;
+}

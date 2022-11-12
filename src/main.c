@@ -21,19 +21,15 @@ void run_testcase(Suite *testcase) {
 }
 
 void run_tests(void) {
-  Suite *list_cases[] = {suite_memchr(),   suite_memcmp(),
-                         suite_memcpy(),   suite_memmove(),
-                         suite_memset(),   suite_strcat(),
-                         suite_strncat(),  suite_strchr(),
-                         suite_strcmp(),   suite_strncmp(),
-                         suite_strcpy(),   suite_strncpy(),
-                         suite_strcspn(),  suite_strerror(),
-                         suite_strlen(),   suite_strpbrk(),
-                         suite_strrchr(),  suite_strspn(),
-                         suite_strstr(),   suite_insert(),
-                         suite_to_lower(), suite_to_upper(),
-                         suite_trim(),     suite_strtok(),
-                         suite_atoi(),     NULL};
+  Suite *list_cases[] = {suite_memchr(),   suite_memcmp(),   suite_memcpy(),
+                         suite_memmove(),  suite_memset(),   suite_strcat(),
+                         suite_strncat(),  suite_strchr(),   suite_strcmp(),
+                         suite_strncmp(),  suite_strcpy(),   suite_strncpy(),
+                         suite_strcspn(),  suite_strerror(), suite_strlen(),
+                         suite_strpbrk(),  suite_strrchr(),  suite_strspn(),
+                         suite_strstr(),   suite_insert(),   suite_to_lower(),
+                         suite_to_upper(), suite_trim(),     suite_strtok(),
+                         suite_atoi(),     suite_sscanf(),   NULL};
   for (Suite **current_testcase = list_cases; *current_testcase != NULL;
        current_testcase++) {
     run_testcase(*current_testcase);
