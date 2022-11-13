@@ -44,6 +44,7 @@ void stringSpecifier(char *buffer, flags *flag, va_list var);
 void widthStringSpecifier(char *buffer, flags *flag, va_list var);
 void integerSpecifier(char *buffer, flags *flag, va_list var);
 void unsignedSpecifier(char *buffer, flags *flag, va_list var);
+void octalSpecifier(char *buffer, flags *flag, va_list var);
 void floatSpecifier(char *buffer, flags *flag, va_list var);
 void exponentSpecifier(char *buffer, flags *flag, va_list var);
 
@@ -55,5 +56,6 @@ void putExponentToString(char *buffer, int pow, char sign);
 void formatPrecision(char *buffer, flags *flag);
 void formatFlags(char *buffer, flags *flag);
 
+void toUpper(char *buffer);
 char digitToAscii(int a);
 int asciiToDigit(char a);

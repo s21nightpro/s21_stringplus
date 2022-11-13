@@ -13,10 +13,10 @@ void start() {
   char *stroka2;
   stroka = (char *)malloc(300 * sizeof(char));
   stroka2 = (char *)malloc(300 * sizeof(char));
-  long double num = -9874.844;
-  s21_sprintf(stroka, "Hello, %.18Le", num);
+  unsigned int num = 00;
+  s21_sprintf(stroka, "Hello, %.0o", num);
   printf("%sEND\n", stroka);
-  sprintf(stroka2, "Hello, %.18Le", num);
+  sprintf(stroka2, "Hello, %.0o", num);
   printf("%sEND\n", stroka2);
   free(stroka);
   free(stroka2);
@@ -135,6 +135,8 @@ char *specifier(char *str, flags *flag, va_list var) {
     integerSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'u') {
     unsignedSpecifier(buffer, flag, var);
+  } else if (flag->specifier == 'o') {
+    octalSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'f') {
     floatSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'e' || flag->specifier == 'E') {
@@ -157,6 +159,10 @@ char *specifier(char *str, flags *flag, va_list var) {
     }
   } else {
     buffer[0] = flag->specifier;
+  }
+  if (flag->specifier == 'G' || flag->specifier == 'X' ||
+      flag->specifier == 'E') {
+    toUpper(buffer);
   }
 
   for (int i = 0; buffer[i]; i++, str++) {
@@ -460,6 +466,7 @@ void doubleToString(long double num, char *buffer, flags *flag) {
 }
 
 char digitToAscii(int a) { return 48 + a; }
+
 int asciiToDigit(char a) { return a - 48; }
 
 void exponentSpecifier(char *buffer, flags *flag, va_list var) {
@@ -503,4 +510,20 @@ void putExponentToString(char *buffer, int pow, char sign) {
   pow /= 10;
   buffer[len + 2] = digitToAscii(pow % 10);
   buffer[len + 4] = '\0';
+}
+
+void toUpper(char *buffer) {
+  for (int i = 0; i < strlen(buffer); i++) {
+    if (buffer[i] >= 97 && buffer[i] <= 122) {
+      buffer[i] -= 32;
+    }
+  }
+}
+
+void octalSpecifier(char *buffer, flags *flag, va_list var) {
+  buffer[0] = '0';
+  int64_t num = va_arg(var, int64_t);
+  integerToString(buffer + flag->hashtag, num, 8);
+  formatPrecision(buffer, flag);
+  formatFlags(buffer, flag);
 }
