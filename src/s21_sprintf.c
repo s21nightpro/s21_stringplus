@@ -13,10 +13,10 @@ void start() {
   char *stroka2;
   stroka = (char *)malloc(300 * sizeof(char));
   stroka2 = (char *)malloc(300 * sizeof(char));
-  unsigned int num = 0x0001;
-  s21_sprintf(stroka, "Hello, % p", &num);
+  long double num = -23;
+  s21_sprintf(stroka, "Hello, %#Lg", &num);
   printf("%sEND\n", stroka);
-  sprintf(stroka2, "Hello, % p", &num);
+  sprintf(stroka2, "Hello, %#Lg", num);
   printf("%sEND\n", stroka2);
   free(stroka);
   free(stroka2);
@@ -144,21 +144,13 @@ char *specifier(char *str, flags *flag, va_list var) {
   } else if (flag->specifier == 'e' || flag->specifier == 'E') {
     exponentSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'g' || flag->specifier == 'G') {
-
+    gSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'x' || flag->specifier == 'X') {
     hexSpecifier(buffer, flag, var);
   } else if (flag->specifier == 's') {
-    if (flag->length == 'l') {
-      widthStringSpecifier(buffer, flag, var);
-    } else {
-      stringSpecifier(buffer, flag, var);
-    }
+    sSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'c') {
-    if (flag->length == 'l') {
-      widthCharSpecifier(buffer, flag, var);
-    } else {
-      charSpecifier(buffer, flag, var);
-    }
+    cSpecifier(buffer, flag, var);
   } else {
     buffer[0] = flag->specifier;
   }
@@ -172,6 +164,22 @@ char *specifier(char *str, flags *flag, va_list var) {
   }
   *str = '\0';
   return str;
+}
+
+void cSpecifier(char *buffer, flags *flag, va_list var) {
+  if (flag->length == 'l') {
+    widthCharSpecifier(buffer, flag, var);
+  } else {
+    charSpecifier(buffer, flag, var);
+  }
+}
+
+void sSpecifier(char *buffer, flags *flag, va_list var) {
+  if (flag->length == 'l') {
+    widthStringSpecifier(buffer, flag, var);
+  } else {
+    stringSpecifier(buffer, flag, var);
+  }
 }
 
 void charSpecifier(char *buffer, flags *flag, va_list var) {
@@ -265,29 +273,13 @@ void integerSpecifier(char *buffer, flags *flag, va_list var) {
   if (flag->length == 0) {
     num = (int32_t)num;
   } else if (flag->length == 'h') {
-    num = (int16_t) num;
+    num = (int16_t)num;
   }
 
   integerToString(buffer, num, 10);
   formatPrecision(buffer, flag);
   formatFlags(buffer, flag);
 }
-
-/// ?DELETE?
-int numsCount(int64_t num) {
-  // count of digits in number
-  int result = 0;
-  if (!num) {
-    result = 1;
-  } else {
-    while (num) {
-      num /= 10;
-      result++;
-    }
-  }
-  return result;
-}
-/// ?DELETE?
 
 void integerToString(char *buffer, int64_t num, int notation) {
   char temp[BUFFER_SIZE] = "";
@@ -410,11 +402,11 @@ void floatSpecifier(char *buffer, flags *flag, va_list var) {
     flag->precision = 6;
   }
 
-  doubleToString(num, buffer, flag);
+  doubleToString(buffer, num, flag);
   formatFlags(buffer, flag);
 }
 
-void doubleToString(long double num, char *buffer, flags *flag) {
+void doubleToString(char *buffer, long double num, flags *flag) {
   char temp[BUFFER_SIZE] = "";
   int sign = 0;
   int notation = 10;
@@ -455,22 +447,17 @@ void doubleToString(long double num, char *buffer, flags *flag) {
     }
   } else {
     int len = strlen(tempRightPart);
-    for (int i = len, j = 0; rightPart || i > 0;
-         rightPart /= 10, i--, j++) {
+    for (int i = len, j = 0; rightPart || i > 0; rightPart /= 10, i--, j++) {
       tempRightPart[j] = digitToAscii((int)(rightPart % 10 + 0.5));
     }
     for (int i = len; i > 0; i--) {
-      buffer[index++] = tempRightPart[i-1];
+      buffer[index++] = tempRightPart[i - 1];
     }
   }
   if (tempIndex == index - 1 && !flag->hashtag) {
     buffer[tempIndex] = '\0';
   }
 }
-
-char digitToAscii(int a) { return 48 + a; }
-
-int asciiToDigit(char a) { return a - 48; }
 
 void exponentSpecifier(char *buffer, flags *flag, va_list var) {
   long double num;
@@ -481,17 +468,17 @@ void exponentSpecifier(char *buffer, flags *flag, va_list var) {
   }
 
   int pow = 0;
-  char sign = (int) num == 0 ? '-' : '+';
+  char sign = (int)num == 0 ? '-' : '+';
 
-  if ((int) num - num) {
-    while ((int) num == 0) {
+  if ((int)num - num) {
+    while ((int)num == 0) {
       pow++;
       num *= 10;
     }
   } else {
     sign = '+';
   }
-  while ((int) num / 10 != 0) {
+  while ((int)num / 10 != 0) {
     pow++;
     num /= 10;
   }
@@ -500,7 +487,7 @@ void exponentSpecifier(char *buffer, flags *flag, va_list var) {
     flag->precision = 6;
   }
 
-  doubleToString(num, buffer, flag);
+  doubleToString(buffer, num, flag);
   putExponentToString(buffer, pow, sign);
   formatFlags(buffer, flag);
 }
@@ -515,14 +502,6 @@ void putExponentToString(char *buffer, int pow, char sign) {
   buffer[len + 4] = '\0';
 }
 
-void toUpper(char *buffer) {
-  for (int i = 0; i < strlen(buffer); i++) {
-    if (buffer[i] >= 97 && buffer[i] <= 122) {
-      buffer[i] -= 32;
-    }
-  }
-}
-
 void octalSpecifier(char *buffer, flags *flag, va_list var) {
   buffer[0] = '0';
   int64_t num = va_arg(var, int64_t);
@@ -535,9 +514,9 @@ void hexSpecifier(char *buffer, flags *flag, va_list var) {
   uint64_t num = va_arg(var, uint64_t);
 
   if (flag->length == 0) {
-    num = (uint32_t) num;
+    num = (uint32_t)num;
   } else if (flag->length == 'h') {
-    num = (uint16_t) num;
+    num = (uint16_t)num;
   }
 
   unsignedToString(buffer, num, 16);
@@ -569,3 +548,92 @@ void pointerSpecifier(char *buffer, flags *flag, va_list var) {
   insertDecimalOx(buffer, flag);
   formatFlags(buffer, flag);
 }
+
+void gSpecifier(char *buffer, flags *flag, va_list var) {
+  long double num;
+  if (flag->length == 'L') {
+    num = va_arg(var, long double);
+  } else {
+    num = va_arg(var, double);
+  }
+
+  if (!flag->isPrecisionSet) {
+    flag->precision = 6;
+  }
+  if (flag->precision == 0) {
+    flag->precision = 1;
+  }
+
+  int digitCount = numsCount((int)num);
+  if (digitCount > flag->precision) {
+    int pow = 0;
+    char sign = (int)num == 0 ? '-' : '+';
+    if ((int)num - num) {
+      while ((int)num == 0) {
+        pow++;
+        num *= 10;
+      }
+    } else {
+      sign = '+';
+    }
+    while ((int)num / 10 != 0) {
+      pow++;
+      num /= 10;
+    }
+    flag->precision--;
+    doubleToString(buffer, num, flag);
+    putExponentToString(buffer, pow, sign);
+  } else {
+    flag->precision = flag->precision - digitCount;
+    doubleToString(buffer, num, flag);
+  }
+
+  if (!flag->hashtag) {
+    deleteZeroesFromEnd(buffer);
+  }
+  formatFlags(buffer, flag);
+}
+
+void deleteZeroesFromEnd(char *buffer) {
+  int len = strlen(buffer);
+  char temp[BUFFER_SIZE] = "";
+  for (int i = 0; i < len; i++) {
+    temp[i] = buffer[len - i - 1];
+  }
+  int i = 0;
+  for ( ; i < len; i++) {
+    if (temp[i] == '0') {
+      buffer[len - i - 1] = '\0';
+    } else {
+      break;
+    }
+  }
+  if (buffer[len - i - 1] == '.') {
+    buffer[len - i - 1] = '\0';
+  }
+}
+
+void toUpper(char *buffer) {
+  for (int i = 0; i < strlen(buffer); i++) {
+    if (buffer[i] >= 97 && buffer[i] <= 122) {
+      buffer[i] -= 32;
+    }
+  }
+}
+
+int numsCount(int64_t num) {
+  int result = 0;
+  if (!num) {
+    result = 1;
+  } else {
+    while (num) {
+      num /= 10;
+      result++;
+    }
+  }
+  return result;
+}
+
+char digitToAscii(int a) { return 48 + a; }
+
+int asciiToDigit(char a) { return a - 48; }

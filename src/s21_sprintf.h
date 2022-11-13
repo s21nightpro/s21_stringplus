@@ -38,6 +38,9 @@ const char *parsePrecision(const char *format, flags *f, va_list var);
 const char *parseLength(const char *format, flags *f);
 
 char *specifier(char *str, flags*, va_list);
+void gSpecifier(char *buffer, flags *flag, va_list var);
+void cSpecifier(char *buffer, flags *flag, va_list var);
+void sSpecifier(char *buffer, flags *flag, va_list var);
 void charSpecifier(char *buffer, flags *flag, va_list var);
 void widthCharSpecifier(char *buffer, flags *flag, va_list var);
 void stringSpecifier(char *buffer, flags *flag, va_list var);
@@ -50,15 +53,17 @@ void hexSpecifier(char *buffer, flags *flag, va_list var);
 void floatSpecifier(char *buffer, flags *flag, va_list var);
 void exponentSpecifier(char *buffer, flags *flag, va_list var);
 
+
 void integerToString(char *buffer, int64_t num, int notation);
 void unsignedToString(char *buffer, uint64_t num, int notation);
-void doubleToString(long double num, char *buffer, flags *flag);
+void doubleToString(char *buffer, long double num, flags *flag);
 void putExponentToString(char *buffer, int pow, char sign);
 
 void formatPrecision(char *buffer, flags *flag);
 void formatFlags(char *buffer, flags *flag);
 
 void insertDecimalOx(char *buffer, flags *flag);
+void deleteZeroesFromEnd(char *buffer);
 void toUpper(char *buffer);
 char digitToAscii(int a);
 int asciiToDigit(char a);
