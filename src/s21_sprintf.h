@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
+#include "s21_string.h"
 #define BUFFER_SIZE 1024
 
 // A format specifier for print functions follows this prototype:
@@ -14,7 +14,7 @@
 typedef struct {
   bool minus;  // Left-justify within the given field width
   bool plus;  // Forces to precede the result with a plus or minus sign (+ or -)
-  // even for positive numbers
+              // even for positive numbers
   bool space;  // If no sign is going to be written, a blank space is inserted
   // before the value
   bool hashtag;   // Made some math things with some specifiers
@@ -43,11 +43,21 @@ void stringSpecifier(char *buffer, flags *flag, va_list var);
 void widthStringSpecifier(char *buffer, flags *flag, va_list var);
 void integerSpecifier(char *buffer, flags *flag, va_list var);
 void unsignedSpecifier(char *buffer, flags *flag, va_list var);
+void octalSpecifier(char *buffer, flags *flag, va_list var);
+void pointerSpecifier(char *buffer, flags *flag, va_list var);
+void hexSpecifier(char *buffer, flags *flag, va_list var);
 void floatSpecifier(char *buffer, flags *flag, va_list var);
+void exponentSpecifier(char *buffer, flags *flag, va_list var);
 
 void integerToString(char *buffer, int64_t num, int notation);
 void unsignedToString(char *buffer, uint64_t num, int notation);
 void doubleToString(long double num, char *buffer, flags *flag);
-char digitToAscii(int a);
+void putExponentToString(char *buffer, int pow, char sign);
+
 void formatPrecision(char *buffer, flags *flag);
 void formatFlags(char *buffer, flags *flag);
+
+void insertDecimalOx(char *buffer, flags *flag);
+void toUpper(char *buffer);
+char digitToAscii(int a);
+int asciiToDigit(char a);

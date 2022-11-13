@@ -1,6 +1,5 @@
 #include "s21_sprintf.h"
 
-#include "s21_sscanf.h"
 // A format specifier for print functions follows this prototype:
 // %[flags][width][.precision][length]specifier
 
@@ -14,10 +13,10 @@ void start() {
   char *stroka2;
   stroka = (char *)malloc(300 * sizeof(char));
   stroka2 = (char *)malloc(300 * sizeof(char));
-  double num = -.047999982222;
-  s21_sprintf(stroka, "Hello, %e", num);
+  unsigned int num = 0x0001;
+  s21_sprintf(stroka, "Hello, % p", &num);
   printf("%sEND\n", stroka);
-  sprintf(stroka2, "Hello, %e", num);
+  sprintf(stroka2, "Hello, % p", &num);
   printf("%sEND\n", stroka2);
   free(stroka);
   free(stroka2);
@@ -131,18 +130,22 @@ const char *parseLength(const char *format, flags *f) {
 }
 
 char *specifier(char *str, flags *flag, va_list var) {
-  // create buffer
   char buffer[BUFFER_SIZE] = "";
   if (flag->specifier == 'd' || flag->specifier == 'i') {
     integerSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'u') {
     unsignedSpecifier(buffer, flag, var);
+  } else if (flag->specifier == 'o') {
+    octalSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'f') {
     floatSpecifier(buffer, flag, var);
+  } else if (flag->specifier == 'p') {
+    pointerSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'e' || flag->specifier == 'E') {
-    eSpecifier(buffer, flag, var);
+    exponentSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'g' || flag->specifier == 'G') {
   } else if (flag->specifier == 'x' || flag->specifier == 'X') {
+    hexSpecifier(buffer, flag, var);
   } else if (flag->specifier == 's') {
     if (flag->length == 'l') {
       widthStringSpecifier(buffer, flag, var);
@@ -158,8 +161,11 @@ char *specifier(char *str, flags *flag, va_list var) {
   } else {
     buffer[0] = flag->specifier;
   }
+  if (flag->specifier == 'G' || flag->specifier == 'X' ||
+      flag->specifier == 'E') {
+    toUpper(buffer);
+  }
 
-  // add buffer to str
   for (int i = 0; buffer[i]; i++, str++) {
     *str = buffer[i];
   }
@@ -191,16 +197,16 @@ void widthCharSpecifier(char *buffer, flags *flag, va_list var) {
   wchar_t ch = va_arg(var, wchar_t);
   if (flag->minus && flag->width) {
     wcstombs(buffer, &ch, BUFFER_SIZE);
-    for (int i = strlen(buffer); i < flag->width; i++) {
+    for (int i = s21_strlen(buffer); i < flag->width; i++) {
       buffer[i] = ' ';
     }
   } else if (flag->width) {
     char temp[BUFFER_SIZE] = "";
-    wcstombs(temp, &ch, BUFFER_SIZE);
-    for (int i = 0; i < flag->width - strlen(temp); i++) {
+    wcstombs(temp, &ch, BUFFER_SIZE);  // ? нельзя
+    for (int i = 0; i < flag->width - s21_strlen(temp); i++) {
       buffer[i] = ' ';
     }
-    strcat(buffer, temp);
+    s21_strcat(buffer, temp);
   } else {
     wcstombs(buffer, &ch, BUFFER_SIZE);
   }
@@ -209,22 +215,22 @@ void widthCharSpecifier(char *buffer, flags *flag, va_list var) {
 void stringSpecifier(char *buffer, flags *flag, va_list var) {
   char *input = va_arg(var, char *);
   char tempInput[BUFFER_SIZE] = "";
-  strcpy(tempInput, input);
+  s21_strcpy(tempInput, input);
   if (flag->isPrecisionSet) {
     tempInput[flag->precision] = '\0';
   }
 
-  int shift = flag->width - strlen(tempInput);
-  int lengthInput = strlen(tempInput);
+  int shift = flag->width - s21_strlen(tempInput);
+  int lengthInput = s21_strlen(tempInput);
 
   if (flag->minus && shift > 0) {
-    strcpy(buffer, tempInput);
-    memset(buffer + lengthInput, ' ', shift);
+    s21_strcpy(buffer, tempInput);
+    s21_memset(buffer + lengthInput, ' ', shift);
   } else if (shift > 0) {
-    memset(buffer, ' ', shift);
-    strcpy(buffer + shift, tempInput);
+    s21_memset(buffer, ' ', shift);
+    s21_strcpy(buffer + shift, tempInput);
   } else {
-    strcpy(buffer, tempInput);
+    s21_strcpy(buffer, tempInput);
   }
 }
 
@@ -233,22 +239,22 @@ void widthStringSpecifier(char *buffer, flags *flag, va_list var) {
   char tempInput[BUFFER_SIZE] = "";
   char fromWcharToChar[BUFFER_SIZE] = "";
   wcstombs(fromWcharToChar, input, BUFFER_SIZE);
-  strcpy(tempInput, fromWcharToChar);
+  s21_strcpy(tempInput, fromWcharToChar);
   if (flag->isPrecisionSet) {
     tempInput[flag->precision] = '\0';
   }
 
-  int shift = flag->width - strlen(tempInput);
-  int lengthInput = strlen(tempInput);
+  int shift = flag->width - s21_strlen(tempInput);
+  int lengthInput = s21_strlen(tempInput);
 
   if (flag->minus && shift > 0) {
-    strcpy(buffer, tempInput);
-    memset(buffer + lengthInput, ' ', shift);
+    s21_strcpy(buffer, tempInput);
+    s21_memset(buffer + lengthInput, ' ', shift);
   } else if (shift > 0) {
-    memset(buffer, ' ', shift);
-    strcpy(buffer + shift, tempInput);
+    s21_memset(buffer, ' ', shift);
+    s21_strcpy(buffer + shift, tempInput);
   } else {
-    strcpy(buffer, tempInput);
+    s21_strcpy(buffer, tempInput);
   }
 }
 
@@ -298,7 +304,7 @@ void integerToString(char *buffer, int64_t num, int notation) {
   if (negative) {
     temp[sign] = '-';
   }
-  int len = strlen(temp);
+  int len = s21_strlen(temp);
   for (int i = 0, j = len - 1; i < len; i++, j--) {
     buffer[i] = temp[j];
   }
@@ -315,7 +321,7 @@ void unsignedToString(char *buffer, uint64_t num, int notation) {
     num /= notation;
     sign++;
   }
-  int len = strlen(temp);
+  int len = s21_strlen(temp);
   for (int i = 0, j = len - 1; i < len; i++, j--) {
     buffer[i] = temp[j];
   }
@@ -323,7 +329,7 @@ void unsignedToString(char *buffer, uint64_t num, int notation) {
 
 void formatPrecision(char *buffer, flags *flag) {
   char temp[BUFFER_SIZE] = "";
-  int len = strlen(buffer);
+  int len = s21_strlen(buffer);
   int sign = 0;
   if (buffer[0] == '-') {
     temp[0] = '-';
@@ -339,7 +345,7 @@ void formatPrecision(char *buffer, flags *flag) {
     for (int j = sign; buffer[j]; j++, i++) {
       temp[i] = buffer[j];
     }
-    strcpy(buffer, temp);
+    s21_strcpy(buffer, temp);
   }
 
   bool isInteger = flag->specifier == 'd' || flag->specifier == 'i' ||
@@ -354,25 +360,26 @@ void formatPrecision(char *buffer, flags *flag) {
 
 void formatFlags(char *buffer, flags *flag) {
   char temp[BUFFER_SIZE] = "";
-  if (flag->plus && flag->specifier != 'u') {
+  if (flag->plus && flag->specifier != 'u' && flag->specifier != 'p') {
     temp[0] = buffer[0] == '-' ? '-' : '+';
-    strcpy(temp + 1, buffer[0] == '-' ? buffer + 1 : buffer);
-    strcpy(buffer, temp);
-  } else if (flag->space && buffer[0] != '-' && flag->specifier != 'u') {
+    s21_strcpy(temp + 1, buffer[0] == '-' ? buffer + 1 : buffer);
+    s21_strcpy(buffer, temp);
+  } else if (flag->space && buffer[0] != '-' && flag->specifier != 'u' &&
+             flag->specifier != 'p') {
     temp[0] = ' ';
-    strcpy(temp + 1, buffer);
-    strcpy(buffer, temp);
+    s21_strcpy(temp + 1, buffer);
+    s21_strcpy(buffer, temp);
   }
-  if (flag->width > (int)strlen(buffer)) {
-    int diff = flag->width - strlen(buffer);
+  if (flag->width > (int)s21_strlen(buffer)) {
+    int diff = flag->width - s21_strlen(buffer);
     if (flag->minus) {
-      strcpy(temp, buffer);
-      memset(temp + strlen(buffer), ' ', diff);
+      s21_strcpy(temp, buffer);
+      s21_memset(temp + s21_strlen(buffer), ' ', diff);
     } else {
-      memset(temp, flag->zero ? '0' : ' ', diff);
-      strcpy(temp + diff, buffer);
+      s21_memset(temp, flag->zero ? '0' : ' ', diff);
+      s21_strcpy(temp + diff, buffer);
     }
-    strcpy(buffer, temp);
+    s21_strcpy(buffer, temp);
   }
 }
 
@@ -406,23 +413,6 @@ void floatSpecifier(char *buffer, flags *flag, va_list var) {
   formatFlags(buffer, flag);
 }
 
-void eSpecifier(char *buffer, flags *flag, va_list var) {
-  long double num;
-  if (flag->length == 'L') {
-    num = va_arg(var, long double);
-  } else {
-    num = va_arg(var, double);
-  }
-
-  if (!flag->isPrecisionSet) {
-    flag->precision = 6;
-  }
-
-  eToString(num, buffer, flag);
-
-  formatFlags(buffer, flag);
-}
-
 void doubleToString(long double num, char *buffer, flags *flag) {
   char temp[BUFFER_SIZE] = "";
   int sign = 0;
@@ -441,7 +431,7 @@ void doubleToString(long double num, char *buffer, flags *flag) {
   if (negative) {
     temp[sign] = '-';
   }
-  int len = strlen(temp);
+  int len = s21_strlen(temp);
   int index = 0;
   for (int j = len - 1; index < len; index++, j--) {
     buffer[index] = temp[j];
@@ -451,12 +441,25 @@ void doubleToString(long double num, char *buffer, flags *flag) {
   }
   int tempIndex = index;
   buffer[index++] = '.';
-
-  for (int p = 0; p < flag->precision; index++, p++) {
-    num *= 10;
-    long double ten = 10;
-    double res = fmod(num, ten);
-    buffer[index] = digitToAscii((int)res);
+  char tempRightPart[BUFFER_SIZE] = "";
+  long double l = 0, r = modfl(num, &l);
+  for (int p = 0; p < flag->precision; p++) {
+    r = r * 10;
+    tempRightPart[p] = digitToAscii((int)r);
+  }
+  long long rightPart = roundl(r);
+  if (!rightPart) {
+    for (int i = 0; i < flag->precision; i++) {
+      buffer[index++] = '0';
+    }
+  } else {
+    int len = s21_strlen(tempRightPart);
+    for (int i = len, j = 0; rightPart || i > 0; rightPart /= 10, i--, j++) {
+      tempRightPart[j] = digitToAscii((int)(rightPart % 10 + 0.5));
+    }
+    for (int i = len; i > 0; i--) {
+      buffer[index++] = tempRightPart[i - 1];
+    }
   }
   if (tempIndex == index - 1 && !flag->hashtag) {
     buffer[tempIndex] = '\0';
@@ -465,94 +468,102 @@ void doubleToString(long double num, char *buffer, flags *flag) {
 
 char digitToAscii(int a) { return 48 + a; }
 
-void eToString(double num, char *buffer, flags *flag) {
-  char temp[BUFFER_SIZE] = "";
-  int sign = 0;
-  int degree_mimus = 0;
-  int sign_mimus = 0;
-  int index = 0;
-  int sign_degree = 1;
-  int degree = 0;
-  int dot = 0;
-  int len = 0;
-  int notation = 10;
-  bool negative = num < 0 ? true : false;
-  num = negative ? -num : num;
-  double tempNum = num;
-  while (tempNum) {
-    if (tempNum < 1 && degree == 0) {
-      sign_degree = -1;
-      degree_mimus++;
-      tempNum *= 10;
-      // degree = 1;
-    } else if (tempNum < 1) {
-      break;
-    } else {
-      temp[sign] = digitToAscii((int)fmod(tempNum, notation));
-      degree++;
-      tempNum /= notation;
-      sign++;
-    }
-  }
-  if (degree_mimus) degree += degree_mimus;
-  if (negative) {
-    buffer[index] = '-';
-    // flag->precision++;
-    index++;
-    sign_mimus = 1;
-  }
-  len += strlen(temp);
-  buffer[index] = temp[len - 1];
-  index++;
-  buffer[index] = '.';
-  index++;
+int asciiToDigit(char a) { return a - 48; }
 
-  for (int j = len - 2; index < len + 1 + sign_mimus; index++, j--) {
-    buffer[index] = temp[j];
-  }
-  int tempIndex = index;
-  tempNum = num - (int)num;
-  tempNum = tempNum * pow(10, flag->precision);
-  tempNum = round(tempNum);
-  tempNum = tempNum / pow(10, flag->precision);
-  // buffer[index++] = '.';
-  for (int p = 0; p < (flag->precision - degree + 1 + degree_mimus);
-       index++, p++) {
-    tempNum *= 10;
-    long double ten = 10;
-    double res = fmod(tempNum, ten);
-    buffer[index] = digitToAscii((int)res);
-  }
-  buffer[index] = 'e';
-  index++;
-  // temp[sign] = {0};
-  if (sign_degree == 1) {
-    buffer[index] = '+';
+void exponentSpecifier(char *buffer, flags *flag, va_list var) {
+  long double num;
+  if (flag->length == 'L') {
+    num = va_arg(var, long double);
   } else {
-    buffer[index] = '-';
+    num = va_arg(var, double);
   }
-  index++;
-  degree--;
-  if (degree > 10) {
-    sign = 0;
-    while (degree > 0) {
-      temp[sign] = digitToAscii((int)fmod(degree, notation));
-      degree /= notation;
-      sign++;
-    }
-    for (s21_size_t j = sign - 1; j > 0; j--) {
-      buffer[index] = temp[j];
-      index++;
+
+  int pow = 0;
+  char sign = (int)num == 0 ? '-' : '+';
+
+  if ((int)num - num) {
+    while ((int)num == 0) {
+      pow++;
+      num *= 10;
     }
   } else {
-    buffer[index] = '0';
-    index++;
-    buffer[index] = digitToAscii((int)fmod(degree, notation));
+    sign = '+';
   }
-  if (index == index - 1 && !flag->hashtag) {
-    buffer[index] = '\0';
+  while ((int)num / 10 != 0) {
+    pow++;
+    num /= 10;
+  }
+
+  if (!flag->isPrecisionSet) {
+    flag->precision = 6;
+  }
+
+  doubleToString(num, buffer, flag);
+  putExponentToString(buffer, pow, sign);
+  formatFlags(buffer, flag);
+}
+
+void putExponentToString(char *buffer, int pow, char sign) {
+  int len = s21_strlen(buffer);
+  buffer[len] = 'e';
+  buffer[len + 1] = sign;
+  buffer[len + 3] = digitToAscii(pow % 10);
+  pow /= 10;
+  buffer[len + 2] = digitToAscii(pow % 10);
+  buffer[len + 4] = '\0';
+}
+
+void toUpper(char *buffer) {
+  for (int i = 0; i < s21_strlen(buffer); i++) {
+    if (buffer[i] >= 97 && buffer[i] <= 122) {
+      buffer[i] -= 32;
+    }
   }
 }
 
-//надо проверять на значения чтобы всегда было больше 1? если нет вызывать
-//другую функцию
+void octalSpecifier(char *buffer, flags *flag, va_list var) {
+  buffer[0] = '0';
+  int64_t num = va_arg(var, int64_t);
+  integerToString(buffer + flag->hashtag, num, 8);
+  formatPrecision(buffer, flag);
+  formatFlags(buffer, flag);
+}
+
+void hexSpecifier(char *buffer, flags *flag, va_list var) {
+  uint64_t num = va_arg(var, uint64_t);
+
+  if (flag->length == 0) {
+    num = (uint32_t)num;
+  } else if (flag->length == 'h') {
+    num = (uint16_t)num;
+  }
+
+  unsignedToString(buffer, num, 16);
+  formatPrecision(buffer, flag);
+  if (flag->hashtag) {
+    insertDecimalOx(buffer, flag);
+  }
+  formatFlags(buffer, flag);
+}
+
+void insertDecimalOx(char *buffer, flags *flag) {
+  bool isAllDigitsIsZeroes = false;
+  for (int i = 0; buffer[i]; i++) {
+    if (buffer[i] == '0') {
+      isAllDigitsIsZeroes = true;
+      break;
+    }
+  }
+  if (!isAllDigitsIsZeroes || flag->specifier == 'p') {
+    s21_memmove(buffer + 2, buffer, s21_strlen(buffer));
+    buffer[0] = '0';
+    buffer[1] = 'x';
+  }
+}
+
+void pointerSpecifier(char *buffer, flags *flag, va_list var) {
+  unsignedToString(buffer, va_arg(var, uint64_t), 16);
+  formatPrecision(buffer, flag);
+  insertDecimalOx(buffer, flag);
+  formatFlags(buffer, flag);
+}
