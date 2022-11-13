@@ -13,10 +13,10 @@ void start() {
   char *stroka2;
   stroka = (char *)malloc(300 * sizeof(char));
   stroka2 = (char *)malloc(300 * sizeof(char));
-  unsigned int num = 00;
-  s21_sprintf(stroka, "Hello, %.0o", num);
+  unsigned int num = 0x0001;
+  s21_sprintf(stroka, "Hello, % p", &num);
   printf("%sEND\n", stroka);
-  sprintf(stroka2, "Hello, %.0o", num);
+  sprintf(stroka2, "Hello, % p", &num);
   printf("%sEND\n", stroka2);
   free(stroka);
   free(stroka2);
@@ -139,12 +139,14 @@ char *specifier(char *str, flags *flag, va_list var) {
     octalSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'f') {
     floatSpecifier(buffer, flag, var);
+  } else if (flag->specifier == 'p') {
+    pointerSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'e' || flag->specifier == 'E') {
     exponentSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'g' || flag->specifier == 'G') {
 
   } else if (flag->specifier == 'x' || flag->specifier == 'X') {
-
+    hexSpecifier(buffer, flag, var);
   } else if (flag->specifier == 's') {
     if (flag->length == 'l') {
       widthStringSpecifier(buffer, flag, var);
@@ -359,11 +361,12 @@ void formatPrecision(char *buffer, flags *flag) {
 
 void formatFlags(char *buffer, flags *flag) {
   char temp[BUFFER_SIZE] = "";
-  if (flag->plus && flag->specifier != 'u') {
+  if (flag->plus && flag->specifier != 'u' && flag->specifier != 'p') {
     temp[0] = buffer[0] == '-' ? '-' : '+';
     strcpy(temp + 1, buffer[0] == '-' ? buffer + 1 : buffer);
     strcpy(buffer, temp);
-  } else if (flag->space && buffer[0] != '-' && flag->specifier != 'u') {
+  } else if (flag->space && buffer[0] != '-' && flag->specifier != 'u' &&
+             flag->specifier != 'p') {
     temp[0] = ' ';
     strcpy(temp + 1, buffer);
     strcpy(buffer, temp);
@@ -525,5 +528,44 @@ void octalSpecifier(char *buffer, flags *flag, va_list var) {
   int64_t num = va_arg(var, int64_t);
   integerToString(buffer + flag->hashtag, num, 8);
   formatPrecision(buffer, flag);
+  formatFlags(buffer, flag);
+}
+
+void hexSpecifier(char *buffer, flags *flag, va_list var) {
+  uint64_t num = va_arg(var, uint64_t);
+
+  if (flag->length == 0) {
+    num = (uint32_t) num;
+  } else if (flag->length == 'h') {
+    num = (uint16_t) num;
+  }
+
+  unsignedToString(buffer, num, 16);
+  formatPrecision(buffer, flag);
+  if (flag->hashtag) {
+    insertDecimalOx(buffer, flag);
+  }
+  formatFlags(buffer, flag);
+}
+
+void insertDecimalOx(char *buffer, flags *flag) {
+  bool isAllDigitsIsZeroes = false;
+  for (int i = 0; buffer[i]; i++) {
+    if (buffer[i] == '0') {
+      isAllDigitsIsZeroes = true;
+      break;
+    }
+  }
+  if (!isAllDigitsIsZeroes || flag->specifier == 'p') {
+    memmove(buffer + 2, buffer, strlen(buffer));
+    buffer[0] = '0';
+    buffer[1] = 'x';
+  }
+}
+
+void pointerSpecifier(char *buffer, flags *flag, va_list var) {
+  unsignedToString(buffer, va_arg(var, uint64_t), 16);
+  formatPrecision(buffer, flag);
+  insertDecimalOx(buffer, flag);
   formatFlags(buffer, flag);
 }
