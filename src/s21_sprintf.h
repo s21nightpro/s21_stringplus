@@ -45,12 +45,15 @@ void widthStringSpecifier(char *buffer, flags *flag, va_list var);
 void integerSpecifier(char *buffer, flags *flag, va_list var);
 void unsignedSpecifier(char *buffer, flags *flag, va_list var);
 void floatSpecifier(char *buffer, flags *flag, va_list var);
+void exponentSpecifier(char *buffer, flags *flag, va_list var);
 
 void integerToString(char *buffer, int64_t num, int notation);
 void unsignedToString(char *buffer, uint64_t num, int notation);
 void doubleToString(long double num, char *buffer, flags *flag);
+void putExponentToString(char *buffer, int pow, char sign);
 
 void formatPrecision(char *buffer, flags *flag);
 void formatFlags(char *buffer, flags *flag);
 
 char digitToAscii(int a);
+int asciiToDigit(char a);

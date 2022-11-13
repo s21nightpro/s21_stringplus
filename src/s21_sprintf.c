@@ -13,10 +13,10 @@ void start() {
   char *stroka2;
   stroka = (char *)malloc(300 * sizeof(char));
   stroka2 = (char *)malloc(300 * sizeof(char));
-  long double num = 85734980;
-  s21_sprintf(stroka, "Hello, %#.0Lf", num);
+  long double num = -9874.844;
+  s21_sprintf(stroka, "Hello, %.18Le", num);
   printf("%sEND\n", stroka);
-  sprintf(stroka2, "Hello, %p", num);
+  sprintf(stroka2, "Hello, %.18Le", num);
   printf("%sEND\n", stroka2);
   free(stroka);
   free(stroka2);
@@ -58,21 +58,21 @@ const char *parseFlags(const char *format, flags *f) {
   while (*format == '-' || *format == '+' || *format == ' ' || *format == '#' ||
          *format == '0') {
     switch (*format) {
-      case '-':
-        f->minus = true;
-        break;
-      case '+':
-        f->plus = true;
-        break;
-      case ' ':
-        f->space = true;
-        break;
-      case '#':
-        f->hashtag = true;
-        break;
-      case '0':
-        f->zero = true;
-        break;
+    case '-':
+      f->minus = true;
+      break;
+    case '+':
+      f->plus = true;
+      break;
+    case ' ':
+      f->space = true;
+      break;
+    case '#':
+      f->hashtag = true;
+      break;
+    case '0':
+      f->zero = true;
+      break;
     }
     format++;
   }
@@ -113,24 +113,23 @@ const char *parsePrecision(const char *format, flags *f, va_list var) {
 
 const char *parseLength(const char *format, flags *f) {
   switch (*format) {
-    case 'h':
-      f->length = 'h';
-      format++;
-      break;
-    case 'l':
-      f->length = 'l';
-      format++;
-      break;
-    case 'L':
-      f->length = 'L';
-      format++;
-      break;
+  case 'h':
+    f->length = 'h';
+    format++;
+    break;
+  case 'l':
+    f->length = 'l';
+    format++;
+    break;
+  case 'L':
+    f->length = 'L';
+    format++;
+    break;
   }
   return format;
 }
 
-char *specifier(char *str, flags* flag, va_list var) {
-  // create buffer
+char *specifier(char *str, flags *flag, va_list var) {
   char buffer[BUFFER_SIZE] = "";
   if (flag->specifier == 'd' || flag->specifier == 'i') {
     integerSpecifier(buffer, flag, var);
@@ -139,7 +138,7 @@ char *specifier(char *str, flags* flag, va_list var) {
   } else if (flag->specifier == 'f') {
     floatSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'e' || flag->specifier == 'E') {
-
+    exponentSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'g' || flag->specifier == 'G') {
 
   } else if (flag->specifier == 'x' || flag->specifier == 'X') {
@@ -160,7 +159,6 @@ char *specifier(char *str, flags* flag, va_list var) {
     buffer[0] = flag->specifier;
   }
 
-  // add buffer to str
   for (int i = 0; buffer[i]; i++, str++) {
     *str = buffer[i];
   }
@@ -257,7 +255,7 @@ void integerSpecifier(char *buffer, flags *flag, va_list var) {
   int64_t num = va_arg(var, int64_t);
 
   if (flag->length == 0) {
-    num = (int32_t) num;
+    num = (int32_t)num;
   } else if (flag->length == 'h') {
     num = (int16_t) num;
   }
@@ -300,7 +298,7 @@ void integerToString(char *buffer, int64_t num, int notation) {
     temp[sign] = '-';
   }
   int len = strlen(temp);
-  for (int i = 0, j = len - 1; i < len; i++, j--)  {
+  for (int i = 0, j = len - 1; i < len; i++, j--) {
     buffer[i] = temp[j];
   }
 }
@@ -317,7 +315,7 @@ void unsignedToString(char *buffer, uint64_t num, int notation) {
     sign++;
   }
   int len = strlen(temp);
-  for (int i = 0, j = len - 1; i < len; i++, j--)  {
+  for (int i = 0, j = len - 1; i < len; i++, j--) {
     buffer[i] = temp[j];
   }
 }
@@ -344,8 +342,8 @@ void formatPrecision(char *buffer, flags *flag) {
   }
 
   bool isInteger = flag->specifier == 'd' || flag->specifier == 'i' ||
-          flag->specifier == 'o' || flag->specifier == 'u' ||
-          flag->specifier == 'x' || flag->specifier == 'X';
+                   flag->specifier == 'o' || flag->specifier == 'u' ||
+                   flag->specifier == 'x' || flag->specifier == 'X';
 
   if (flag->isPrecisionSet && flag->precision == 0 && isInteger &&
       buffer[0] == '0') {
@@ -359,13 +357,12 @@ void formatFlags(char *buffer, flags *flag) {
     temp[0] = buffer[0] == '-' ? '-' : '+';
     strcpy(temp + 1, buffer[0] == '-' ? buffer + 1 : buffer);
     strcpy(buffer, temp);
-  } else if (flag->space && buffer[0] != '-' &&
-             flag->specifier != 'u') {
+  } else if (flag->space && buffer[0] != '-' && flag->specifier != 'u') {
     temp[0] = ' ';
     strcpy(temp + 1, buffer);
     strcpy(buffer, temp);
   }
-  if (flag->width > (int) strlen(buffer)) {
+  if (flag->width > (int)strlen(buffer)) {
     int diff = flag->width - strlen(buffer);
     if (flag->minus) {
       strcpy(temp, buffer);
@@ -382,9 +379,9 @@ void unsignedSpecifier(char *buffer, flags *flag, va_list var) {
   uint64_t num = va_arg(var, uint64_t);
 
   if (flag->length == 0) {
-    num = (uint32_t) num;
+    num = (uint32_t)num;
   } else if (flag->length == 'h') {
-    num = (uint16_t) num;
+    num = (uint16_t)num;
   }
 
   unsignedToString(buffer, num, 10);
@@ -419,7 +416,7 @@ void doubleToString(long double num, char *buffer, flags *flag) {
     if (tempNum < 1) {
       break;
     }
-    temp[sign] = digitToAscii((int)fmod(tempNum,notation));
+    temp[sign] = digitToAscii((int)fmod(tempNum, notation));
     tempNum /= notation;
     sign++;
   }
@@ -428,7 +425,7 @@ void doubleToString(long double num, char *buffer, flags *flag) {
   }
   int len = strlen(temp);
   int index = 0;
-  for (int j = len - 1; index < len; index++, j--)  {
+  for (int j = len - 1; index < len; index++, j--) {
     buffer[index] = temp[j];
   }
   if (index == 0 || negative && index == 1) {
@@ -436,19 +433,74 @@ void doubleToString(long double num, char *buffer, flags *flag) {
   }
   int tempIndex = index;
   buffer[index++] = '.';
-
-  for (int p = 0; p < flag->precision; index++, p++) {
-    num *= 10;
-    long double ten = 10;
-    double res = fmod(num,ten);
-    buffer[index] = digitToAscii((int)res);
+  char tempRightPart[BUFFER_SIZE] = "";
+  long double l = 0, r = modfl(num, &l);
+  for (int p = 0; p < flag->precision; p++) {
+    r = r * 10;
+    tempRightPart[p] = digitToAscii((int)r);
+  }
+  long long rightPart = roundl(r);
+  if (!rightPart) {
+    for (int i = 0; i < flag->precision; i++) {
+      buffer[index++] = '0';
+    }
+  } else {
+    int len = strlen(tempRightPart);
+    for (int i = len, j = 0; rightPart || i > 0;
+         rightPart /= 10, i--, j++) {
+      tempRightPart[j] = digitToAscii((int)(rightPart % 10 + 0.5));
+    }
+    for (int i = len; i > 0; i--) {
+      buffer[index++] = tempRightPart[i-1];
+    }
   }
   if (tempIndex == index - 1 && !flag->hashtag) {
     buffer[tempIndex] = '\0';
   }
 }
 
+char digitToAscii(int a) { return 48 + a; }
+int asciiToDigit(char a) { return a - 48; }
 
-char digitToAscii(int a) {
-  return 48 + a;
+void exponentSpecifier(char *buffer, flags *flag, va_list var) {
+  long double num;
+  if (flag->length == 'L') {
+    num = va_arg(var, long double);
+  } else {
+    num = va_arg(var, double);
+  }
+
+  int pow = 0;
+  char sign = (int) num == 0 ? '-' : '+';
+
+  if ((int) num - num) {
+    while ((int) num == 0) {
+      pow++;
+      num *= 10;
+    }
+  } else {
+    sign = '+';
+  }
+  while ((int) num / 10 != 0) {
+    pow++;
+    num /= 10;
+  }
+
+  if (!flag->isPrecisionSet) {
+    flag->precision = 6;
+  }
+
+  doubleToString(num, buffer, flag);
+  putExponentToString(buffer, pow, sign);
+  formatFlags(buffer, flag);
+}
+
+void putExponentToString(char *buffer, int pow, char sign) {
+  int len = strlen(buffer);
+  buffer[len] = 'e';
+  buffer[len + 1] = sign;
+  buffer[len + 3] = digitToAscii(pow % 10);
+  pow /= 10;
+  buffer[len + 2] = digitToAscii(pow % 10);
+  buffer[len + 4] = '\0';
 }
