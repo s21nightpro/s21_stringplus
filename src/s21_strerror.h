@@ -113,7 +113,7 @@ char *s21_sys_errlist[S21_ERRLIST_SIZE] = {
     [106] = "Interface output queue is full"};
 #endif
 
-#if defined(__linux__)  // btw Im using arch linux *_*
+#if defined(__linux__) // btw Im using arch linux *_*
 #define S21_ERRLIST_SIZE 134
 char *s21_sys_errlist[S21_ERRLIST_SIZE] = {
     [0] = "Success",
@@ -252,4 +252,4 @@ char *s21_sys_errlist[S21_ERRLIST_SIZE] = {
 };
 #endif
 
-#endif  // SRC_S21_STRERROR_H_
+#endif // SRC_S21_STRERROR_H_

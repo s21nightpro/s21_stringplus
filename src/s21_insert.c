@@ -3,7 +3,7 @@
 void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
   char *ch_insert = s21_NULL;
 
-  if (s21_strlen(str) >= start_index && src && str) {
+  if (s21_strlen(src) >= start_index && src) {
     ch_insert =
         (char *)malloc((s21_strlen(src) + s21_strlen(str) + 1) * sizeof(char));
     if (ch_insert) {

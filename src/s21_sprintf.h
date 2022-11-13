@@ -12,18 +12,18 @@
 // %[flags][width][.precision][length]specifier
 
 typedef struct {
-  bool minus;  // Left-justify within the given field width
+  bool minus; // Left-justify within the given field width
   bool plus;  // Forces to precede the result with a plus or minus sign (+ or -)
               // even for positive numbers
-  bool space;  // If no sign is going to be written, a blank space is inserted
+  bool space; // If no sign is going to be written, a blank space is inserted
   // before the value
-  bool hashtag;   // Made some math things with some specifiers
-  bool zero;      // Left-pads the number with zeroes (0) instead of spaces
-  int width;      // (number) - minimum number of character to be printed   or *
-  int precision;  // Precision
-  bool isPrecisionSet;  // is precision set
-  char length;          // h, l or L
-  int specifier;        // just specifier
+  bool hashtag;  // Made some math things with some specifiers
+  bool zero;     // Left-pads the number with zeroes (0) instead of spaces
+  int width;     // (number) - minimum number of character to be printed   or *
+  int precision; // Precision
+  bool isPrecisionSet; // is precision set
+  char length;         // h, l or L
+  int specifier;       // just specifier
 } flags;
 
 void start();

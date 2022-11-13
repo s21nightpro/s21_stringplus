@@ -14,9 +14,9 @@ void start() {
   stroka = (char *)malloc(300 * sizeof(char));
   stroka2 = (char *)malloc(300 * sizeof(char));
   unsigned int num = 0x0001;
-  s21_sprintf(stroka, "Hello, % p", &num);
+  s21_sprintf(stroka, "Hello, %p", &num);
   printf("%sEND\n", stroka);
-  sprintf(stroka2, "Hello, % p", &num);
+  sprintf(stroka2, "Hello, %p", &num);
   printf("%sEND\n", stroka2);
   free(stroka);
   free(stroka2);
@@ -58,21 +58,21 @@ const char *parseFlags(const char *format, flags *f) {
   while (*format == '-' || *format == '+' || *format == ' ' || *format == '#' ||
          *format == '0') {
     switch (*format) {
-      case '-':
-        f->minus = true;
-        break;
-      case '+':
-        f->plus = true;
-        break;
-      case ' ':
-        f->space = true;
-        break;
-      case '#':
-        f->hashtag = true;
-        break;
-      case '0':
-        f->zero = true;
-        break;
+    case '-':
+      f->minus = true;
+      break;
+    case '+':
+      f->plus = true;
+      break;
+    case ' ':
+      f->space = true;
+      break;
+    case '#':
+      f->hashtag = true;
+      break;
+    case '0':
+      f->zero = true;
+      break;
     }
     format++;
   }
@@ -113,18 +113,18 @@ const char *parsePrecision(const char *format, flags *f, va_list var) {
 
 const char *parseLength(const char *format, flags *f) {
   switch (*format) {
-    case 'h':
-      f->length = 'h';
-      format++;
-      break;
-    case 'l':
-      f->length = 'l';
-      format++;
-      break;
-    case 'L':
-      f->length = 'L';
-      format++;
-      break;
+  case 'h':
+    f->length = 'h';
+    format++;
+    break;
+  case 'l':
+    f->length = 'l';
+    format++;
+    break;
+  case 'L':
+    f->length = 'L';
+    format++;
+    break;
   }
   return format;
 }
@@ -202,8 +202,8 @@ void widthCharSpecifier(char *buffer, flags *flag, va_list var) {
     }
   } else if (flag->width) {
     char temp[BUFFER_SIZE] = "";
-    wcstombs(temp, &ch, BUFFER_SIZE);  // ? нельзя
-    for (int i = 0; i < flag->width - s21_strlen(temp); i++) {
+    wcstombs(temp, &ch, BUFFER_SIZE); // ? нельзя
+    for (size_t i = 0; i < flag->width - s21_strlen(temp); i++) {
       buffer[i] = ' ';
     }
     s21_strcat(buffer, temp);
@@ -436,7 +436,7 @@ void doubleToString(long double num, char *buffer, flags *flag) {
   for (int j = len - 1; index < len; index++, j--) {
     buffer[index] = temp[j];
   }
-  if (index == 0 || negative && index == 1) {
+  if (index == 0 || (negative && index == 1)) {
     buffer[index++] = '0';
   }
   int tempIndex = index;
@@ -514,7 +514,7 @@ void putExponentToString(char *buffer, int pow, char sign) {
 }
 
 void toUpper(char *buffer) {
-  for (int i = 0; i < s21_strlen(buffer); i++) {
+  for (s21_size_t i = 0; i < s21_strlen(buffer); i++) {
     if (buffer[i] >= 97 && buffer[i] <= 122) {
       buffer[i] -= 32;
     }

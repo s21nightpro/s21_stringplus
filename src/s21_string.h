@@ -1,6 +1,7 @@
 #define s21_NULL ((void *)0)
 typedef long unsigned s21_size_t;
 
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -31,6 +32,7 @@ void *s21_to_lower(const char *str);
 void *s21_to_upper(const char *str);
 
 int s21_sprintf(char *str, const char *format, ...);
+int s21_sscanf(const char *str, const char *format, ...);
 
 int s21_atoii(const char *str);
 long s21_atol(const char *str);
@@ -39,13 +41,8 @@ short s21_atos(const char *str);
 float s21_atof(const char *str);
 double s21_atod(const char *str);
 long double s21_atold(const char *str);
-long long s21_atohex(const char *str);
-long long s21_ato8(const char *str);
-float s21_atoE(const char *str);
-unsigned long s21_unsigned_atol(const char *str);
+long s21_atohex(const char *str);
 unsigned long s21_usigned_atohex(const char *str);
-unsigned long s21_unsigned_ato0ct(const char *str);
-// void *s21_usigned_void_atohex(const char *str);
-char digit_to_ascii(int a);
-// void eToString(double num, char *buffer, flags *flag);
-// void eSpecifier(char *buffer, flags *flag, va_list var);
+long s21_ato8(const char *str);
+unsigned long s21_unsigned_ato8(const char *str);
+long double s21_atoE(const char *str);

@@ -22,7 +22,8 @@ void rightpart(char *str_trim, const char *src, const char *trim_chars) {
         is_break = 1;
       }
     }
-    if (is_break) break;
+    if (is_break)
+      break;
   }
 }
 
@@ -40,7 +41,8 @@ void leftpart(char *str_trim, const char *src, const char *trim_chars) {
         is_break = 1;
       }
     }
-    if (is_break) break;
+    if (is_break)
+      break;
   }
 }
 
@@ -64,4 +66,3 @@ void *s21_trim(const char *src, const char *trim_chars) {
   }
   return error_flag ? s21_NULL : (void *)str_trim;
 }
-//данную функцию надо фришить
