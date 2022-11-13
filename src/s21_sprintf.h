@@ -12,22 +12,20 @@
 // %[flags][width][.precision][length]specifier
 
 typedef struct {
-  bool minus; // Left-justify within the given field width
+  bool minus;  // Left-justify within the given field width
   bool plus;  // Forces to precede the result with a plus or minus sign (+ or -)
               // even for positive numbers
-  bool space; // If no sign is going to be written, a blank space is inserted
+  bool space;  // If no sign is going to be written, a blank space is inserted
   // before the value
-  bool hashtag;  // Made some math things with some specifiers
-  bool zero;     // Left-pads the number with zeroes (0) instead of spaces
-  int width;     // (number) - minimum number of character to be printed   or *
-  int precision; // Precision
-  bool isPrecisionSet; // is precision set
-  char length;         // h, l or L
-  int specifier;       // just specifier
+  bool hashtag;   // Made some math things with some specifiers
+  bool zero;      // Left-pads the number with zeroes (0) instead of spaces
+  int width;      // (number) - minimum number of character to be printed   or *
+  int precision;  // Precision
+  bool isPrecisionSet;  // is precision set
+  char length;          // h, l or L
+  int specifier;        // just specifier
 } flags;
 
-void start();
-int s21_sprintf(char *str, const char *format, ...);
 int numsCount(int64_t num);
 
 const char *parseFormat(const char *format, flags *f, va_list var);
@@ -51,7 +49,7 @@ void exponentSpecifier(char *buffer, flags *flag, va_list var);
 
 void integerToString(char *buffer, int64_t num, int notation);
 void unsignedToString(char *buffer, uint64_t num, int notation);
-void doubleToString(long double num, char *buffer, flags *flag);
+void doubleToString(char *buffer, long double num, flags *flag);
 void putExponentToString(char *buffer, int pow, char sign);
 
 void formatPrecision(char *buffer, flags *flag);
@@ -61,3 +59,5 @@ void insertDecimalOx(char *buffer, flags *flag);
 void toUpper(char *buffer);
 char digitToAscii(int a);
 int asciiToDigit(char a);
+void gSpecifier(char *buffer, flags *flag, va_list var);
+void deleteZeroesFromEnd(char *buffer);

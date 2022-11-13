@@ -3,24 +3,24 @@
 // A format specifier for print functions follows this prototype:
 // %[flags][width][.precision][length]specifier
 
-int main() {
-  start();
-  return 0;
-}
+// int main() {
+//   start();
+//   return 0;
+// }
 
-void start() {
-  char *stroka;
-  char *stroka2;
-  stroka = (char *)malloc(300 * sizeof(char));
-  stroka2 = (char *)malloc(300 * sizeof(char));
-  unsigned int num = 0x0001;
-  s21_sprintf(stroka, "Hello, %p", &num);
-  printf("%sEND\n", stroka);
-  sprintf(stroka2, "Hello, %p", &num);
-  printf("%sEND\n", stroka2);
-  free(stroka);
-  free(stroka2);
-}
+// void start() {
+//   char *stroka;
+//   char *stroka2;
+//   stroka = (char *)malloc(300 * sizeof(char));
+//   stroka2 = (char *)malloc(300 * sizeof(char));
+//   double num = -.00123;
+//   s21_sprintf(stroka, "Hello, %e", num);
+//   printf("%sEND\n", stroka);
+//   sprintf(stroka2, "Hello, %e", num);
+//   printf("%sEND\n", stroka2);
+//   free(stroka);
+//   free(stroka2);
+// }
 
 int s21_sprintf(char *str, const char *format, ...) {
   flags flag = {0};
@@ -58,21 +58,21 @@ const char *parseFlags(const char *format, flags *f) {
   while (*format == '-' || *format == '+' || *format == ' ' || *format == '#' ||
          *format == '0') {
     switch (*format) {
-    case '-':
-      f->minus = true;
-      break;
-    case '+':
-      f->plus = true;
-      break;
-    case ' ':
-      f->space = true;
-      break;
-    case '#':
-      f->hashtag = true;
-      break;
-    case '0':
-      f->zero = true;
-      break;
+      case '-':
+        f->minus = true;
+        break;
+      case '+':
+        f->plus = true;
+        break;
+      case ' ':
+        f->space = true;
+        break;
+      case '#':
+        f->hashtag = true;
+        break;
+      case '0':
+        f->zero = true;
+        break;
     }
     format++;
   }
@@ -113,18 +113,18 @@ const char *parsePrecision(const char *format, flags *f, va_list var) {
 
 const char *parseLength(const char *format, flags *f) {
   switch (*format) {
-  case 'h':
-    f->length = 'h';
-    format++;
-    break;
-  case 'l':
-    f->length = 'l';
-    format++;
-    break;
-  case 'L':
-    f->length = 'L';
-    format++;
-    break;
+    case 'h':
+      f->length = 'h';
+      format++;
+      break;
+    case 'l':
+      f->length = 'l';
+      format++;
+      break;
+    case 'L':
+      f->length = 'L';
+      format++;
+      break;
   }
   return format;
 }
@@ -202,7 +202,7 @@ void widthCharSpecifier(char *buffer, flags *flag, va_list var) {
     }
   } else if (flag->width) {
     char temp[BUFFER_SIZE] = "";
-    wcstombs(temp, &ch, BUFFER_SIZE); // ? нельзя
+    wcstombs(temp, &ch, BUFFER_SIZE);  // ? нельзя
     for (size_t i = 0; i < flag->width - s21_strlen(temp); i++) {
       buffer[i] = ' ';
     }
@@ -409,11 +409,11 @@ void floatSpecifier(char *buffer, flags *flag, va_list var) {
     flag->precision = 6;
   }
 
-  doubleToString(num, buffer, flag);
+  doubleToString(buffer, num, flag);
   formatFlags(buffer, flag);
 }
 
-void doubleToString(long double num, char *buffer, flags *flag) {
+void doubleToString(char *buffer, long double num, flags *flag) {
   char temp[BUFFER_SIZE] = "";
   int sign = 0;
   int notation = 10;
@@ -498,7 +498,7 @@ void exponentSpecifier(char *buffer, flags *flag, va_list var) {
     flag->precision = 6;
   }
 
-  doubleToString(num, buffer, flag);
+  doubleToString(buffer, num, flag);
   putExponentToString(buffer, pow, sign);
   formatFlags(buffer, flag);
 }
@@ -566,4 +566,68 @@ void pointerSpecifier(char *buffer, flags *flag, va_list var) {
   formatPrecision(buffer, flag);
   insertDecimalOx(buffer, flag);
   formatFlags(buffer, flag);
+}
+
+void gSpecifier(char *buffer, flags *flag, va_list var) {
+  long double num;
+  if (flag->length == 'L') {
+    num = va_arg(var, long double);
+  } else {
+    num = va_arg(var, double);
+  }
+
+  if (!flag->isPrecisionSet) {
+    flag->precision = 6;
+  }
+  if (flag->precision == 0) {
+    flag->precision = 1;
+  }
+
+  int digitCount = numsCount((int)num);
+  if (digitCount > flag->precision) {
+    int pow = 0;
+    char sign = (int)num == 0 ? '-' : '+';
+    if ((int)num - num) {
+      while ((int)num == 0) {
+        pow++;
+        num *= 10;
+      }
+    } else {
+      sign = '+';
+    }
+    while ((int)num / 10 != 0) {
+      pow++;
+      num /= 10;
+    }
+    flag->precision--;
+    doubleToString(buffer, num, flag);
+    putExponentToString(buffer, pow, sign);
+  } else {
+    flag->precision = flag->precision - digitCount;
+    doubleToString(buffer, num, flag);
+  }
+
+  if (!flag->hashtag) {
+    deleteZeroesFromEnd(buffer);
+  }
+  formatFlags(buffer, flag);
+}
+
+void deleteZeroesFromEnd(char *buffer) {
+  int len = s21_strlen(buffer);
+  char temp[BUFFER_SIZE] = "";
+  for (int i = 0; i < len; i++) {
+    temp[i] = buffer[len - i - 1];
+  }
+  int i = 0;
+  for (; i < len; i++) {
+    if (temp[i] == '0') {
+      buffer[len - i - 1] = '\0';
+    } else {
+      break;
+    }
+  }
+  if (buffer[len - i - 1] == '.') {
+    buffer[len - i - 1] = '\0';
+  }
 }

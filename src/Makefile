@@ -1,4 +1,4 @@
-CC = gcc -Wall -Wextra -Werror -std=c11
+CC = gcc -Wall -Wextra  -std=c11
 
 
 
@@ -36,10 +36,10 @@ linter:
 	rm -rf ../.clang-format
 
 build5:
-	$(CC) s21_sscanf.c s21_atoi.c s21_to_lower.c s21_strlen.c s21_strcpy.c -o test -g
+	$(CC) -lcheak s21_sscanf.c s21_atoi.c s21_to_lower.c s21_strlen.c s21_strcpy.c -o test -g
 	
 build6:
-	$(CC) s21_sprintf.c $(SRC) -o test -g
+	$(CC) -lcheck s21_sprintf.c tests/sprintf_test.c $(SRC) -o test -g
 
 run: 
 		./test
