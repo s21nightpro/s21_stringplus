@@ -27,7 +27,7 @@ typedef struct {
 } flags;
 
 int numsCount(int64_t num);
-
+void start();
 const char *parseFormat(const char *format, flags *f, va_list var);
 const char *parseFlags(const char *format, flags *f);
 const char *parseWidth(const char *format, flags *f, va_list var);

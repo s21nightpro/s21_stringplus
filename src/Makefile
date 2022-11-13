@@ -41,5 +41,8 @@ build5:
 build6:
 	$(CC) -lcheck s21_sprintf.c tests/sprintf_test.c $(SRC) -o test -g
 
+build7:
+	$(CC)  s21_sprintf.c  $(SRC) -o test -g
+
 run: 
 		./test

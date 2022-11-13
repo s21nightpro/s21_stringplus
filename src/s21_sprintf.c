@@ -1,5 +1,6 @@
 #include "s21_sprintf.h"
 
+#include <limits.h>
 // A format specifier for print functions follows this prototype:
 // %[flags][width][.precision][length]specifier
 
@@ -9,20 +10,28 @@
 // }
 
 // void start() {
-//   char *stroka;
-//   char *stroka2;
-//   stroka = (char *)malloc(300 * sizeof(char));
-//   stroka2 = (char *)malloc(300 * sizeof(char));
-//   double num = -.00123;
-//   s21_sprintf(stroka, "Hello, %e", num);
-//   printf("%sEND\n", stroka);
-//   sprintf(stroka2, "Hello, %e", num);
-//   printf("%sEND\n", stroka2);
-//   free(stroka);
-//   free(stroka2);
+//   // char *stroka;
+//   // char *stroka2;
+//   // stroka = (char *)malloc(300 * sizeof(char));
+//   // stroka2 = (char *)malloc(300 * sizeof(char));
+//   char test_original[1024] = {0};
+//   char test_your[1024] = {0};
+//   sprintf(test_original, "H%ldello %s", 1234567890123456789,
+//           "abcdefghtabcdefghtabcdefghtabcdefghtabcdefghtabcdefght"),
+//       s21_sprintf(test_your, "H%ldello %s", 1234567890123456789,
+//                   "abcdefghtabcdefghtabcdefghtabcdefghtabcdefghtabcdefght");
+//   // ck_assert_str_eq(str1, str2);
+//   // double num = -.00123;
+//   // s21_sprintf(stroka, "Hello, %e", num);
+//   printf("%sEND\n", test_original);
+//   // sprintf(stroka2, "Hello, %e", num);
+//   printf("%sEND\n", test_your);
+//   // free(stroka);
+//   // free(stroka2);
 // }
 
 int s21_sprintf(char *str, const char *format, ...) {
+  // s21_memset(str, '\0', 1024);
   flags flag = {0};
   va_list var;
   va_start(var, format);
@@ -147,11 +156,11 @@ char *specifier(char *str, flags *flag, va_list var) {
   } else if (flag->specifier == 'x' || flag->specifier == 'X') {
     hexSpecifier(buffer, flag, var);
   } else if (flag->specifier == 's') {
-    if (flag->length == 'l') {
-      widthStringSpecifier(buffer, flag, var);
-    } else {
-      stringSpecifier(buffer, flag, var);
-    }
+    // if (flag->length == 'l') {
+    //   widthStringSpecifier(buffer, flag, var);
+    // } else {
+    stringSpecifier(buffer, flag, var);
+    // }
   } else if (flag->specifier == 'c') {
     if (flag->length == 'l') {
       widthCharSpecifier(buffer, flag, var);
