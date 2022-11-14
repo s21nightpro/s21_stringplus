@@ -1,2069 +1,0 @@
-!<arch>
-s21_atoi.c      1668418161  20591 4222  100644  8267      `
-#include <math.h>
-
-#include "s21_sscanf.h"
-
-int s21_atoii(const char *str) {
-  int atoint = 0;
-  int sign = 1;  //ĞµÑĞ»Ğ¸ Ğ¿Ğ¾Ğ´Ğ°ÑÑ‚ Ğ¾Ñ‚Ñ€Ğ¸Ñ†Ğ°Ñ‚ĞµĞ»ÑŒĞ½Ğ¾Ğµ Ñ‡Ğ¸ÑĞ»Ğ¾
-  if (*str == '-' && *(str + 1) != '+') {
-    sign = -1;
-    str++;
-  } else if (*str == '+') {
-    sign = 1;
-    str++;
-  }
-  while (*str && *str >= '0' && *str <= '9') {
-    atoint = atoint * 10 + (*str - '0');
-    str++;
-  }
-  if (sign < 0) atoint *= sign;
-  return (atoint);
-}
-
-long s21_atol(const char *str) {
-  long atol = 0;
-  int sign = 1;  //ĞµÑĞ»Ğ¸ Ğ¿Ğ¾Ğ´Ğ°ÑÑ‚ Ğ¾Ñ‚Ñ€Ğ¸Ñ†Ğ°Ñ‚ĞµĞ»ÑŒĞ½Ğ¾Ğµ Ñ‡Ğ¸ÑĞ»Ğ¾
-
-  if (*str == '-' && *(str + 1) != '+') {
-    sign = -1;
-    str++;
-  } else if (*str == '+') {
-    sign = 1;
-    str++;
-  }
-  while (*str && *str >= '0' && *str <= '9') {
-    atol = atol * 10 + (*str - '0');
-    str++;
-  }
-  if (sign < 0) atol *= sign;
-  return (atol);
-}
-
-long long s21_atoll(const char *str) {
-  long long atol = 0;
-  int sign = 1;  //ĞµÑĞ»Ğ¸ Ğ¿Ğ¾Ğ´Ğ°ÑÑ‚ Ğ¾Ñ‚Ñ€Ğ¸Ñ†Ğ°Ñ‚ĞµĞ»ÑŒĞ½Ğ¾Ğµ Ñ‡Ğ¸ÑĞ»Ğ¾
-  // int zero = 0;
-
-  //   while (*str != ' ') {
-  //   }
-  if (*str == '-' && *(str + 1) != '+') {
-    sign = -1;
-    str++;
-  } else if (*str == '+') {
-    sign = 1;
-    str++;
-  }
-  while (*str && *str >= '0' && *str <= '9') {
-    atol = atol * 10 + (*str - '0');
-    str++;
-  }
-  if (sign < 0) atol *= sign;
-  return (atol);
-}
-
-short s21_atos(const char *str) {
-  short atos = 0;
-  int sign = 1;  //ĞµÑĞ»Ğ¸ Ğ¿Ğ¾Ğ´Ğ°ÑÑ‚ Ğ¾Ñ‚Ñ€Ğ¸Ñ†Ğ°Ñ‚ĞµĞ»ÑŒĞ½Ğ¾Ğµ Ñ‡Ğ¸ÑĞ»Ğ¾
-  if (*str == '-' && *(str + 1) != '+') {
-    sign = -1;
-    str++;
-  } else if (*str == '+') {
-    sign = 1;
-    str++;
-  }
-  while (*str && *str >= '0' && *str <= '9') {
-    atos = atos * 10 + (*str - '0');
-    str++;
-  }
-  if (sign < 0) atos *= sign;
-  //   if (atoint >)
-  return (atos);
-}
-
-float s21_atof(const char *str) {
-  float atof = 0;
-  float fraction = 0;
-  int n = 0;  //ĞºĞ¾Ğ»-Ğ²Ğ¾ Ğ·Ğ½Ğ°ĞºĞ¾Ğ² Ğ¿Ğ¾ÑĞ»Ğµ Ğ·Ğ°Ğ¿ÑÑ‚Ğ¾Ğ¹
-  int sign = 1;
-  if (*str == '-' && *(str + 1) != '+') {
-    sign = -1;
-    str++;
-  } else if (*str == '+') {
-    str++;
-  }
-  while (*str && ((*str >= '0' && *str <= '9') || *str == '.')) {
-    if (*str == '.') {
-      str++;
-      break;
-    }
-
-    atof = atof * 10 + (*str - '0');
-    str++;
-  }
-  //   printf("%f\n", atof);
-  while (*str && *str >= '0' && *str <= '9' && n != 5) {
-    n++;
-    fraction = (*str - '0');
-    atof = atof + (fraction / pow(10, n));
-    str++;
-    // printf("%f\n", fraction / pow(10, n));
-  }
-  //   atof += (fraction / n);
-  if (sign < 0) atof *= sign;
-  return (atof);
-}
-
-double s21_atod(const char *str) {
-  double atod = 0;
-  double fraction = 0;
-  int n = 0;  //ĞºĞ¾Ğ»-Ğ²Ğ¾ Ğ·Ğ½Ğ°ĞºĞ¾Ğ² Ğ¿Ğ¾ÑĞ»Ğµ Ğ·Ğ°Ğ¿ÑÑ‚Ğ¾Ğ¹
-  int sign = 1;
-  if (*str == '-' && *(str + 1) != '+') {
-    sign = -1;
-    str++;
-  } else if (*str == '+') {
-    str++;
-  }
-  while (*str && ((*str >= '0' && *str <= '9') || *str == '.')) {
-    if (*str == '.') {
-      str++;
-      break;
-    }
-
-    atod = atod * 10 + (*str - '0');
-    str++;
-  }
-  while (*str && *str >= '0' && *str <= '9') {
-    n++;
-    fraction = (*str - '0');
-    atod = atod + (fraction / pow(10, n));
-    str++;
-    // printf("%f\n", fraction / pow(10, n));
-  }
-  if (sign < 0) atod *= sign;
-  return (atod);
-}
-
-long double s21_atold(const char *str) {
-  long double atold = 0;
-  long double fraction = 0;
-  int n = 0;  //ĞºĞ¾Ğ»-Ğ²Ğ¾ Ğ·Ğ½Ğ°ĞºĞ¾Ğ² Ğ¿Ğ¾ÑĞ»Ğµ Ğ·Ğ°Ğ¿ÑÑ‚Ğ¾Ğ¹
-  int sign = 1;
-  if (*str == '-' && *(str + 1) != '+') {
-    sign = -1;
-    str++;
-  } else if (*str == '+') {
-    str++;
-  }
-  while (*str && ((*str >= '0' && *str <= '9') || *str == '.')) {
-    if (*str == '.') {
-      str++;
-      break;
-    }
-    atold = atold * 10 + (*str - '0');
-    str++;
-  }
-  while (*str && *str >= '0' && *str <= '9') {
-    n++;
-    fraction = (*str - '0');
-    atold = atold + (fraction / pow(10, n));
-    str++;
-    // printf("%Lf\n", fraction / pow(10, n));
-  }
-  if (sign < 0) atold *= sign;
-  return (atold);
-}
-
-long s21_atohex(const char *str) {
-  long hex = 0;
-  int degree = 0;
-  int sign = 1;
-  int short_pow = 0;
-  if (*str == '-' && *(str + 1) != '+') {
-    sign = -1;
-    str++;
-  } else if (*str == '+') {
-    str++;
-  }
-  if (*str == '0' && (*(str + 1) == 'x' || *(str + 1) == 'X')) {
-    str += 2;
-  }
-  degree = s21_strlen(str) - 1;
-  while (*str &&
-         ((*str >= '0' && *str <= '9') ||
-          ((*str >= 'a' && *str <= 'f') || (*str >= 'A' && *str <= 'F'))) &&
-         degree >= 0) {
-    short_pow = (int)pow(16, degree);
-    if (*str == 'a' || *str == 'A') {
-      hex = hex + (10 * short_pow);
-    } else if (*str == 'b' || *str == 'B') {
-      hex = hex + (11 * short_pow);
-    } else if (*str == 'c' || *str == 'C') {
-      hex = hex + (12 * short_pow);
-    } else if (*str == 'd' || *str == 'D') {
-      hex = hex + (13 * short_pow);
-    } else if (*str == 'e' || *str == 'E') {
-      hex = hex + (14 * short_pow);
-    } else if (*str == 'f' || *str == 'F') {
-      hex = hex + (15 * short_pow);
-    } else {
-      hex = hex + ((*str - '0') * short_pow);
-    }
-    degree--;
-    str++;
-  }
-  if (sign < 0) hex *= sign;
-  return hex;
-}
-
-long s21_ato8(const char *str) {
-  long hex = 0;
-  int degree = 0;
-  int sign = 1;
-  int short_pow = 0;
-  if (*str == '-' && *(str + 1) != '+') {
-    sign = -1;
-    str++;
-  } else if (*str == '+') {
-    str++;
-  }
-  degree = s21_strlen(str) - 1;
-  while (*str && (*str >= '0' && *str <= '7') && degree >= 0) {
-    short_pow = (int)pow(8, degree);
-    hex = hex + ((*str - '0') * short_pow);
-    degree--;
-    str++;
-  }
-  if (sign < 0) hex *= sign;
-  return hex;
-}
-
-long double s21_atoE(const char *str) {
-  long double atold = 0;
-  long double fraction = 0;
-  int n = 0;  //ĞºĞ¾Ğ»-Ğ²Ğ¾ Ğ·Ğ½Ğ°ĞºĞ¾Ğ² Ğ¿Ğ¾ÑĞ»Ğµ Ğ·Ğ°Ğ¿ÑÑ‚Ğ¾Ğ¹
-  int sign = 1;
-  int degree = 0;
-  int sign_degree = 1;
-  int e = 0;
-  if (*str == '-' && *(str + 1) != '+') {
-    sign = -1;
-    str++;
-  } else if (*str == '+') {
-    str++;
-  }
-  while (*str && ((*str >= '0' && *str <= '9') || *str == '.')) {
-    if (*str == '.') {
-      str++;
-      break;
-    }
-    atold = atold * 10 + (*str - '0');
-    str++;
-  }
-  while (*str &&
-         ((*str >= '0' && *str <= '9') || (*str == 'e') || (*str == 'E')) &&
-         e == 0) {
-    if (*str == 'e' || *str == 'E') {
-      // printf("atold %f\n", atold);
-      e = 1;
-      str++;
-    } else {
-      n++;
-      fraction = (*str - '0');
-      atold = atold + (fraction / pow(10, n));
-      str++;
-    }
-  }
-  if (*str == '-' && *(str + 1) != '+') {
-    sign_degree = -1;
-    str++;
-  }
-  if (*str == '+') {
-    str++;
-  }
-  while (*str && *str >= '0' && *str <= '9') {
-    // printf("%c", *str);
-    degree = degree * 10 + (*str - '0');
-    str++;
-  }
-  if (sign_degree < 0) degree *= sign_degree;
-  // printf("\n");
-  // printf("atold:%f degree:%d\n", atold, degree);
-  atold = atold * pow(10, degree);
-  if (sign < 0) atold *= sign;
-  return (atold);
-}
-
-unsigned long s21_usigned_atohex(const char *str) {
-  unsigned long hex = 0;
-  int degree = 0;
-  int sign = 1;
-  int short_pow = 0;
-  if (*str == '0' && (*(str + 1) == 'x' || *(str + 1) == 'X')) {
-    str += 2;
-  }
-  degree = s21_strlen(str) - 1;
-  while (*str &&
-         ((*str >= '0' && *str <= '9') ||
-          ((*str >= 'a' && *str <= 'f') || (*str >= 'A' && *str <= 'F'))) &&
-         degree >= 0) {
-    short_pow = (int)pow(16, degree);
-    if (*str == 'a' || *str == 'A') {
-      hex = hex + (10 * short_pow);
-    } else if (*str == 'b' || *str == 'B') {
-      hex = hex + (11 * short_pow);
-    } else if (*str == 'c' || *str == 'C') {
-      hex = hex + (12 * short_pow);
-    } else if (*str == 'd' || *str == 'D') {
-      hex = hex + (13 * short_pow);
-    } else if (*str == 'e' || *str == 'E') {
-      hex = hex + (14 * short_pow);
-    } else if (*str == 'f' || *str == 'F') {
-      hex = hex + (15 * short_pow);
-    } else {
-      hex = hex + ((*str - '0') * short_pow);
-    }
-    degree--;
-    str++;
-  }
-  if (sign < 0) hex *= sign;
-  return hex;
-}
-
-unsigned long s21_unsigned_ato8(const char *str) {
-  unsigned long hex = 0;
-  int degree = 0;
-  int sign = 1;
-  int short_pow = 0;
-  degree = s21_strlen(str) - 1;
-  while (*str && (*str >= '0' && *str <= '7') && degree >= 0) {
-    short_pow = (int)pow(8, degree);
-    hex = hex + ((*str - '0') * short_pow);
-    degree--;
-    str++;
-  }
-  if (sign < 0) hex *= sign;
-  return hex;
-}
-
-s21_insert.c    1668265163  20591 4222  100644  635       `
-#include "s21_string.h"
-
-void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
-  char *ch_insert = s21_NULL;
-
-  if (s21_strlen(src) >= start_index && src) {
-    ch_insert =
-        (char *)malloc((s21_strlen(src) + s21_strlen(str) + 1) * sizeof(char));
-    if (ch_insert) {
-      s21_size_t i = 0;
-      s21_size_t j = 0;
-      for (; i < start_index; i++) {
-        ch_insert[i] = src[i];
-      }
-      for (; j < s21_strlen(str); j++) {
-        ch_insert[i + j] = str[j];
-      }
-      for (i = start_index; i < s21_strlen(src); i++) {
-        ch_insert[i + j] = src[i];
-      }
-    }
-  }
-  return ch_insert;
-}
-s21_memchr.c    1668073289  20591 4222  100644  345       `
-#include "s21_string.h"
-
-void *s21_memchr(const void *str, int c, s21_size_t n) {
-  unsigned char *buffer = (unsigned char *)str;
-  s21_size_t i = 0;
-  unsigned char *ret_val = s21_NULL;
-  while (i < n && buffer) {
-    if ((*buffer) == (unsigned char)c) {
-      ret_val = buffer;
-      i = n;
-    }
-    buffer++;
-    i++;
-  }
-  return ret_val;
-}
-s21_memcmp.c    1667927791  20591 4222  100644  357       `
-#include "s21_string.h"
-
-int s21_memcmp(const void *str1, const void *str2, s21_size_t n) {
-  int ammount = 0;
-  unsigned char *ustr1 = (unsigned char *)str1;
-  unsigned char *ustr2 = (unsigned char *)str2;
-  for (s21_size_t i = 0; i < n; i++) {
-    if (ustr1[i] != ustr2[i]) {
-      ammount = ustr1[i] - ustr2[i];
-      i = n;
-    }
-  }
-  return ammount;
-}
-s21_memcpy.c    1667927791  20591 4222  100644  300       `
-#include "s21_string.h"
-
-void *s21_memcpy(void *dest, const void *src, s21_size_t n) {
-  unsigned char *udest = (unsigned char *)dest;
-  unsigned char *usrc = (unsigned char *)src;
-  if (dest != s21_NULL) {
-    for (s21_size_t i = 0; i < n; i++) {
-      udest[i] = usrc[i];
-    }
-  }
-  return dest;
-}s21_memmove.c   1667927791  20591 4222  100644  356       `
-#include "s21_string.h"
-
-void *s21_memmove(void *dest, const void *src, s21_size_t n) {
-  unsigned char *udest = (unsigned char *)dest;
-  unsigned char *usrc = (unsigned char *)src;
-  unsigned char temp[n];
-  for (s21_size_t i = 0; i < n; i++) {
-    temp[i] = usrc[i];
-  }
-  for (s21_size_t i = 0; i < n; i++) {
-    udest[i] = temp[i];
-  }
-  return dest;
-}s21_memset.c    1667927791  20591 4222  100644  218       `
-#include "s21_string.h"
-
-void *s21_memset(void *str, int c, s21_size_t n) {
-  char *buffer = (char *)str;
-  if (str != s21_NULL) {
-    for (s21_size_t i = 0; i < n; i++) {
-      buffer[i] = c;
-    }
-  }
-  return str;
-}s21_sprintf.c   1668428780  20591 4222  100644  16070     `
-#include "s21_sprintf.h"
-
-#include <limits.h>
-// A format specifier for print functions follows this prototype:
-// %[flags][width][.precision][length]specifier
-
-// int main() {
-//   start();
-//   return 0;
-// }
-
-// void start() {
-//   // char *stroka;
-//   // char *stroka2;
-//   // stroka = (char *)malloc(300 * sizeof(char));
-//   // stroka2 = (char *)malloc(300 * sizeof(char));
-//   char test_original[1024] = {0};
-//   char test_your[1024] = {0};
-//   sprintf(test_original, "H%ldello %s", 1234567890123456789,
-//           "abcdefghtabcdefghtabcdefghtabcdefghtabcdefghtabcdefght"),
-//       s21_sprintf(test_your, "H%ldello %s", 1234567890123456789,
-//                   "abcdefghtabcdefghtabcdefghtabcdefghtabcdefghtabcdefght");
-//   // ck_assert_str_eq(str1, str2);
-//   // double num = -.00123;
-//   // s21_sprintf(stroka, "Hello, %e", num);
-//   printf("%sEND\n", test_original);
-//   // sprintf(stroka2, "Hello, %e", num);
-//   printf("%sEND\n", test_your);
-//   // free(stroka);
-//   // free(stroka2);
-// }
-
-int s21_sprintf(char *str, const char *format, ...) {
-  // s21_memset(str, '\0', 1024);
-  flags flag = {0};
-  va_list var;
-  va_start(var, format);
-  char *strStart = str;
-  while (*format) {
-    if (*format != '%') {
-      *str++ = *format++;
-    } else {
-      format++;
-      format = parse_Format(format, &flag, var);
-      str = specifier(str, &flag, var);
-      if (flag.specifier == 'n') {
-        int *pointer = va_arg(var, int *);
-        *pointer = str - strStart;
-      }
-    }
-  }
-  va_end(var);
-  return str - strStart;
-}
-
-const char *parse_Format(const char *format, flags *f, va_list var) {
-  format = parseFlags(format, f);
-  format = parse_Width(format, f, var);
-  format = parsePrecision(format, f, var);
-  format = parse_Length(format, f);
-  f->specifier = *format;
-  format++;
-  return format;
-}
-
-const char *parseFlags(const char *format, flags *f) {
-  while (*format == '-' || *format == '+' || *format == ' ' || *format == '#' ||
-         *format == '0') {
-    switch (*format) {
-      case '-':
-        f->minus = true;
-        break;
-      case '+':
-        f->plus = true;
-        break;
-      case ' ':
-        f->space = true;
-        break;
-      case '#':
-        f->hashtag = true;
-        break;
-      case '0':
-        f->zero = true;
-        break;
-    }
-    format++;
-  }
-  return format;
-}
-
-const char *parse_Width(const char *format, flags *f, va_list var) {
-  if (*format == '*') {
-    format++;
-    f->width = va_arg(var, int);
-  } else if (*format >= 48 && *format <= 57) {
-    char tempWidth[BUFFER_SIZE] = "";
-    for (int i = 0; *format >= 48 && *format <= 57; i++, format++) {
-      tempWidth[i] = *format;
-    }
-    f->width = atoi(tempWidth);
-  }
-  return format;
-}
-
-const char *parsePrecision(const char *format, flags *f, va_list var) {
-  if (*format == '.') {
-    f->isPrecisionSet = true;
-    format++;
-    if (*format == '*') {
-      format++;
-      f->precision = va_arg(var, int);
-    } else if (*format >= 48 && *format <= 57) {
-      char tempPrecision[BUFFER_SIZE] = "";
-      for (int i = 0; *format >= 48 && *format <= 57; i++, format++) {
-        tempPrecision[i] = *format;
-      }
-      f->precision = atoi(tempPrecision);
-    }
-  }
-  return format;
-}
-
-const char *parse_Length(const char *format, flags *f) {
-  switch (*format) {
-    case 'h':
-      f->length = 'h';
-      format++;
-      break;
-    case 'l':
-      f->length = 'l';
-      format++;
-      break;
-    case 'L':
-      f->length = 'L';
-      format++;
-      break;
-  }
-  return format;
-}
-
-char *specifier(char *str, flags *flag, va_list var) {
-  char buffer[BUFFER_SIZE] = "";
-  if (flag->specifier == 'd' || flag->specifier == 'i') {
-    integerSpecifier(buffer, flag, var);
-  } else if (flag->specifier == 'u') {
-    unsignedSpecifier(buffer, flag, var);
-  } else if (flag->specifier == 'o') {
-    octalSpecifier(buffer, flag, var);
-  } else if (flag->specifier == 'f') {
-    floatSpecifier(buffer, flag, var);
-  } else if (flag->specifier == 'p') {
-    pointerSpecifier(buffer, flag, var);
-  } else if (flag->specifier == 'e' || flag->specifier == 'E') {
-    exponentSpecifier(buffer, flag, var);
-  } else if (flag->specifier == 'g' || flag->specifier == 'G') {
-  } else if (flag->specifier == 'x' || flag->specifier == 'X') {
-    hexSpecifier(buffer, flag, var);
-  } else if (flag->specifier == 's') {
-    // if (flag->length == 'l') {
-    //   widthStringSpecifier(buffer, flag, var);
-    // } else {
-    stringSpecifier(buffer, flag, var);
-    // }
-  } else if (flag->specifier == 'c') {
-    if (flag->length == 'l') {
-      widthCharSpecifier(buffer, flag, var);
-    } else {
-      charSpecifier(buffer, flag, var);
-    }
-  } else {
-    buffer[0] = flag->specifier;
-  }
-  if (flag->specifier == 'G' || flag->specifier == 'X' ||
-      flag->specifier == 'E') {
-    toUpper(buffer);
-  }
-
-  for (int i = 0; buffer[i]; i++, str++) {
-    *str = buffer[i];
-  }
-  *str = '\0';
-  return str;
-}
-
-void charSpecifier(char *buffer, flags *flag, va_list var) {
-  char ch = va_arg(var, int);
-  if (flag->minus && flag->width) {
-    buffer[0] = ch;
-    for (int i = 1; i < flag->width; i++) {
-      buffer[i] = ' ';
-    }
-  } else if (flag->width) {
-    for (int i = 0; i < flag->width; i++) {
-      if (i == flag->width - 1) {
-        buffer[i] = ch;
-      } else {
-        buffer[i] = ' ';
-      }
-    }
-  } else {
-    buffer[0] = ch;
-  }
-}
-
-void widthCharSpecifier(char *buffer, flags *flag, va_list var) {
-  wchar_t ch = va_arg(var, wchar_t);
-  if (flag->minus && flag->width) {
-    wcstombs(buffer, &ch, BUFFER_SIZE);
-    for (int i = s21_strlen(buffer); i < flag->width; i++) {
-      buffer[i] = ' ';
-    }
-  } else if (flag->width) {
-    char temp[BUFFER_SIZE] = "";
-    wcstombs(temp, &ch, BUFFER_SIZE);  // ? Ğ½ĞµĞ»ÑŒĞ·Ñ
-    for (size_t i = 0; i < flag->width - s21_strlen(temp); i++) {
-      buffer[i] = ' ';
-    }
-    s21_strcat(buffer, temp);
-  } else {
-    wcstombs(buffer, &ch, BUFFER_SIZE);
-  }
-}
-
-void stringSpecifier(char *buffer, flags *flag, va_list var) {
-  char *input = va_arg(var, char *);
-  char tempInput[BUFFER_SIZE] = "";
-  s21_strcpy(tempInput, input);
-  if (flag->isPrecisionSet) {
-    tempInput[flag->precision] = '\0';
-  }
-
-  int shift = flag->width - s21_strlen(tempInput);
-  int lengthInput = s21_strlen(tempInput);
-
-  if (flag->minus && shift > 0) {
-    s21_strcpy(buffer, tempInput);
-    s21_memset(buffer + lengthInput, ' ', shift);
-  } else if (shift > 0) {
-    s21_memset(buffer, ' ', shift);
-    s21_strcpy(buffer + shift, tempInput);
-  } else {
-    s21_strcpy(buffer, tempInput);
-  }
-}
-
-void widthStringSpecifier(char *buffer, flags *flag, va_list var) {
-  wchar_t *input = va_arg(var, wchar_t *);
-  char tempInput[BUFFER_SIZE] = "";
-  char fromWcharToChar[BUFFER_SIZE] = "";
-  wcstombs(fromWcharToChar, input, BUFFER_SIZE);
-  s21_strcpy(tempInput, fromWcharToChar);
-  if (flag->isPrecisionSet) {
-    tempInput[flag->precision] = '\0';
-  }
-
-  int shift = flag->width - s21_strlen(tempInput);
-  int lengthInput = s21_strlen(tempInput);
-
-  if (flag->minus && shift > 0) {
-    s21_strcpy(buffer, tempInput);
-    s21_memset(buffer + lengthInput, ' ', shift);
-  } else if (shift > 0) {
-    s21_memset(buffer, ' ', shift);
-    s21_strcpy(buffer + shift, tempInput);
-  } else {
-    s21_strcpy(buffer, tempInput);
-  }
-}
-
-void integerSpecifier(char *buffer, flags *flag, va_list var) {
-  int64_t num = va_arg(var, int64_t);
-
-  if (flag->length == 0) {
-    num = (int32_t)num;
-  } else if (flag->length == 'h') {
-    num = (int16_t)num;
-  }
-
-  integerToString(buffer, num, 10);
-  formatPrecision(buffer, flag);
-  formatFlags(buffer, flag);
-}
-
-/// ?DELETE?
-int numsCount(int64_t num) {
-  // count of digits in number
-  int result = 0;
-  if (!num) {
-    result = 1;
-  } else {
-    while (num) {
-      num /= 10;
-      result++;
-    }
-  }
-  return result;
-}
-/// ?DELETE?
-
-void integerToString(char *buffer, int64_t num, int notation) {
-  char temp[BUFFER_SIZE] = "";
-  int sign = 0;
-  bool negative = num < 0 ? true : false;
-  num = negative ? -num : num;
-  if (!num) {
-    buffer[0] = '0';
-  }
-  while (num) {
-    temp[sign] = "0123456789abcdef"[num % notation];
-    num /= notation;
-    sign++;
-  }
-  if (negative) {
-    temp[sign] = '-';
-  }
-  int len = s21_strlen(temp);
-  for (int i = 0, j = len - 1; i < len; i++, j--) {
-    buffer[i] = temp[j];
-  }
-}
-
-void unsignedToString(char *buffer, uint64_t num, int notation) {
-  char temp[BUFFER_SIZE] = "";
-  int sign = 0;
-  if (!num) {
-    buffer[0] = '0';
-  }
-  while (num) {
-    temp[sign] = "0123456789abcdef"[num % notation];
-    num /= notation;
-    sign++;
-  }
-  int len = s21_strlen(temp);
-  for (int i = 0, j = len - 1; i < len; i++, j--) {
-    buffer[i] = temp[j];
-  }
-}
-
-void formatPrecision(char *buffer, flags *flag) {
-  char temp[BUFFER_SIZE] = "";
-  int len = s21_strlen(buffer);
-  int sign = 0;
-  if (buffer[0] == '-') {
-    temp[0] = '-';
-    sign = 1;
-    len--;
-  }
-
-  if (flag->precision > len) {
-    int i;
-    for (i = sign; i < flag->precision - len + sign; i++) {
-      temp[i] = '0';
-    }
-    for (int j = sign; buffer[j]; j++, i++) {
-      temp[i] = buffer[j];
-    }
-    s21_strcpy(buffer, temp);
-  }
-
-  bool isInteger = flag->specifier == 'd' || flag->specifier == 'i' ||
-                   flag->specifier == 'o' || flag->specifier == 'u' ||
-                   flag->specifier == 'x' || flag->specifier == 'X';
-
-  if (flag->isPrecisionSet && flag->precision == 0 && isInteger &&
-      buffer[0] == '0') {
-    buffer[0] = '\0';
-  }
-}
-
-void formatFlags(char *buffer, flags *flag) {
-  char temp[BUFFER_SIZE] = "";
-  if (flag->plus && flag->specifier != 'u' && flag->specifier != 'p') {
-    temp[0] = buffer[0] == '-' ? '-' : '+';
-    s21_strcpy(temp + 1, buffer[0] == '-' ? buffer + 1 : buffer);
-    s21_strcpy(buffer, temp);
-  } else if (flag->space && buffer[0] != '-' && flag->specifier != 'u' &&
-             flag->specifier != 'p') {
-    temp[0] = ' ';
-    s21_strcpy(temp + 1, buffer);
-    s21_strcpy(buffer, temp);
-  }
-  if (flag->width > (int)s21_strlen(buffer)) {
-    int diff = flag->width - s21_strlen(buffer);
-    if (flag->minus) {
-      s21_strcpy(temp, buffer);
-      s21_memset(temp + s21_strlen(buffer), ' ', diff);
-    } else {
-      s21_memset(temp, flag->zero ? '0' : ' ', diff);
-      s21_strcpy(temp + diff, buffer);
-    }
-    s21_strcpy(buffer, temp);
-  }
-}
-
-void unsignedSpecifier(char *buffer, flags *flag, va_list var) {
-  uint64_t num = va_arg(var, uint64_t);
-
-  if (flag->length == 0) {
-    num = (uint32_t)num;
-  } else if (flag->length == 'h') {
-    num = (uint16_t)num;
-  }
-
-  unsignedToString(buffer, num, 10);
-  formatPrecision(buffer, flag);
-  formatFlags(buffer, flag);
-}
-
-void floatSpecifier(char *buffer, flags *flag, va_list var) {
-  long double num;
-  if (flag->length == 'L') {
-    num = va_arg(var, long double);
-  } else {
-    num = va_arg(var, double);
-  }
-
-  if (!flag->isPrecisionSet) {
-    flag->precision = 6;
-  }
-
-  doubleToString(buffer, num, flag);
-  formatFlags(buffer, flag);
-}
-
-void doubleToString(char *buffer, long double num, flags *flag) {
-  char temp[BUFFER_SIZE] = "";
-  int sign = 0;
-  int notation = 10;
-  bool negative = num < 0 ? true : false;
-  num = negative ? -num : num;
-  long double tempNum = num;
-  while (tempNum) {
-    if (tempNum < 1) {
-      break;
-    }
-    temp[sign] = digitToAscii((int)fmod(tempNum, notation));
-    tempNum /= notation;
-    sign++;
-  }
-  if (negative) {
-    temp[sign] = '-';
-  }
-  int len = s21_strlen(temp);
-  int index = 0;
-  for (int j = len - 1; index < len; index++, j--) {
-    buffer[index] = temp[j];
-  }
-  if (index == 0 || (negative && index == 1)) {
-    buffer[index++] = '0';
-  }
-  int tempIndex = index;
-  buffer[index++] = '.';
-  char tempRightPart[BUFFER_SIZE] = "";
-  long double l = 0, r = modfl(num, &l);
-  for (int p = 0; p < flag->precision; p++) {
-    r = r * 10;
-    tempRightPart[p] = digitToAscii((int)r);
-  }
-  long long rightPart = roundl(r);
-  if (!rightPart) {
-    for (int i = 0; i < flag->precision; i++) {
-      buffer[index++] = '0';
-    }
-  } else {
-    int len = s21_strlen(tempRightPart);
-    for (int i = len, j = 0; rightPart || i > 0; rightPart /= 10, i--, j++) {
-      tempRightPart[j] = digitToAscii((int)(rightPart % 10 + 0.5));
-    }
-    for (int i = len; i > 0; i--) {
-      buffer[index++] = tempRightPart[i - 1];
-    }
-  }
-  if (tempIndex == index - 1 && !flag->hashtag) {
-    buffer[tempIndex] = '\0';
-  }
-}
-
-char digitToAscii(int a) { return 48 + a; }
-
-int asciiToDigit(char a) { return a - 48; }
-
-void exponentSpecifier(char *buffer, flags *flag, va_list var) {
-  long double num;
-  if (flag->length == 'L') {
-    num = va_arg(var, long double);
-  } else {
-    num = va_arg(var, double);
-  }
-
-  int pow = 0;
-  char sign = (int)num == 0 ? '-' : '+';
-
-  if ((int)num - num) {
-    while ((int)num == 0) {
-      pow++;
-      num *= 10;
-    }
-  } else {
-    sign = '+';
-  }
-  while ((int)num / 10 != 0) {
-    pow++;
-    num /= 10;
-  }
-
-  if (!flag->isPrecisionSet) {
-    flag->precision = 6;
-  }
-
-  doubleToString(buffer, num, flag);
-  putExponentToString(buffer, pow, sign);
-  formatFlags(buffer, flag);
-}
-
-void putExponentToString(char *buffer, int pow, char sign) {
-  int len = s21_strlen(buffer);
-  buffer[len] = 'e';
-  buffer[len + 1] = sign;
-  buffer[len + 3] = digitToAscii(pow % 10);
-  pow /= 10;
-  buffer[len + 2] = digitToAscii(pow % 10);
-  buffer[len + 4] = '\0';
-}
-
-void toUpper(char *buffer) {
-  for (s21_size_t i = 0; i < s21_strlen(buffer); i++) {
-    if (buffer[i] >= 97 && buffer[i] <= 122) {
-      buffer[i] -= 32;
-    }
-  }
-}
-
-void octalSpecifier(char *buffer, flags *flag, va_list var) {
-  buffer[0] = '0';
-  int64_t num = va_arg(var, int64_t);
-  integerToString(buffer + flag->hashtag, num, 8);
-  formatPrecision(buffer, flag);
-  formatFlags(buffer, flag);
-}
-
-void hexSpecifier(char *buffer, flags *flag, va_list var) {
-  uint64_t num = va_arg(var, uint64_t);
-
-  if (flag->length == 0) {
-    num = (uint32_t)num;
-  } else if (flag->length == 'h') {
-    num = (uint16_t)num;
-  }
-
-  unsignedToString(buffer, num, 16);
-  formatPrecision(buffer, flag);
-  if (flag->hashtag) {
-    insertDecimalOx(buffer, flag);
-  }
-  formatFlags(buffer, flag);
-}
-
-void insertDecimalOx(char *buffer, flags *flag) {
-  bool isAllDigitsIsZeroes = false;
-  for (int i = 0; buffer[i]; i++) {
-    if (buffer[i] == '0') {
-      isAllDigitsIsZeroes = true;
-      break;
-    }
-  }
-  if (!isAllDigitsIsZeroes || flag->specifier == 'p') {
-    s21_memmove(buffer + 2, buffer, s21_strlen(buffer));
-    buffer[0] = '0';
-    buffer[1] = 'x';
-  }
-}
-
-void pointerSpecifier(char *buffer, flags *flag, va_list var) {
-  unsignedToString(buffer, va_arg(var, uint64_t), 16);
-  formatPrecision(buffer, flag);
-  insertDecimalOx(buffer, flag);
-  formatFlags(buffer, flag);
-}
-
-void gSpecifier(char *buffer, flags *flag, va_list var) {
-  long double num;
-  if (flag->length == 'L') {
-    num = va_arg(var, long double);
-  } else {
-    num = va_arg(var, double);
-  }
-
-  if (!flag->isPrecisionSet) {
-    flag->precision = 6;
-  }
-  if (flag->precision == 0) {
-    flag->precision = 1;
-  }
-
-  int digitCount = numsCount((int)num);
-  if (digitCount > flag->precision) {
-    int pow = 0;
-    char sign = (int)num == 0 ? '-' : '+';
-    if ((int)num - num) {
-      while ((int)num == 0) {
-        pow++;
-        num *= 10;
-      }
-    } else {
-      sign = '+';
-    }
-    while ((int)num / 10 != 0) {
-      pow++;
-      num /= 10;
-    }
-    flag->precision--;
-    doubleToString(buffer, num, flag);
-    putExponentToString(buffer, pow, sign);
-  } else {
-    flag->precision = flag->precision - digitCount;
-    doubleToString(buffer, num, flag);
-  }
-
-  if (!flag->hashtag) {
-    deleteZeroesFromEnd(buffer);
-  }
-  formatFlags(buffer, flag);
-}
-
-void deleteZeroesFromEnd(char *buffer) {
-  int len = s21_strlen(buffer);
-  char temp[BUFFER_SIZE] = "";
-  for (int i = 0; i < len; i++) {
-    temp[i] = buffer[len - i - 1];
-  }
-  int i = 0;
-  for (; i < len; i++) {
-    if (temp[i] == '0') {
-      buffer[len - i - 1] = '\0';
-    } else {
-      break;
-    }
-  }
-  if (buffer[len - i - 1] == '.') {
-    buffer[len - i - 1] = '\0';
-  }
-}
-s21_sscanf.c    1668417631  20591 4222  100644  13664     `
-#include "s21_sscanf.h"
-
-#define HEX 16
-#define DEC 10
-#define OCT 8
-
-void parseFormat(const char **format, flags_t *f);
-const char *parseWidth(const char *format, flags_t *f);
-const char *parseLength(const char *format, flags_t *f);
-const char *parseSpecifier(const char *format, flags_t *f);
-
-void parseString(const char **str, const s21_size_t str_len, flags_t *f,
-                 va_list var, char skip);
-
-int checkSign(const char *a, int *sign, int width, int base, int i);
-
-int checkString(const char *str);
-int isSign(int a);
-int isDigit(int a);
-int isAscii(int a);
-int isSeporator(int a);
-int isHex(int a, int i);
-int isOct(int a);
-int isFloat(int a, int next, float_flags_t *fl);
-
-void assignChar(char ch, va_list var, flags_t *f);
-void assignString(char *str, va_list var, flags_t *f);
-void assignFloat(char *str, va_list var, flags_t *f);
-void assignN(int n, va_list var, flags_t *f);
-void assignInt(char *str, va_list var, flags_t *f);
-void assignHex(char *str, va_list var, flags_t *f);
-void assignOct(char *str, va_list var, flags_t *f);
-void assignIntUnsigned(char *str, va_list var, flags_t *f);
-void assignOctUnsigned(char *str, va_list var, flags_t *f);
-void assignHexUnsigned(char *str, va_list var, flags_t *f);
-void assignVoid(char *str, va_list var, flags_t *f);
-
-// int main() {
-// #include <locale.h>
-//   setlocale(LC_ALL, "");
-//   unsigned long long int a1, a2;
-//   const char str[] = "faaaaaaaaaaaaf";
-//   const char fstr[] = "%llx";
-//   uint16_t res1 = s21_sscanf(str, fstr, &a1);
-//   uint16_t res2 = sscanf(str, fstr, &a2);
-//   printf("%d %d\n", res1, res2);
-//   printf("%llx %llx\n", a1, a2);
-// }
-
-int checkString(const char *str) {
-  int res = 0;
-
-  for (int i = 0; str[i]; i++) {
-    if (!isSeporator(str[i])) {
-      res = 1;
-      break;
-    }
-  }
-
-  return res;
-}
-
-int s21_sscanf(const char *str, const char *format, ...) {
-  int non_empty_string = checkString(str);
-  int success = 0;
-  int convertions = 0;
-
-  if (non_empty_string) {
-    va_list var;
-    va_start(var, format);
-    const s21_size_t str_len = s21_strlen(str);
-    char skip = '\0';
-    while (*format != '\0') {
-      if (*format == '%') {
-        flags_t flag_format = {0};
-        format++;
-        parseFormat(&format, &flag_format);
-        if (flag_format.error) break;
-        parseString(&str, str_len, &flag_format, var, skip);
-        if (flag_format.convertions) convertions++;
-        success++;
-        if (flag_format.error) break;
-        skip = '\0';
-      } else if (skip == '\0' || skip == *format) {
-        skip = *format;
-        format++;
-      } else {
-        break;
-      }
-    }
-    va_end(var);
-  }
-
-  return success ? convertions : -1;
-}
-
-int checkSign(const char *a, int *sign, int width, int base, int i) {
-  int res = 0;
-  if (!(*sign) && width != 1 && isSign(*a) && !i) {
-    switch (base) {
-      case HEX:
-        if (isHex(*(a + 1), 0)) res = 1;
-        break;
-      case DEC:
-        if (isDigit(*(a + 1))) res = 1;
-        break;
-      case OCT:
-        if (isOct(*(a + 1))) res = 1;
-        break;
-    }
-  }
-  if (res) sign++;
-  return res;
-}
-
-void parseString(const char **str, const s21_size_t str_len, flags_t *f,
-                 va_list var, char skip) {
-  char str_temp[1024] = {'\0'};
-  char ch = 0;
-  int i = 0;
-  int n = 0;
-  int sign = 0;
-  float_flags_t float_struct = {0};
-
-  while ((isSeporator(**str) && f->specifier != 'c' && **str != '\0') ||
-         (**str == skip && **str != '\0')) {
-    (*str)++;
-  }
-  if (**str != '\0') {
-    switch (f->specifier) {
-      case 'd':
-        while ((isDigit(**str) || checkSign(*str, &sign, f->width, DEC, i)) &&
-               (f->width != 0)) {
-          str_temp[i] = **str;
-          (*str)++;
-          i++;
-          f->width--;
-        }
-        if (!i)
-          f->error = 1;
-        else if (!f->asterics)
-          assignInt(str_temp, var, f);
-        break;
-      case 'u':
-        while ((isDigit(**str) || checkSign(*str, &sign, f->width, DEC, i)) &&
-               (f->width != 0)) {
-          str_temp[i] = **str;
-          (*str)++;
-          i++;
-          f->width--;
-        }
-        if (!i)
-          f->error = 1;
-        else if (!f->asterics)
-          assignIntUnsigned(str_temp, var, f);
-        break;
-      case 'c':
-        if (isAscii(**str)) {
-          ch = **str;
-          if (!f->asterics) assignChar(ch, var, f);
-          (*str)++;
-          break;
-        } else {
-          f->error = 1;
-        }
-      case 's':
-        while ((f->width != 0 && !isSeporator(**str))) {
-          str_temp[i] = **str;
-          (*str)++;
-          i++;
-          f->width--;
-        }
-        if (!i)
-          f->error = 1;
-        else if (!f->asterics)
-          assignString(str_temp, var, f);
-        break;
-      case 'i':
-        if (**str == '0') {
-          (*str)++;
-          if ((**str) == 'x' || (**str) == 'X') {
-            (*str)++;
-            while (
-                (isHex(**str, 0) || checkSign(*str, &sign, f->width, HEX, i)) &&
-                (f->width != 0)) {
-              str_temp[i] = **str;
-              (*str)++;
-              i++;
-              f->width--;
-            }
-            if (!i)
-              f->error = 1;
-            else if (!f->asterics)
-              assignHex(str_temp, var, f);
-          } else {
-            while ((isOct(**str) || checkSign(*str, &sign, f->width, DEC, i)) &&
-                   (f->width != 0)) {
-              str_temp[i] = **str;
-              (*str)++;
-              i++;
-              f->width--;
-            }
-            if (!i)
-              f->error = 1;
-            else if (!f->asterics)
-              assignOct(str_temp, var, f);
-          }
-        } else {
-          while ((isDigit(**str) || checkSign(*str, &sign, f->width, DEC, i)) &&
-                 (f->width != 0)) {
-            str_temp[i] = **str;
-            (*str)++;
-            i++;
-            f->width--;
-          }
-          if (!i)
-            f->error = 1;
-          else if (!f->asterics)
-            assignInt(str_temp, var, f);
-        }
-        break;
-
-      case 'o':
-        while ((isOct(**str) || checkSign(*str, &sign, f->width, OCT, i)) &&
-               (f->width != 0)) {
-          str_temp[i] = **str;
-          (*str)++;
-          i++;
-          f->width--;
-        }
-        if (!i)
-          f->error = 1;
-        else if (!f->asterics)
-          assignOctUnsigned(str_temp, var, f);
-        break;
-
-      case 'x':
-      case 'X':
-        while (((isHex(**str, i + sign)) ||
-                checkSign(*str, &sign, f->width, HEX, i)) &&
-               (f->width != 0)) {
-          str_temp[i] = **str;
-          (*str)++;
-          i++;
-          f->width--;
-        }
-        if (!i)
-          f->error = 1;
-        else if (!f->asterics)
-          assignHexUnsigned(str_temp, var, f);
-        break;
-
-      case 'e':
-      case 'E':
-      case 'f':
-      case 'g':
-      case 'G':
-        while (isFloat(**str, *(*str + 1), &float_struct) &&
-               (f->width != 0)) {  // Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ¸Ñ‚ÑŒ nan Ğ¸ inf
-          str_temp[i] = **str;
-          (*str)++;
-          i++;
-          f->width--;
-        }
-        if (!i)
-          f->error = 1;
-        else if (!f->asterics)
-          assignFloat(str_temp, var, f);
-        break;
-
-      case 'n':
-        n = str_len - s21_strlen(*str);
-        if (!f->asterics) assignN(n, var, f);
-        break;
-
-      case 'p':
-        while ((isHex(**str, i)) && (f->width != 0)) {
-          str_temp[i] = **str;
-          (*str)++;
-          i++;
-          f->width--;
-        }
-        if (!i)
-          f->error = 1;
-        else if (!f->asterics)
-          assignVoid(str_temp, var, f);
-        break;
-
-      case '%':
-        if (**str == '%') {
-          (*str)++;
-          i++;
-        }
-        if (!i) f->error = 1;
-        break;
-    }
-  } else {
-    f->error++;
-  }
-}
-
-int isFloat(int a, int next, float_flags_t *fl) {
-  int flag = 1;
-  if (isDigit(a)) {
-    fl->digit = 1;
-  } else if ((fl->digit == 0 && fl->sign_before_e == 0 && fl->e == 0 &&
-              fl->dot == 0 && (a == '-' || a == '+'))) {
-    fl->sign_before_e++;
-  } else if (fl->sign_before_e == 1 && fl->e == 0 && (a == '-' || a == '+')) {
-    flag = 0;
-  } else if (fl->sign_after_e == 0 && fl->digit && fl->e == 1 &&
-             (a == '-' || a == '+')) {
-    fl->sign_after_e++;
-  } else if (fl->e == 1 && (a == '-' || a == '+') &&
-             (fl->sign_after_e == 1 && !fl->digit)) {
-    flag = 0;
-  } else if (fl->digit == 1 && fl->e == 0 && (a == 'e' || a == 'E')) {
-    fl->e++;
-  } else if (fl->e == 0 && fl->dot == 0 && (a == '.') && isDigit(next)) {
-    fl->dot++;
-  } else {
-    flag = 0;
-  }
-  return flag;
-}
-
-/*
-c - ÑÑ‡Ğ¸Ñ‚Ñ‹Ğ²Ğ°ĞµÑ‚ 1 ÑĞ¸Ğ¼Ğ²Ğ¾Ğ»
-s - ÑÑ‡Ğ¸Ñ‚Ñ‹Ğ²Ğ°ĞµÑ‚ ÑÑ‚Ñ€Ğ¾ĞºÑƒ
-d - ÑÑ‡Ğ¸Ñ‚Ñ‹Ğ²Ğ°ĞµÑ‚ 10Ñ‚Ğ¸Ñ‡Ğ½Ğ¾Ğµ Ñ‡Ğ¸ÑĞ»Ğ¾
-i - Ğ·Ğ½Ğ°ĞºĞ¾Ğ²Ğ¾Ğµ 10Ñ‚Ğ¸Ñ‡Ğ½Ğ¾Ğµ, 8Ñ€Ğ¸Ñ‡Ğ½Ğ¾Ğµ, 16Ñ€Ğ¸Ñ‡Ğ½Ğ¾Ğµ
-
-eEfgG - Ğ´ĞµÑÑÑ‚Ğ¸Ñ‡Ğ½Ğ¾Ğµ Ñ Ğ¿Ğ»Ğ°Ğ²Ğ°ÑÑˆĞµĞ¹ Ğ¸Ğ»Ğ¸ Ğ½Ğ°ÑƒÑ‡Ğ½Ğ°Ñ Ğ½Ğ¾Ñ‚Ğ°Ñ†Ğ¸Ñ
-o - Ğ±ĞµĞ·Ğ·Ğ½Ğ°Ğº 8Ñ€Ğ¸Ñ‡Ğ½Ğ¾Ğµ
-u - Ğ±ĞµĞ·Ğ·Ğ½Ğ°Ğº Ğ´ĞµÑÑÑ‚Ğ¸Ñ‡Ğ½Ğ¾Ğµ Ñ†ĞµĞ»Ğ¾Ğµ
-xX - Ğ±ĞµĞ·Ğ·Ğ½Ğ°Ğº 16Ñ€Ğ¸Ñ‡Ğ½Ğ¾Ğµ Ñ†ĞµĞ»Ğ¾Ğµ
-p - Ğ°Ğ´Ñ€ĞµÑ ÑƒĞºĞ°Ğ·Ğ°Ñ‚ĞµĞ»Ñ
-n - ĞºĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾ ÑÑ‡Ğ¸Ñ‚Ğ°Ğ½Ğ½Ñ‹Ñ… ÑĞ¸Ğ¼Ğ²Ğ¾Ğ»Ğ¾Ğ²
-*/
-
-int isDigit(int a) { return (a >= '0' && a <= '9'); }
-
-int isHex(int a, int i) {
-  return ((a >= '0' && a <= '9') || (a >= 'a' && a <= 'f') ||
-          (a >= 'A' && a <= 'F')) ||
-         (a == 'x' && i == 1) || (a == 'X' && i == 1);
-}
-
-int isOct(int a) { return (a >= '0' && a <= '7'); }
-
-int isAscii(int a) { return (a >= 0 && a <= 127); }
-
-int isSeporator(int a) {
-  return ((a == '\n') || (a == 32) || (a == '\0' || (a == '\t')));
-}
-
-int isSign(int a) { return (a == '+' || a == '-'); }
-
-void assignHex(char *str, va_list var, flags_t *f) {
-  f->convertions++;
-  if (f->length == 'h') {
-    *va_arg(var, short *) = (short)s21_atohex(str);
-  } else if (f->length == 'l') {
-    *va_arg(var, long *) = s21_atohex(str);
-  } else {
-    *va_arg(var, int *) = (int)s21_atohex(str);
-  }
-}
-
-void assignHexUnsigned(char *str, va_list var, flags_t *f) {
-  f->convertions++;
-  if (f->length == 'h') {
-    *va_arg(var, unsigned short *) = (unsigned short)s21_atohex(str);
-  } else if (f->length == 'l') {
-    *va_arg(var, unsigned long *) = s21_atohex(str);
-  } else {
-    *va_arg(var, unsigned int *) = (unsigned int)s21_atohex(str);
-  }
-}
-
-void assignOct(char *str, va_list var, flags_t *f) {
-  f->convertions++;
-  if (f->length == 'h') {
-    *va_arg(var, short *) = (short)s21_ato8(str);
-  } else if (f->length == 'l') {
-    *va_arg(var, long *) = s21_ato8(str);
-  } else {
-    *va_arg(var, int *) = (int)s21_ato8(str);
-  }
-}
-
-void assignOctUnsigned(char *str, va_list var, flags_t *f) {
-  f->convertions++;
-  if (f->length == 'h') {
-    *va_arg(var, unsigned short *) = (unsigned short)s21_ato8(str);
-  } else if (f->length == 'l') {
-    *va_arg(var, unsigned long *) = s21_ato8(str);
-  } else {
-    *va_arg(var, unsigned int *) = (unsigned int)s21_ato8(str);
-  }
-}
-
-void assignIntUnsigned(char *str, va_list var, flags_t *f) {
-  f->convertions++;
-  if (f->length == 'h') {
-    *va_arg(var, short *) = (unsigned short)s21_atos(str);
-  } else if (f->length == 'l') {
-    *va_arg(var, long *) = s21_atol(str);
-  } else {
-    *va_arg(var, int *) = (unsigned int)s21_atoii(str);
-  }
-}
-
-void assignInt(char *str, va_list var, flags_t *f) {
-  f->convertions++;
-  if (f->length == 'h') {
-    *va_arg(var, short *) = (short)s21_atos(str);
-  } else if (f->length == 'l') {
-    *va_arg(var, long *) = s21_atol(str);
-  } else {
-    *va_arg(var, int *) = (int)s21_atoii(str);
-  }
-}
-
-void assignVoid(char *str, va_list var, flags_t *f) {
-  f->convertions++;
-  void **dest = va_arg(var, void **);
-
-  *dest = (void *)(0x0 + s21_usigned_atohex(str));
-}
-
-void assignN(int n, va_list var, flags_t *f) {
-  // f->convertions++;
-  if (f->length == 'h') {
-    *va_arg(var, short *) = n;
-  } else if (f->length == 'l') {
-    *va_arg(var, long *) = n;
-  } else {
-    *va_arg(var, int *) = n;
-  }
-}
-
-void assignFloat(char *str, va_list var, flags_t *f) {
-  f->convertions++;
-  if (f->length == 'l') {
-    *va_arg(var, double *) = (double)s21_atoE(str);
-  } else if (f->length == 'L') {
-    *va_arg(var, long double *) = s21_atoE(str);
-  } else {
-    *va_arg(var, float *) = (float)s21_atoE(str);
-  }
-}
-
-void assignChar(char ch, va_list var, flags_t *f) {
-  f->convertions++;
-  *va_arg(var, char *) = ch;
-}
-
-void assignString(char *str, va_list var, flags_t *f) {
-  f->convertions++;
-  s21_strcpy(va_arg(var, char *), str);
-}
-
-void parseFormat(const char **format, flags_t *f) {
-  *format = parseWidth(*format, f);
-  *format = parseLength(*format, f);
-  *format = parseSpecifier(*format, f);
-}
-
-const char *parseWidth(const char *format, flags_t *f) {
-  char tempWidth[512];
-  int i = 0;
-  while (*format == '*' || (*format >= 48 && *format <= 57)) {
-    if (*format == '*') {
-      f->asterics = 1;
-    } else if (!f->asterics) {
-      tempWidth[i] = *format;
-      i++;
-    }
-    format++;
-  }
-  if (i) f->width = s21_atoii(tempWidth);
-  if (f->width == 0) f->width = -1;
-  return format;
-}
-
-const char *parseLength(const char *format, flags_t *f) {
-  switch (*format) {
-    case 'h':
-      f->length = 'h';
-      format++;
-      break;
-    case 'l':
-      f->length = 'l';
-      format++;
-      if ((*format) == 'l') format++;
-      break;
-    case 'L':
-      f->length = 'L';
-      format++;
-      break;
-  }
-  return format;
-}
-
-const char *parseSpecifier(const char *format, flags_t *f) {
-  char specList[17] = "cdieEfgGosuxXpn%";
-  int unmatch = 1;
-  for (int i = 0; i < 16; i++) {
-    if (*format == specList[i]) {
-      f->specifier = specList[i];
-      unmatch = 0;
-      break;
-    }
-  }
-  f->error = unmatch;
-
-  return ++format;
-}
-s21_strcat.c    1667927791  20591 4222  100644  207       `
-#include "s21_string.h"
-
-char *s21_strcat(char *dest, const char *src) {
-  s21_size_t x = s21_strlen(dest);
-  for (s21_size_t i = 0; i < s21_strlen(src); i++) {
-    dest[i + x] = src[i];
-  }
-  return dest;
-}
-s21_strchr.c    1667927791  20591 4222  100644  287       `
-#include "s21_string.h"
-
-char *s21_strchr(const char *str, int c) {
-  char *arc = s21_NULL;
-  int flag = 0;
-  s21_size_t l = s21_strlen(str);
-  for (s21_size_t i = 0; i < l; i++) {
-    if (str[i] == c && flag == 0) {
-      arc = (char *)&str[i];
-      flag = 1;
-    }
-  }
-  return arc;
-}
-s21_strcmp.c    1668010161  20591 4222  100644  375       `
-#include "s21_string.h"
-
-int s21_strcmp(const char *str1, const char *str2) {
-  int value = 0, flag = 1;
-  unsigned char *ustr1 = (unsigned char *)str1;
-  unsigned char *ustr2 = (unsigned char *)str2;
-  for (s21_size_t i = 0; (ustr1[i] || ustr2[i]) && flag; i++) {
-    if (ustr1[i] != ustr2[i]) {
-      value = ustr1[i] - ustr2[i];
-      flag = 0;
-    }
-  }
-  return value;
-}
-s21_strcpy.c    1668084006  20591 4222  100644  214       `
-#include "s21_string.h"
-
-char *s21_strcpy(char *dest, const char *src) {
-  s21_size_t i;
-  s21_size_t len_str = s21_strlen(src);
-  for (i = 0; i < len_str; i++) dest[i] = src[i];
-  dest[i] = '\0';
-  return dest;
-}
-s21_strcspn.c   1667927791  20591 4222  100644  335       `
-#include "s21_string.h"
-
-s21_size_t s21_strcspn(const char *str1, const char *str2) {
-  s21_size_t strs = s21_strlen(str1);
-
-  for (s21_size_t i = 0; i < s21_strlen(str1); i++) {
-    for (s21_size_t j = 0; j < s21_strlen(str2); j++) {
-      if ((str1[i] == str2[j]) && (strs > i)) {
-        strs = i;
-      }
-    }
-  }
-  return strs;
-}
-s21_strerror.c  1668012931  20591 4222  100644  322       `
-#include "s21_strerror.h"
-
-#include "s21_string.h"
-
-char *s21_strerror(int errnum) {
-  static char err[100];
-
-  if (errnum < 0 || errnum >= S21_ERRLIST_SIZE) {
-    sprintf(err, "Unknown error: %d", errnum);  // Ğ·Ğ°Ğ¼ĞµĞ½Ğ¸Ñ‚ÑŒ Ğ½Ğ° s21_sprintf
-  } else {
-    s21_strcpy(err, s21_sys_errlist[errnum]);
-  }
-
-  return err;
-}s21_strlen.c    1667985169  20591 4222  100644  175       `
-#include "s21_string.h"
-
-s21_size_t s21_strlen(const char* str) {
-  s21_size_t i = 0;
-  if (str != s21_NULL) {
-    while (str[i] != '\0') {
-      i++;
-    }
-  }
-  return i;
-}
-
-s21_strncat.c   1667927791  20591 4222  100644  234       `
-#include "s21_string.h"
-
-char *s21_strncat(char *dest, const char *src, s21_size_t n) {
-  s21_size_t x = s21_strlen(dest);
-  s21_size_t i = 0;
-  for (; i < n; i++) {
-    dest[i + x] = src[i];
-  }
-  dest[i + x] = '\0';
-  return dest;
-}s21_strncmp.c   1667927791  20591 4222  100644  374       `
-#include "s21_string.h"
-
-int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
-  int value = 0, flag = 1;
-  unsigned char *ustr1 = (unsigned char *)str1;
-  unsigned char *ustr2 = (unsigned char *)str2;
-
-  for (s21_size_t i = 0; i < n && flag; i++) {
-    if (ustr1[i] != ustr2[i]) {
-      value = ustr1[i] - ustr2[i];
-      flag = 0;
-    }
-  }
-  return value;
-}s21_strncpy.c   1668083707  20591 4222  100644  164       `
-#include "s21_string.h"
-
-char *s21_strncpy(char *dest, const char *src, s21_size_t n) {
-  s21_size_t i;
-  for (i = 0; i < n; i++) dest[i] = src[i];
-  return dest;
-}s21_strpbrk.c   1667927791  20591 4222  100644  403       `
-#include "s21_string.h"
-
-char *s21_strpbrk(const char *str1, const char *str2) {
-  char *buffer = s21_NULL;
-
-  for (s21_size_t i = 0; i < s21_strlen(str1); i++) {
-    for (s21_size_t j = 0; j < s21_strlen(str2); j++) {
-      if (str1[i] == str2[j]) {
-        buffer = (char *)str1 + i;
-        j = s21_strlen(str2);
-        i = s21_strlen(str1);
-        // flag = 0;
-      }
-    }
-  }
-  return buffer;
-}
-s21_strrchr.c   1667927791  20591 4222  100644  272       `
-#include "s21_string.h"
-
-char *s21_strrchr(const char *str, int c) {
-  char *arc = s21_NULL;
-  int flag = 0;
-  s21_size_t i = s21_strlen(str);
-  for (; i > 0; i--) {
-    if (str[i] == c && flag == 0) {
-      arc = (char *)&str[i];
-      flag = 1;
-    }
-  }
-  return arc;
-}s21_strspn.c    1668078627  20591 4222  100644  381       `
-#include "s21_string.h"
-
-s21_size_t s21_strspn(const char *str1, const char *str2) {
-  s21_size_t strs = 0;
-  int flag;
-  for (s21_size_t i = 0; i < s21_strlen(str1); i++) {
-    flag = 0;
-    for (s21_size_t j = 0; j < s21_strlen(str2); j++) {
-      if (str1[i] == str2[j]) {
-        strs++;
-        flag = 1;
-        break;
-      }
-    }
-    if (!flag) break;
-  }
-  return strs;
-}
-s21_strstr.c    1667927791  20591 4222  100644  653       `
-#include "s21_string.h"
-
-char *s21_strstr(const char *str, const char *needle) {
-  const char *istr;
-  char *str1;
-  int flag = 0;
-  if (s21_strlen(needle) > s21_strlen(str)) {
-    istr = s21_NULL;
-  } else {
-    if (needle[0] == '\0') {
-      istr = str;
-    } else {
-      istr = s21_NULL;
-      int i = 0;
-      str1 = (char *)str;
-      while (str1[i] != '\0') {
-        int k = 0, a = i;
-        while (str1[a] == needle[k] && (str1[a] != '\0')) {
-          a++;
-          k++;
-        }
-        if (needle[k] == '\0' && flag == 0) {
-          istr = &str1[i];
-          flag = 1;
-        }
-        i++;
-      }
-    }
-  }
-  return ((char *)istr);
-}
-s21_strtok.c    1668002507  20591 4222  100644  838       `
-#include "s21_string.h"
-
-static int s21_delim(char c, const char *delim) {
-  int flag = 0;
-  while (*delim != '\0') {
-    if (c == *delim) flag = 1;
-    delim++;
-  }
-  return flag;
-}
-
-char *s21_strtok(char *s, const char *delim) {
-  static char *st_ch;
-  char *ch_pointer;
-  if (!s) s = st_ch;
-  if (s != s21_NULL) {
-    if (*s == '\0' || !s) {
-      ch_pointer = s21_NULL;
-    } else {
-      while (1) {
-        if (s21_delim(*s, delim)) {
-          s++;
-          continue;
-        }
-        if (*s == '\0') s = s21_NULL;
-        break;
-      }
-      ch_pointer = s;
-      while (s != s21_NULL) {
-        if (*s == '\0') {
-          st_ch = s;
-          break;
-        }
-        if (s21_delim(*s, delim)) {
-          *s = '\0';
-          st_ch = s + 1;
-          break;
-        }
-        s++;
-      }
-    }
-  }
-  return (ch_pointer);
-}
-s21_to_lower.c  1667927791  20591 4222  100644  350       `
-#include "s21_string.h"
-
-void *s21_to_lower(const char *str) {
-  char *ch = s21_NULL;
-  if (str) {
-    ch = (char *)malloc((s21_strlen(str) + 1) * sizeof(char));
-    if (ch) {
-      s21_strcpy(ch, str);
-      for (s21_size_t i = 0; i < s21_strlen(str); i++) {
-        if (ch[i] >= 'A' && ch[i] <= 'Z') ch[i] += 32;
-      }
-    }
-  }
-
-  return (ch);
-}s21_to_upper.c  1667994158  20591 4222  100644  350       `
-#include "s21_string.h"
-
-void *s21_to_upper(const char *str) {
-  char *ch = s21_NULL;
-  if (str) {
-    ch = (char *)malloc((s21_strlen(str) + 1) * sizeof(char));
-    if (ch) {
-      s21_strcpy(ch, str);
-      for (s21_size_t i = 0; i < s21_strlen(str); i++) {
-        if (ch[i] >= 'a' && ch[i] <= 'z') ch[i] -= 32;
-      }
-    }
-  }
-
-  return (ch);
-}s21_trim.c      1668173829  20591 4222  100644  1862      `
-#include "s21_string.h"
-
-void delete_first_letter(char *str) {
-  s21_size_t counter = 0;
-  while (str[counter]) {
-    str[counter] = str[counter + 1];
-    counter++;
-  }
-}
-
-void rightpart(char *str_trim, const char *src, const char *trim_chars) {
-  s21_size_t trim_lenght = s21_strlen(trim_chars);
-  s21_size_t str_trim_length = s21_strlen(str_trim);
-  for (int i = (int)str_trim_length - 1; i >= 0; i--) {
-    int is_break = 0;
-    for (s21_size_t j = 0; j < trim_lenght; j++) {
-      if (str_trim[i] == trim_chars[j]) {
-        str_trim[i] = '\0';
-        break;
-      }
-      if (j == trim_lenght - 1 && src[i] != trim_chars[trim_lenght]) {
-        is_break = 1;
-      }
-    }
-    if (is_break) break;
-  }
-}
-
-void leftpart(char *str_trim, const char *src, const char *trim_chars) {
-  s21_size_t trim_lenght = s21_strlen(trim_chars);
-  s21_size_t str_length = s21_strlen(src);
-  for (s21_size_t i = 0; i < str_length; i++) {
-    int is_break = 0;
-    for (s21_size_t j = 0; j < trim_lenght; j++) {
-      if (src[i] == trim_chars[j]) {
-        delete_first_letter(str_trim);
-        break;
-      }
-      if (j == trim_lenght - 1 && src[i] != trim_chars[trim_lenght]) {
-        is_break = 1;
-      }
-    }
-    if (is_break) break;
-  }
-}
-
-void *s21_trim(const char *src, const char *trim_chars) {
-  int error_flag = 0;
-  char *str_trim = s21_NULL;
-  if (src) {
-    char default_chars[10] = " \t\n\v\r\f\0";
-    if (trim_chars == s21_NULL || s21_strlen(trim_chars) == 0)
-      trim_chars = default_chars;
-    str_trim = (char *)malloc((s21_strlen(src) + 10) * sizeof(char));
-    if (str_trim == s21_NULL) {
-      error_flag = 1;
-    } else {
-      s21_strcpy(str_trim, (char *)src);
-      leftpart(str_trim, src, trim_chars);
-      rightpart(str_trim, src, trim_chars);
-    }
-  } else {
-    error_flag = 1;
-  }
-  return error_flag ? s21_NULL : (void *)str_trim;
-}
-s21_atoi.o      1668431442  20591 4222  100644  6416      `
-Ïúíş           X             Ø                                x                         __text          __TEXT                        x      €       €            __literal4      __TEXT                        ˜                            __literal8      __TEXT          (                                          __literal16     __TEXT          @             ¸                            __eh_frame      __TEXT          P      ¸      È     P       h            2                              P  À      P                                                                      UH‰åH‰}èÇEü    ÇEø   H‹Eè¶ <-uH‹EèHƒÀ¶ <+tÇEøÿÿÿÿHƒEèëH‹Eè¶ <+u3ÇEø   HƒEèë%‹Uü‰ĞÁàĞÀ‰ÂH‹Eè¶ ¾Àƒè0Ğ‰EüHƒEèH‹Eè¶ „ÀtH‹Eè¶ </~H‹Eè¶ <9~ºƒ}ø y
-‹Eü¯Eø‰Eü‹Eü]ÃUH‰åH‰}èHÇEø    ÇEô   H‹Eè¶ <-uH‹EèHƒÀ¶ <+tÇEôÿÿÿÿHƒEèëH‹Eè¶ <+u=ÇEô   HƒEèë/H‹UøH‰ĞHÁàHĞHÀH‰ÂH‹Eè¶ ¾Àƒè0H˜HĞH‰EøHƒEèH‹Eè¶ „ÀtH‹Eè¶ </~H‹Eè¶ <9~°ƒ}ô y‹EôH˜H‹UøH¯ÂH‰EøH‹Eø]ÃUH‰åH‰}èHÇEø    ÇEô   H‹Eè¶ <-uH‹EèHƒÀ¶ <+tÇEôÿÿÿÿHƒEèëH‹Eè¶ <+u=ÇEô   HƒEèë/H‹UøH‰ĞHÁàHĞHÀH‰ÂH‹Eè¶ ¾Àƒè0H˜HĞH‰EøHƒEèH‹Eè¶ „ÀtH‹Eè¶ </~H‹Eè¶ <9~°ƒ}ô y‹EôH˜H‹UøH¯ÂH‰EøH‹Eø]ÃUH‰åH‰}èfÇEş  ÇEø   H‹Eè¶ <-uH‹EèHƒÀ¶ <+tÇEøÿÿÿÿHƒEèëH‹Eè¶ <+u4ÇEø   HƒEèë&·Uş‰ĞÁàĞÀ‰ÂH‹Eè¶ f˜Ğƒè0f‰EşHƒEèH‹Eè¶ „ÀtH‹Eè¶ </~H‹Eè¶ <9~¹ƒ}ø y‹Eø‰Â·Eş¯Âf‰Eş·Eş]ÃUH‰åHƒì0H‰}èfïÀóEüfïÀóEğÇEø    ÇEô   H‹Eè¶ <-uH‹EèHƒÀ¶ <+tÇEôÿÿÿÿHƒEèëH‹Eè¶ <+uMHƒEèëFH‹Eè¶ <.uHƒEèëdóMüó    óYÈH‹Eè¶ ¾Àƒè0fïÀó*ÀóXÁóEüHƒEèH‹Eè¶ „À„›   H‹Eè¶ </~H‹Eè¶ <9~•H‹Eè¶ <.tŠëxƒEøH‹Eè¶ ¾Àƒè0fïÀó*ÀóEğfïÒóZUüòUàfïÛóZ]ğò]ØfïÀò*EøH‹    f(ÈfHnÀè    òMØò^ÈòEàòXÁòZÀóEüHƒEèH‹Eè¶ „Àt H‹Eè¶ </~H‹Eè¶ <9
-ƒ}ø…]ÿÿÿƒ}ô yfïÀó*EôóMüóYÁóEüóEüÉÃUH‰åHƒì0H‰}ØfïÀòEøfïÀòEèÇEô    ÇEğ   H‹EØ¶ <-uH‹EØHƒÀ¶ <+tÇEğÿÿÿÿHƒEØëH‹EØ¶ <+uMHƒEØëFH‹EØ¶ <.uHƒEØë`òMøò    òYÈH‹EØ¶ ¾Àƒè0fïÀò*ÀòXÁòEøHƒEØH‹EØ¶ „Àt{H‹EØ¶ </~H‹EØ¶ <9~™H‹EØ¶ <.tëXƒEôH‹EØ¶ ¾Àƒè0fïÀò*ÀòEèfïÀò*EôH‹    f(ÈfHnÀè    òMèò^ÈòEøòXÁòEøHƒEØH‹EØ¶ „ÀtH‹EØ¶ </~H‹EØ¶ <9~‡ƒ}ğ yfïÀò*EğòMøòYÁòEøòEøfH~ÀfHnÀÉÃUH‰åHƒì@H‰}ÈÙîÛ}ğÙîÛ}ĞÇEì    ÇEè   H‹EÈ¶ <-uH‹EÈHƒÀ¶ <+tÇEèÿÿÿÿHƒEÈëH‹EÈ¶ <+uAHƒEÈë:H‹EÈ¶ <.uHƒEÈëTÛmğÛ-    ŞÉH‹EÈ¶ ¾Àƒè0‰EÀÛEÀŞÁÛ}ğHƒEÈH‹EÈ¶ „ÀtuH‹EÈ¶ </~H‹EÈ¶ <9~¥H‹EÈ¶ <.tšëRƒEìH‹EÈ¶ ¾Àƒè0‰EÀÛEÀÛ}ĞfïÀò*EìH‹    f(ÈfHnÀè    òEÀİEÀÛmĞŞñÛmğŞÁÛ}ğHƒEÈH‹EÈ¶ „ÀtH‹EÈ¶ </~H‹EÈ¶ <9~ƒ}è yÛEèÛmğŞÉÛ}ğÛmğÉÃUH‰åHƒì0H‰}ØHÇEø    ÇEô    ÇEğ   ÇEì    H‹EØ¶ <-uH‹EØHƒÀ¶ <+tÇEğÿÿÿÿHƒEØëH‹EØ¶ <+uHƒEØH‹EØ¶ <0u#H‹EØHƒÀ¶ <xtH‹EØHƒÀ¶ <XuHƒEØH‹EØH‰Çè    ƒè‰EôéF  fïÀò*EôH‹    f(ÈfHnÀè    ò,À‰EìH‹EØ¶ <atH‹EØ¶ <Au‹Uì‰ĞÁàĞÀH˜HEøéë   H‹EØ¶ <btH‹EØ¶ <Bu‹Uì‰ĞÁàĞÀĞH˜HEøé¼   H‹EØ¶ <ctH‹EØ¶ <Cu‹Uì‰ĞÀĞÁàH˜HEøé   H‹EØ¶ <dtH‹EØ¶ <Du‹Uì‰ĞÀĞÁàĞH˜HEøëcH‹EØ¶ <etH‹EØ¶ <Eu‹EìkÀH˜HEøë?H‹EØ¶ <ftH‹EØ¶ <Fu‹Uì‰ĞÁà)ĞH˜HEøëH‹EØ¶ ¾Àƒè0¯EìH˜HEøƒmôHƒEØH‹EØ¶ „ÀtLH‹EØ¶ </~H‹EØ¶ <9~,H‹EØ¶ <`~H‹EØ¶ <f~H‹EØ¶ <@~H‹EØ¶ <F
-ƒ}ô ‰cşÿÿƒ}ğ y‹EğH˜H‹UøH¯ÂH‰EøH‹EøÉÃUH‰åHƒì0H‰}ØHÇEø    ÇEô    ÇEğ   ÇEì    H‹EØ¶ <-uH‹EØHƒÀ¶ <+tÇEğÿÿÿÿHƒEØëH‹EØ¶ <+uHƒEØH‹EØH‰Çè    ƒè‰EôëEfïÀò*EôH‹    f(ÈfHnÀè    ò,À‰EìH‹EØ¶ ¾Àƒè0¯EìH˜HEøƒmôHƒEØH‹EØ¶ „ÀtH‹EØ¶ </~H‹EØ¶ <7ƒ}ô y”ƒ}ğ y‹EğH˜H‹UøH¯ÂH‰EøH‹EøÉÃUH‰åHƒìPH‰}¸ÙîÛ}ğÙîÛ}ÀÇEì    ÇEè   ÇEä    ÇEà   ÇEÜ    H‹E¸¶ <-uH‹E¸HƒÀ¶ <+tÇEèÿÿÿÿHƒE¸ëH‹E¸¶ <+uAHƒE¸ë:H‹E¸¶ <.uHƒE¸ëXÛmğÛ-    ŞÉH‹E¸¶ ¾Àƒè0‰E°ÛE°ŞÁÛ}ğHƒE¸H‹E¸¶ „À„™   H‹E¸¶ </~H‹E¸¶ <9~¡H‹E¸¶ <.t–ëvH‹E¸¶ <etH‹E¸¶ <EuÇEÜ   HƒE¸ëRƒEìH‹E¸¶ ¾Àƒè0‰E°ÛE°Û}ÀfïÀò*EìH‹    f(ÈfHnÀè    òE°İE°ÛmÀŞñÛmğŞÁÛ}ğHƒE¸H‹E¸¶ „Àt6H‹E¸¶ </~H‹E¸¶ <9~H‹E¸¶ <etH‹E¸¶ <Eu
-ƒ}Ü „IÿÿÿH‹E¸¶ <-uH‹E¸HƒÀ¶ <+tÇEàÿÿÿÿHƒE¸H‹E¸¶ <+u,HƒE¸ë%‹Uä‰ĞÁàĞÀ‰ÂH‹E¸¶ ¾Àƒè0Ğ‰EäHƒE¸H‹E¸¶ „ÀtH‹E¸¶ </~H‹E¸¶ <9~ºƒ}à y
-‹Eä¯Eà‰EäfïÀò*EäH‹    f(ÈfHnÀè    òE°İE°ÛmğŞÉÛ}ğƒ}è yÛEèÛmğŞÉÛ}ğÛmğÉÃUH‰åHƒì0H‰}ØHÇEø    ÇEô    ÇEğ   ÇEì    H‹EØ¶ <0u#H‹EØHƒÀ¶ <xtH‹EØHƒÀ¶ <XuHƒEØH‹EØH‰Çè    ƒè‰EôéF  fïÀò*EôH‹    f(ÈfHnÀè    ò,À‰EìH‹EØ¶ <atH‹EØ¶ <Au‹Uì‰ĞÁàĞÀH˜HEøéë   H‹EØ¶ <btH‹EØ¶ <Bu‹Uì‰ĞÁàĞÀĞH˜HEøé¼   H‹EØ¶ <ctH‹EØ¶ <Cu‹Uì‰ĞÀĞÁàH˜HEøé   H‹EØ¶ <dtH‹EØ¶ <Du‹Uì‰ĞÀĞÁàĞH˜HEøëcH‹EØ¶ <etH‹EØ¶ <Eu‹EìkÀH˜HEøë?H‹EØ¶ <ftH‹EØ¶ <Fu‹Uì‰ĞÁà)ĞH˜HEøëH‹EØ¶ ¾Àƒè0¯EìH˜HEøƒmôHƒEØH‹EØ¶ „ÀtLH‹EØ¶ </~H‹EØ¶ <9~,H‹EØ¶ <`~H‹EØ¶ <f~H‹EØ¶ <@~H‹EØ¶ <F
-ƒ}ô ‰cşÿÿƒ}ğ y‹EğH˜H‹UøH¯ÂH‰EøH‹EøÉÃUH‰åHƒì0H‰}ØHÇEø    ÇEô    ÇEğ   ÇEì    H‹EØH‰Çè    ƒè‰EôëEfïÀò*EôH‹    f(ÈfHnÀè    ò,À‰EìH‹EØ¶ ¾Àƒè0¯EìH˜HEøƒmôHƒEØH‹EØ¶ „ÀtH‹EØ¶ </~H‹EØ¶ <7ƒ}ô y”ƒ}ğ y‹EğH˜H‹UøH¯ÂH‰EøH‹EøÉÃ     A          $@      0@       @        @             zR x  4      àÿÿÿÿÿÿÿ²           †   ­          4   T   ¨ÿÿÿÿÿÿÿÅ           †   À          4   Œ   pÿÿÿÿÿÿÿÅ           †   À          4   Ä   8ÿÿÿÿÿÿÿ¹           †   ´          4   ü    ÿÿÿÿÿÿÿ¥          †             4   4  Èşÿÿÿÿÿÿ          †   |         4   l  şÿÿÿÿÿÿO          †   J         4   ¤  Xşÿÿÿÿÿÿ`          †   [         4   Ü   şÿÿÿÿÿÿş           †   ù          4     èıÿÿÿÿÿÿh          †   c         4   L  °ıÿÿÿÿÿÿ(          †   #         4   „  xıÿÿÿÿÿÿÆ           †   Á          ¯    -¡    ‰    -¸    -ª        -    -ø    ÿ    -ñ    R    Y
-    -K
-    3
-    -*    -        -    -        ¬    -        '    -    v     ˆ    ^ˆ    P    ^P        ^    à    ^à    ¨    ^¨  
-  p    ^p    8    ^8         ^   	  È     ^È          ^     X     ^X           ^      ¼            ®     (      ª     @      ¦     0      ¢     8      ²     P      ˜     Ê	      {     È
-      f     š      \     õ           j      Q             <     ²       p           F     w      &     <      …     X           0      !              0               _s21_usigned_atohex _s21_atohex _pow _s21_atos _s21_strlen _s21_atol _s21_atoll _s21_atoii _s21_atof _s21_atod _s21_atold _s21_atoE _s21_unsigned_ato8 _s21_ato8 lC8 lC7 lC5 lC2 EH_frame1 lC1 s21_insert.o    1668431442  20591 4222  100644  968       `
-Ïúíş           h             è                                 ˆ                         __text          __TEXT                  ;      ˆ             €            __eh_frame      __TEXT          @      P       È     H       h            2                         X     ˜  0      P                                                                      UH‰åSHƒìHH‰}ÈH‰uÀH‰U¸HÇEè    H‹EÈH‰Çè    H9E¸‡ş   Hƒ}È „ó   H‹EÈH‰Çè    H‰ÃH‹EÀH‰Çè    HØHƒÀH‰Çè    H‰EèHƒ}è „º   HÇEà    HÇEØ    ë H‹UÈH‹EàHĞH‹MèH‹UàHÊ¶ ˆHƒEàH‹EàH;E¸rÖë'H‹UÀH‹EØHĞH‹MàH‹UØHÑH‹UèHÊ¶ ˆHƒEØH‹EÀH‰Çè    H9EØrÇH‹E¸H‰Eàë'H‹UÈH‹EàHĞH‹MàH‹UØHÑH‹UèHÊ¶ ˆHƒEàH‹EÈH‰Çè    H9EàrÇH‹EèH‹]øÉÃ            zR x  4      àÿÿÿÿÿÿÿ;          †      ƒ1  '    -ä     -d     -U     -F     -%     -       ^      !     @                                                _s21_insert _s21_strlen _malloc EH_frame1      s21_memchr.o    1668431442  20591 4222  100644  648       `
-Ïúíş           h             è                           ¸       ˆ      ¸                    __text          __TEXT                  h       ˆ                €            __eh_frame      __TEXT          h       P       ğ     @       h            2                         P     p        P                                                                       UH‰åH‰}Ø‰uÔH‰UÈH‹EØH‰EøHÇEğ    HÇEè    ë(H‹Eø¶ ‹UÔ8ĞuH‹EøH‰EèH‹EÈH‰EğHƒEøHƒEğH‹EğH;EÈsHƒ}ø uÇH‹Eè]Ã       zR x  4      àÿÿÿÿÿÿÿh           †   c                 ^           h                     _s21_memchr EH_frame1  s21_memcmp.o    1668431442  20591 4222  100644  696       `
-Ïúíş           h             è                           è       ˆ      è                    __text          __TEXT                  –       ˆ                €            __eh_frame      __TEXT          ˜       P             p       h            2                         €              P                                                                       UH‰åH‰}ØH‰uĞH‰UÈÇEü    H‹EØH‰EèH‹EĞH‰EàHÇEğ    ëVH‹UèH‹EğHĞ¶H‹MàH‹EğHÈ¶ 8Ât1H‹UèH‹EğHĞ¶ ¶ĞH‹MàH‹EğHÈ¶ ¶È‰Ğ)È‰EüH‹EÈH‰EğHƒEğH‹EğH;EÈr ‹Eü]Ã         zR x  4      àÿÿÿÿÿÿÿ–           †   ‘                 ^           ˜                     _s21_memcmp EH_frame1  s21_memcpy.o    1668431442  20591 4222  100644  648       `
-Ïúíş           h             è                           ¸       ˆ      ¸                    __text          __TEXT                  a       ˆ                €            __eh_frame      __TEXT          h       P       ğ     @       h            2                         P     p        P                                                                       UH‰åH‰}ØH‰uĞH‰UÈH‹EØH‰EğH‹EĞH‰EèHƒ}Ø t4HÇEø    ë H‹UèH‹EøHĞH‹MğH‹UøHÊ¶ ˆHƒEøH‹EøH;EÈrÖH‹EØ]Ã              zR x  4      àÿÿÿÿÿÿÿa           †   \                 ^           h                     _s21_memcpy EH_frame1  s21_memmove.o   1668431442  20591 4222  100644  784       `
-Ïúíş           h             è                           @      ˆ      @                   __text          __TEXT                  ë       ˆ                €            __eh_frame      __TEXT          ğ       P       x     È       h            2                         Ø     ø        P                                                                       UH‰åSHƒìXH‰}¸H‰u°H‰U¨H‰àH‰ÆH‹E¸H‰EØH‹E°H‰EĞH‹E¨H‰ÂHƒêH‰UÈI‰ÀA¹    H‰Á»    º   HƒêHĞ»   º    H÷óHkÀH)ÄH‰àHƒÀ H‰EÀHÇEà    ë H‹UĞH‹EàHĞ¶ H‹MÀH‹UàHÊˆHƒEàH‹EàH;E¨rÖHÇEè    ë H‹UØH‹EèHÂH‹MÀH‹EèHÈ¶ ˆHƒEèH‹EèH;E¨rÖH‹E¸H‰ôH‹]øÉÃ            zR x  4      àÿÿÿÿÿÿÿë           †      ƒá          ^           ğ                     _s21_memmove EH_frame1 s21_memset.o    1668431442  20591 4222  100644  624       `
-Ïúíş           h             è                                   ˆ                           __text          __TEXT                  M       ˆ                €            __eh_frame      __TEXT          P       P       Ø     (       h            2                         8     X        P                                                                       UH‰åH‰}è‰uäH‰UØH‹EèH‰EğHƒ}è t)HÇEø    ëH‹UğH‹EøHĞ‹UäˆHƒEøH‹EøH;EØráH‹Eè]Ã          zR x  4      àÿÿÿÿÿÿÿM           †   H                 ^           P                     _s21_memset EH_frame1  s21_sprintf.o   1668431442  20591 4222  100644  15192     `
-Ïúíş           X             Ø                          Ø-      x      Ø-                   __text          __TEXT                  È&      x     P0  {     €            __cstring       __TEXT          È&             @)                             __literal16     __TEXT          à&             X)                            __literal8      __TEXT          ğ&             h)                            __eh_frame      __TEXT          ø&      à      p)     (4  >     h            2                         6  .   ø8  `     P                #                                                      UH‰åHì  H‰½øşÿÿH‰µğşÿÿH‰•`ÿÿÿH‰hÿÿÿL‰…pÿÿÿL‰xÿÿÿ„Àt )E€)M)U )]°)eÀ)mĞ)uà)}ğHÇ… ÿÿÿ    HÇ…(ÿÿÿ    HÇ…0ÿÿÿ    Ç…ÿÿÿ   Ç…ÿÿÿ0   HEH‰…ÿÿÿH…PÿÿÿH‰…ÿÿÿH‹…øşÿÿH‰…Hÿÿÿé   H‹…ğşÿÿ¶ <%t.H‹•ğşÿÿHBH‰…ğşÿÿH‹…øşÿÿHHH‰øşÿÿ¶ˆéÄ   Hƒ…ğşÿÿH•ÿÿÿH… ÿÿÿH‹ğşÿÿH‰ÆH‰Ïè    H‰…ğşÿÿH•ÿÿÿH… ÿÿÿH‹øşÿÿH‰ÆH‰Ïè    H‰…øşÿÿ‹…4ÿÿÿƒønuc‹…ÿÿÿƒø/w#H‹…ÿÿÿ‹•ÿÿÿ‰ÒHĞ‹•ÿÿÿƒÂ‰•ÿÿÿëH‹…ÿÿÿHPH‰•ÿÿÿH‹ H‰…@ÿÿÿH‹…øşÿÿH+…Hÿÿÿ‰ÂH‹…@ÿÿÿ‰H‹…ğşÿÿ¶ „À…îşÿÿH‹…øşÿÿH+…HÿÿÿÉÃUH‰åHƒì H‰}øH‰uğH‰UèH‹UğH‹EøH‰ÖH‰Çè    H‰EøH‹UèH‹MğH‹EøH‰ÎH‰Çè    H‰EøH‹UèH‹MğH‹EøH‰ÎH‰Çè    H‰EøH‹UğH‹EøH‰ÖH‰Çè    H‰EøH‹Eø¶ ¾ÀH‹Uğ‰BHƒEøH‹EøÉÃUH‰åH‰}øH‰uğé´   H‹Eø¶ ¾Àƒè ƒø‡™   ‰ÀH…    H   ‹H˜H   HĞÿà W   t   t   a   t   t   t   t   t   t   t   M   t   D   t   t   k   H‹EğÆ ë'H‹EğÆ@ëH‹EğÆ@ëH‹EğÆ@ë	H‹EğÆ@HƒEøH‹Eø¶ <-„=ÿÿÿH‹Eø¶ <+„.ÿÿÿH‹Eø¶ < „ÿÿÿH‹Eø¶ <#„ÿÿÿH‹Eø¶ <0„ÿÿÿH‹Eø]ÃUH‰åHì0  H‰½èûÿÿH‰µàûÿÿH‰•ØûÿÿH‹…èûÿÿ¶ <*uqHƒ…èûÿÿH‹…Øûÿÿ‹ ƒø/w0H‹…ØûÿÿH‹PH‹…Øûÿÿ‹ ‰ÀHĞH‹•Øûÿÿ‹JH‹•Øûÿÿ‰
-ëH‹…ØûÿÿH‹@HPH‹ØûÿÿH‰Q‹H‹…àûÿÿ‰Pé©   H‹…èûÿÿ¶ </—   H‹…èûÿÿ¶ <9…   HÇ…ğûÿÿ    H…øûÿÿºø  ¾    H‰Çè    ÇEü    ë#H‹…èûÿÿ¶ ‹UüHcÒˆ„ğûÿÿƒEüHƒ…èûÿÿH‹…èûÿÿ¶ </~H‹…èûÿÿ¶ <9~ÁH…ğûÿÿH‰Çè    H‹•àûÿÿ‰BH‹…èûÿÿÉÃUH‰åHì0  H‰½èûÿÿH‰µàûÿÿH‰•ØûÿÿH‹…èûÿÿ¶ <.…;  H‹…àûÿÿÆ@Hƒ…èûÿÿH‹…èûÿÿ¶ <*uqHƒ…èûÿÿH‹…Øûÿÿ‹ ƒø/w0H‹…ØûÿÿH‹PH‹…Øûÿÿ‹ ‰ÀHĞH‹•Øûÿÿ‹JH‹•Øûÿÿ‰
-ëH‹…ØûÿÿH‹@HPH‹ØûÿÿH‰Q‹H‹…àûÿÿ‰Pé©   H‹…èûÿÿ¶ </—   H‹…èûÿÿ¶ <9…   HÇ…ğûÿÿ    H…øûÿÿºø  ¾    H‰Çè    ÇEü    ë#H‹…èûÿÿ¶ ‹UüHcÒˆ„ğûÿÿƒEüHƒ…èûÿÿH‹…èûÿÿ¶ </~H‹…èûÿÿ¶ <9~ÁH…ğûÿÿH‰Çè    H‹•àûÿÿ‰BH‹…èûÿÿÉÃUH‰åH‰}øH‰uğH‹Eø¶ ¾Àƒøltƒøl6ƒøLt#ƒøhu,H‹EğÆ@hHƒEøëH‹EğÆ@lHƒEøëH‹EğÆ@LHƒEøH‹Eø]ÃUH‰åHì0  H‰½èûÿÿH‰µàûÿÿH‰•ØûÿÿHÇ…ğûÿÿ    H…øûÿÿºø  ¾    H‰Çè    H‹…àûÿÿ‹@ƒødtH‹…àûÿÿ‹@ƒøiu%H‹•ØûÿÿH‹àûÿÿH…ğûÿÿH‰ÎH‰Çè    é  H‹…àûÿÿ‹@ƒøuu%H‹•ØûÿÿH‹àûÿÿH…ğûÿÿH‰ÎH‰Çè    éë  H‹…àûÿÿ‹@ƒøou%H‹•ØûÿÿH‹àûÿÿH…ğûÿÿH‰ÎH‰Çè    é·  H‹…àûÿÿ‹@ƒøfu%H‹•ØûÿÿH‹àûÿÿH…ğûÿÿH‰ÎH‰Çè    éƒ  H‹…àûÿÿ‹@ƒøpu%H‹•ØûÿÿH‹àûÿÿH…ğûÿÿH‰ÎH‰Çè    éO  H‹…àûÿÿ‹@ƒøetH‹…àûÿÿ‹@ƒøEu%H‹•ØûÿÿH‹àûÿÿH…ğûÿÿH‰ÎH‰Çè    é  H‹…àûÿÿ‹@ƒøg„ù   H‹…àûÿÿ‹@ƒøG„æ   H‹…àûÿÿ‹@ƒøxtH‹…àûÿÿ‹@ƒøXu%H‹•ØûÿÿH‹àûÿÿH…ğûÿÿH‰ÎH‰Çè    é£   H‹…àûÿÿ‹@ƒøsu"H‹•ØûÿÿH‹àûÿÿH…ğûÿÿH‰ÎH‰Çè    ërH‹…àûÿÿ‹@ƒøcuSH‹…àûÿÿ¶@<lu"H‹•ØûÿÿH‹àûÿÿH…ğûÿÿH‰ÎH‰Çè    ë2H‹•ØûÿÿH‹àûÿÿH…ğûÿÿH‰ÎH‰Çè    ëH‹…àûÿÿ‹@ˆ…ğûÿÿH‹…àûÿÿ‹@ƒøGtH‹…àûÿÿ‹@ƒøXtH‹…àûÿÿ‹@ƒøEuH…ğûÿÿH‰Çè    ÇEü    ë"‹EüH˜¶„ğûÿÿH‹•èûÿÿˆƒEüHƒ…èûÿÿ‹EüH˜¶„ğûÿÿ„ÀuÍH‹…èûÿÿÆ  H‹…èûÿÿÉÃUH‰åH‰}èH‰uàH‰UØH‹EØ‹ ƒø/w$H‹EØH‹PH‹EØ‹ ‰ÀHĞH‹UØ‹JH‹UØ‰
-ëH‹EØH‹@HPH‹MØH‰Q‹ ˆE÷H‹Eà¶ „Àt?H‹Eà‹@…Àt4H‹Uè¶E÷ˆÇEü   ë‹EüH˜H‹UèHĞÆ  ƒEüH‹Eà‹@9Eü|áëdH‹Eà‹@…ÀtMÇEø    ë6H‹Eà‹@ƒè9Eøu‹EøH˜H‹UèHÂ¶E÷ˆë‹EøH˜H‹UèHĞÆ  ƒEøH‹Eà‹@9Eø|¾ëH‹Uè¶E÷ˆë ]ÃUH‰åSHìH  H‰½ÈûÿÿH‰µÀûÿÿH‰•¸ûÿÿH‹…¸ûÿÿ‹ ƒø/w0H‹…¸ûÿÿH‹PH‹…¸ûÿÿ‹ ‰ÀHĞH‹•¸ûÿÿ‹JH‹•¸ûÿÿ‰
-ëH‹…¸ûÿÿH‹@HPH‹¸ûÿÿH‰Q‹ ‰EÜH‹…Àûÿÿ¶ „ÀtgH‹…Àûÿÿ‹@…ÀtYHEÜH‹Èûÿÿº   H‰ÆH‰Ïè    H‹…ÈûÿÿH‰Çè    ‰Eìë‹EìH˜H‹•ÈûÿÿHĞÆ  ƒEìH‹…Àûÿÿ‹@9Eì|ÛéÔ   H‹…Àûÿÿ‹@…À„¥   HÇ…Ğûÿÿ    H…Øûÿÿºø  ¾    H‰Çè    HMÜH…Ğûÿÿº   H‰ÎH‰Çè    HÇEà    ëH‹•ÈûÿÿH‹EàHĞÆ  HƒEàH‹…Àûÿÿ‹@HcØH…ĞûÿÿH‰Çè    H‰ÂH‰ØH)ĞH9Eàr¿H…ĞûÿÿH‹•ÈûÿÿH‰ÆH‰×è    ëHEÜH‹Èûÿÿº   H‰ÆH‰Ïè    ë H‹]øÉÃUH‰åSHì8  H‰½ØûÿÿH‰µĞûÿÿH‰•ÈûÿÿH‹…Èûÿÿ‹ ƒø/w0H‹…ÈûÿÿH‹PH‹…Èûÿÿ‹ ‰ÀHĞH‹•Èûÿÿ‹JH‹•Èûÿÿ‰
-ëH‹…ÈûÿÿH‹@HPH‹ÈûÿÿH‰QH‹ H‰EèHÇ…àûÿÿ    H…èûÿÿºø  ¾    H‰Çè    H‹UèH…àûÿÿH‰ÖH‰Çè    H‹…Ğûÿÿ¶@„ÀtH‹…Ğûÿÿ‹@H˜Æ„àûÿÿ H‹…Ğûÿÿ‹@‰ÃH…àûÿÿH‰Çè    ‰Â‰Ø)Ğ‰EäH…àûÿÿH‰Çè    ‰EàH‹…Ğûÿÿ¶ „ÀtFƒ}ä ~@H…àûÿÿH‹•ØûÿÿH‰ÆH‰×è    ‹EäH˜‹UàHcÒH‹ØûÿÿHÑH‰Â¾    H‰Ïè    ë^ƒ}ä ~?‹EäH˜H‹ØûÿÿH‰Â¾    H‰Ïè    ‹EäH˜H‹•ØûÿÿHÂH…àûÿÿH‰ÆH‰×è    ëH…àûÿÿH‹•ØûÿÿH‰ÆH‰×è    H‹]øÉÃUH‰åSHì8  H‰½Ø÷ÿÿH‰µĞ÷ÿÿH‰•È÷ÿÿH‹…È÷ÿÿ‹ ƒø/w0H‹…È÷ÿÿH‹PH‹…È÷ÿÿ‹ ‰ÀHĞH‹•È÷ÿÿ‹JH‹•È÷ÿÿ‰
-ëH‹…È÷ÿÿH‹@HPH‹È÷ÿÿH‰QH‹ H‰EèHÇ…àûÿÿ    H…èûÿÿºø  ¾    H‰Çè    HÇ…à÷ÿÿ    H…è÷ÿÿºø  ¾    H‰Çè    H‹MèH…à÷ÿÿº   H‰ÎH‰Çè    H•à÷ÿÿH…àûÿÿH‰ÖH‰Çè    H‹…Ğ÷ÿÿ¶@„ÀtH‹…Ğ÷ÿÿ‹@H˜Æ„àûÿÿ H‹…Ğ÷ÿÿ‹@‰ÃH…àûÿÿH‰Çè    ‰Â‰Ø)Ğ‰EäH…àûÿÿH‰Çè    ‰EàH‹…Ğ÷ÿÿ¶ „ÀtFƒ}ä ~@H…àûÿÿH‹•Ø÷ÿÿH‰ÆH‰×è    ‹EäH˜‹UàHcÒH‹Ø÷ÿÿHÑH‰Â¾    H‰Ïè    ë^ƒ}ä ~?‹EäH˜H‹Ø÷ÿÿH‰Â¾    H‰Ïè    ‹EäH˜H‹•Ø÷ÿÿHÂH…àûÿÿH‰ÆH‰×è    ëH…àûÿÿH‹•Ø÷ÿÿH‰ÆH‰×è    H‹]øÉÃUH‰åHƒì0H‰}èH‰uàH‰UØH‹EØ‹ ƒø/w$H‹EØH‹PH‹EØ‹ ‰ÀHĞH‹UØ‹JH‹UØ‰
-ëH‹EØH‹@HPH‹MØH‰QH‹ H‰EøH‹Eà¶@„ÀuH‹EøH˜H‰EøëH‹Eà¶@<huH‹EøH¿ÀH‰EøH‹MøH‹Eèº
-   H‰ÎH‰Çè    H‹UàH‹EèH‰ÖH‰Çè    H‹UàH‹EèH‰ÖH‰Çè    ÉÃUH‰åH‰}èÇEü    Hƒ}è u6ÇEü   ë4H‹MèHºgfffffffH‰ÈH÷êH‰ĞHÁøHÁù?H‰ÊH)ĞH‰EèƒEüHƒ}è uÌ‹Eü]ÃUH‰åHì@  H‰½ØûÿÿH‰µĞûÿÿ‰•ÌûÿÿHÇ…àûÿÿ    H…èûÿÿºø  ¾    H‰Çè    ÇEü    H‹…ĞûÿÿHÁø?ƒà…À•ÀˆEó€}ó tH‹…ĞûÿÿH÷ØëH‹…ĞûÿÿH‰…ĞûÿÿHƒ½Ğûÿÿ uYH‹…ØûÿÿÆ 0ëM‹…ÌûÿÿHcÈH‹…ĞûÿÿH™H÷ùH    ¶‹UüHcÒˆ„àûÿÿ‹…ÌûÿÿHcÈH‹…ĞûÿÿH™H÷ùH‰…ĞûÿÿƒEüHƒ½Ğûÿÿ u©€}ó t‹EüH˜Æ„àûÿÿ-H…àûÿÿH‰Çè    ‰EìÇEø    ‹Eìƒè‰Eôë&‹EøH˜H‹•ØûÿÿHÂ‹EôH˜¶„àûÿÿˆƒEøƒmô‹Eø;Eì|ÒÉÃUH‰åHì0  H‰½èûÿÿH‰µàûÿÿ‰•ÜûÿÿHÇ…ğûÿÿ    H…øûÿÿºø  ¾    H‰Çè    ÇEü    Hƒ½àûÿÿ u_H‹…èûÿÿÆ 0ëS‹…ÜûÿÿHcÈH‹…àûÿÿº    H÷ñH    ¶‹UüHcÒˆ„ğûÿÿ‹…ÜûÿÿHcÈH‹…àûÿÿº    H÷ñH‰…àûÿÿƒEüHƒ½àûÿÿ u£H…ğûÿÿH‰Çè    ‰EğÇEø    ‹Eğƒè‰Eôë&‹EøH˜H‹•èûÿÿHÂ‹EôH˜¶„ğûÿÿˆƒEøƒmô‹Eø;Eğ|ÒÉÃUH‰åHì0  H‰½ØûÿÿH‰µĞûÿÿHÇ…àûÿÿ    H…èûÿÿºø  ¾    H‰Çè    H‹…ØûÿÿH‰Çè    ‰EüÇEø    H‹…Øûÿÿ¶ <-uÆ…àûÿÿ-ÇEø   ƒmüH‹…Ğûÿÿ‹@9Eü   ‹Eø‰Eôë‹EôH˜Æ„àûÿÿ0ƒEôH‹…Ğûÿÿ‹@+Eü‹UøĞ9Eô|Ø‹Eø‰Eğë'‹EğH˜H‹•ØûÿÿHĞ¶ ‹UôHcÒˆ„àûÿÿƒEğƒEô‹EğH˜H‹•ØûÿÿHĞ¶ „ÀuÃH…àûÿÿH‹•ØûÿÿH‰ÆH‰×è    H‹…Ğûÿÿ‹@ƒødtKH‹…Ğûÿÿ‹@ƒøit<H‹…Ğûÿÿ‹@ƒøot-H‹…Ğûÿÿ‹@ƒøutH‹…Ğûÿÿ‹@ƒøxtH‹…Ğûÿÿ‹@ƒøXu¸   ë¸    ˆEï€eïH‹…Ğûÿÿ¶@„Àt,H‹…Ğûÿÿ‹@…Àu€}ï tH‹…Øûÿÿ¶ <0u
-H‹…ØûÿÿÆ  ÉÃUH‰åSHì(  H‰½ØûÿÿH‰µĞûÿÿHÇ…àûÿÿ    H…èûÿÿºø  ¾    H‰Çè    H‹…Ğûÿÿ¶@„À„•   H‹…Ğûÿÿ‹@ƒøu„‚   H‹…Ğûÿÿ‹@ƒøptsH‹…Øûÿÿ¶ <-u¸-   ë¸+   ˆ…àûÿÿH‹…Øûÿÿ¶ <-uH‹…ØûÿÿHPëH‹•ØûÿÿH…àûÿÿHƒÀH‰ÖH‰Çè    H…àûÿÿH‹•ØûÿÿH‰ÆH‰×è    ëxH‹…Ğûÿÿ¶@„ÀtiH‹…Øûÿÿ¶ <-t[H‹…Ğûÿÿ‹@ƒøutLH‹…Ğûÿÿ‹@ƒøpt=Æ…àûÿÿ H…àûÿÿHƒÀH‹•ØûÿÿH‰ÖH‰Çè    H…àûÿÿH‹•ØûÿÿH‰ÆH‰×è    H‹…Ğûÿÿ‹XH‹…ØûÿÿH‰Çè    9Ãè   H‹…Ğûÿÿ‹@‰ÃH‹…ØûÿÿH‰Çè    ‰Â‰Ø)Ğ‰EìH‹…Ğûÿÿ¶ „ÀtJH‹•ØûÿÿH…àûÿÿH‰ÖH‰Çè    ‹EìHcØH‹…ØûÿÿH‰Çè    H•àûÿÿHĞH‰Ú¾    H‰Çè    ëS‹EìHcĞH‹…Ğûÿÿ¶@„Àt¹0   ë¹    H…àûÿÿ‰ÎH‰Çè    ‹EìH˜H•àûÿÿHĞH‹•ØûÿÿH‰ÖH‰Çè    H…àûÿÿH‹•ØûÿÿH‰ÆH‰×è    H‹]øÉÃUH‰åHƒì0H‰}èH‰uàH‰UØH‹EØ‹ ƒø/w$H‹EØH‹PH‹EØ‹ ‰ÀHĞH‹UØ‹JH‹UØ‰
-ëH‹EØH‹@HPH‹MØH‰QH‹ H‰EøH‹Eà¶@„ÀuH‹Eø‰ÀH‰EøëH‹Eà¶@<huH‹Eø·ÀH‰EøH‹MøH‹Eèº
-   H‰ÎH‰Çè    H‹UàH‹EèH‰ÖH‰Çè    H‹UàH‹EèH‰ÖH‰Çè    ÉÃUH‰åHƒì0H‰}èH‰uàH‰UØH‹Eà¶@<Lu#H‹EØH‹@HƒÀHƒàğHPH‹MØH‰QÛ(Û}ğëNH‹EØ‹@=¯   w'H‹EØH‹PH‹EØ‹@‰ÀHĞH‹UØ‹RJH‹UØ‰JëH‹EØH‹@HPH‹MØH‰Qİ Û}ğH‹Eà¶@ƒğ„ÀtH‹EàÇ@   H‹UàH‹EèÿuøÿuğH‰ÖH‰Çè    HƒÄH‹UàH‹EèH‰ÖH‰Çè    ÉÃUH‰åHì°  H‰½h÷ÿÿH‰µ`÷ÿÿHÇ…€ûÿÿ    H…ˆûÿÿºø  ¾    H‰Çè    ÇEü    ÇEœ
-   ÛmÙîßñİØ—ÀˆE›€}› tÛmÙàëÛmÛ}ÛmÛ}àëUÛmàÙèßñİØwbfïÀò*EœÛmàİX÷ÿÿf(Èò…X÷ÿÿè    ò,À‰Çè    ‹UüHcÒˆ„€ûÿÿÛEœÛmàŞñÛ}àƒEüÛmàÙîßéİØz ÛmàÙîßñİØu•ë€}› t‹EüH˜Æ„€ûÿÿ-H…€ûÿÿH‰Çè    ‰E”ÇEÜ    ‹E”ƒè‰EØë&‹EÜH˜H‹•h÷ÿÿHÂ‹EØH˜¶„€ûÿÿˆƒEÜƒmØ‹EÜ;E”|Òƒ}Ü t€}› tƒ}Üu‹EÜP‰UÜH˜H‹•h÷ÿÿHĞÆ 0‹EÜ‰E‹EÜP‰UÜH˜H‹•h÷ÿÿHĞÆ .HÇ…€÷ÿÿ    H…ˆ÷ÿÿºø  ¾    H‰Çè    ÙîÛ½p÷ÿÿH…p÷ÿÿÿuÿuH‰Çè    HƒÄÛ}ÀÇE¼    ë3ÛmÀÛ-    ŞÉÛ}ÀÛmÀÛX÷ÿÿ‹½X÷ÿÿè    ‹U¼HcÒˆ„€÷ÿÿƒE¼H‹…`÷ÿÿ‹@9E¼|¾ÿuÈÿuÀè    HƒÄİM°Hƒ}° u9ÇE¬    ë‹EÜP‰UÜH˜H‹•h÷ÿÿHĞÆ 0ƒE¬H‹…`÷ÿÿ‹@9E¬|Õé  H…€÷ÿÿH‰Çè    ‰EŒ‹EŒ‰E¨ÇE¤    é™   H‹M°HºgfffffffH‰ÈH÷êH‰ĞHÁøH‰ÎHÁş?H)ğH‰ÂH‰ĞHÁàHĞHÀH)ÁH‰ÊfïÉòH*Êò    òXÁò,À‰Çè    ‹U¤HcÒˆ„€÷ÿÿH‹M°HºgfffffffH‰ÈH÷êH‰ĞHÁøHÁù?H‰ÊH)ĞH‰E°ƒm¨ƒE¤Hƒ}° …\ÿÿÿƒ}¨ Rÿÿÿ‹EŒ‰E ë,‹E Hÿ‹EÜP‰UÜH˜H‹•h÷ÿÿHÂHcÁ¶„€÷ÿÿˆƒm ƒ}  Î‹EÜƒè9Eu$H‹…`÷ÿÿ¶@ƒğ„Àt‹EH˜H‹•h÷ÿÿHĞÆ  ÉÃUH‰å‰}ü‹EüƒÀ0]ÃUH‰å‰øˆEü¾Eüƒè0]ÃUH‰åHƒì@H‰}ØH‰uĞH‰UÈH‹EĞ¶@<Lu#H‹EÈH‹@HƒÀHƒàğHPH‹MÈH‰QÛ(Û}ğëNH‹EÈ‹@=¯   w'H‹EÈH‹PH‹EÈ‹@‰ÀHĞH‹UÈ‹RJH‹UÈ‰JëH‹EÈH‹@HPH‹MÈH‰Qİ Û}ğÇEì    ÛmğÛMÄƒ}Ä u¸-   ë¸+   ˆEëÛmğÛMÄÛEÄÛmğŞéÙîßézÙîßñİØt&ëƒEìÛmğÛ-    ŞÉÛ}ğëİØÛmğÛMÄƒ}Ä tŞëÆEë+ëƒEìÛmğÛ-    ŞùÛ}ğÛmğÛMÄ‹EÄƒÀ	ƒøwİH‹EĞ¶@ƒğ„ÀtH‹EĞÇ@   H‹UĞH‹EØÿuøÿuğH‰ÖH‰Çè    HƒÄ¾Eë‹uìH‹MØ‰ÂH‰Ïè    H‹UĞH‹EØH‰ÖH‰Çè    ÉÃUH‰åSHƒì(H‰}Ø‰uÔ‰ĞˆEĞH‹EØH‰Çè    ‰Eì‹EìH˜H‹UØHĞÆ e‹EìH˜HPH‹EØHÂ¶EĞˆ‹MÔHcÁHiÀgfffHÁè Áø‰ÎÁş)ğ‰Â‰ĞÁàĞÀ)Á‰Ê‹EìH˜HHH‹EØH‰×è    ˆ‹EÔHcĞHiÒgfffHÁê ÁúÁø‰Á‰Ğ)È‰EÔ‹MÔHcÁHiÀgfffHÁè Áø‰ÎÁş)ğ‰Â‰ĞÁàĞÀ)Á‰Ê‹EìH˜HHH‹EØH‰×è    ˆ‹EìH˜HPH‹EØHĞÆ  H‹]øÉÃUH‰åHƒì H‰}èHÇEø    ëGH‹UèH‹EøHĞ¶ <`~0H‹UèH‹EøHĞ¶ <zH‹UèH‹EøHĞ¶ PàH‹MèH‹EøHÈˆHƒEøH‹EèH‰Çè    H9Eør§ÉÃUH‰åHƒì0H‰}èH‰uàH‰UØH‹EèÆ 0H‹EØ‹ ƒø/w$H‹EØH‹PH‹EØ‹ ‰ÀHĞH‹UØ‹JH‹UØ‰
-ëH‹EØH‹@HPH‹MØH‰QH‹ H‰EøH‹Eà¶@¶ÀH‹UèHĞH‹Møº   H‰ÎH‰Çè    H‹UàH‹EèH‰ÖH‰Çè    H‹UàH‹EèH‰ÖH‰Çè    ÉÃUH‰åHƒì0H‰}èH‰uàH‰UØH‹EØ‹ ƒø/w$H‹EØH‹PH‹EØ‹ ‰ÀHĞH‹UØ‹JH‹UØ‰
-ëH‹EØH‹@HPH‹MØH‰QH‹ H‰EøH‹Eà¶@„ÀuH‹Eø‰ÀH‰EøëH‹Eà¶@<huH‹Eø·ÀH‰EøH‹MøH‹Eèº   H‰ÎH‰Çè    H‹UàH‹EèH‰ÖH‰Çè    H‹Eà¶@„ÀtH‹UàH‹EèH‰ÖH‰Çè    H‹UàH‹EèH‰ÖH‰Çè    ÉÃUH‰åHƒì H‰}èH‰uàÆEÿ ÇEø    ë‹EøH˜H‹UèHĞ¶ <0uÆEÿëƒEø‹EøH˜H‹UèHĞ¶ „ÀuĞ¶Eÿƒğ„ÀuH‹Eà‹@ƒøpu8H‹EèH‰Çè    H‰ÂH‹EèHƒÀH‹MèH‰ÎH‰Çè    H‹EèÆ 0H‹EèHƒÀÆ xÉÃUH‰åHƒì H‰}øH‰uğH‰UèH‹Eè‹ ƒø/w$H‹EèH‹PH‹Eè‹ ‰ÀHĞH‹Uè‹JH‹Uè‰
-ëH‹EèH‹@HPH‹MèH‰QH‹H‹Eøº   H‰ÎH‰Çè    H‹UğH‹EøH‰ÖH‰Çè    H‹UğH‹EøH‰ÖH‰Çè    H‹UğH‹EøH‰ÖH‰Çè    ÉÃUH‰åHƒì@H‰}ØH‰uĞH‰UÈH‹EĞ¶@<Lu#H‹EÈH‹@HƒÀHƒàğHPH‹MÈH‰QÛ(Û}ğëNH‹EÈ‹@=¯   w'H‹EÈH‹PH‹EÈ‹@‰ÀHĞH‹UÈ‹RJH‹UÈ‰JëH‹EÈH‹@HPH‹MÈH‰Qİ Û}ğH‹EĞ¶@ƒğ„ÀtH‹EĞÇ@   H‹EĞ‹@…ÀuH‹EĞÇ@   ÛmğÛMÄHcEÄH‰Çè    ‰EäH‹EĞ‹@9EäÒ   ÇEì    ÛmğÛMÄƒ}Ä u¸-   ë¸+   ˆEëÛmğÛMÄÛEÄÛmğŞéÙîßézÙîßñİØt&ëƒEìÛmğÛ-    ŞÉÛ}ğëİØÛmğÛMÄƒ}Ä tŞëÆEë+ëƒEìÛmğÛ-    ŞùÛ}ğÛmğÛMÄ‹EÄƒÀ	ƒøwİH‹EĞ‹@PÿH‹EĞ‰PH‹UĞH‹EØÿuøÿuğH‰ÖH‰Çè    HƒÄ¾Eë‹uìH‹MØ‰ÂH‰Ïè    ë.H‹EĞ‹@+EäH‹UĞ‰BH‹UĞH‹EØÿuøÿuğH‰ÖH‰Çè    HƒÄH‹EĞ¶@ƒğ„ÀtH‹EØH‰Çè    H‹UĞH‹EØH‰ÖH‰Çè    ÉÃUH‰åHì   H‰½èûÿÿH‹…èûÿÿH‰Çè    ‰EôHÇ…ğûÿÿ    H…øûÿÿºø  ¾    H‰Çè    ÇEü    ë*‹Eô+EüH˜HPÿH‹…èûÿÿHĞ¶ ‹UüHcÒˆ„ğûÿÿƒEü‹Eü;Eô|ÎÇEø    ë.‹EøH˜¶„ğûÿÿ<0u'‹Eô+EøH˜HPÿH‹…èûÿÿHĞÆ  ƒEø‹Eø;Eô|Êë‹Eô+EøH˜HPÿH‹…èûÿÿHĞ¶ <.u‹Eô+EøH˜HPÿH‹…èûÿÿHĞÆ  ÉÃ0123456789abcdef                @            à?       zR x  4      àÿÿÿÿÿÿÿÜ          †   ×         4   T   ¨ÿÿÿÿÿÿÿ”           †             4   Œ   pÿÿÿÿÿÿÿ          †            4   Ä   8ÿÿÿÿÿÿÿQ          †   L         4   ü    ÿÿÿÿÿÿÿv          †   q         4   4  Èşÿÿÿÿÿÿ\           †   W          4   l  şÿÿÿÿÿÿ1          †   ,         4   ¤  Xşÿÿÿÿÿÿ	          †            4   Ü   şÿÿÿÿÿÿÎ          †      ƒÁ  4     èıÿÿÿÿÿÿÌ          †      ƒ¿  4   L  °ıÿÿÿÿÿÿ          †      ƒ  4   „  xıÿÿÿÿÿÿÏ           †   Ê          4   ¼  @ıÿÿÿÿÿÿX           †   S          4   ô  ıÿÿÿÿÿÿV          †   Q         4   ,  Ğüÿÿÿÿÿÿ          †            4   d  ˜üÿÿÿÿÿÿÂ          †   ½         4   œ  `üÿÿÿÿÿÿn          †      ƒa  4   Ô  (üÿÿÿÿÿÿÎ           †   É          4     ğûÿÿÿÿÿÿŞ           †   Ù          4   D  ¸ûÿÿÿÿÿÿ³          †   ®         4   |  €ûÿÿÿÿÿÿ           †   
-          4   ´  Hûÿÿÿÿÿÿ           †             4   ì  ûÿÿÿÿÿÿ€          †   {         4   $  Øúÿÿÿÿÿÿ          †      ƒ  4   \   úÿÿÿÿÿÿs           †   n          4   ”  húÿÿÿÿÿÿ´           †   ¯          4   Ì  0úÿÿÿÿÿÿí           †   è          4     øùÿÿÿÿÿÿŸ           †   š          4   <  Àùÿÿÿÿÿÿª           †   ¥          4   t  ˆùÿÿÿÿÿÿ          †            4   ¬  Pùÿÿÿÿÿÿş           †   ù          &  %  -ç%  ,  -Ã%    -°%    -‘%    -e%    -L%    -%    â$    ‚$    -¬#    -™#    -†#    -s#     -ğ"  (  -Ö"  ,  -c"    -P"    -1"    -"     -v!    -c!    -P!    -»   ,  -6     -Ò    -h  ,  -D    -1    -    -Ï    ¥    ç    -Ø    w  ,  -!  '  -ö    -İ    Ä  &  -§  %  -ø  ,  -¡    -–  $  -0  %  -ğ    -Ù    -    -ÿ    -ì     -@  +  -'  +  -  )  -Ò  )  -¸  ,  -£  +  -s  ,  -P  ,  -7  +  -  +  -½  +  -¤  +  -  %  -.  +  -c  ,  -T  %  -Ğ  ,  -ƒ     G  %  -½  ,  -`     ñ  %  -S    -@    --    -€  +  -e  +  -D  )  -   )  -û  +  -Ë  ,  -³  ,  -u  +  -\  -  -A  %  -  %  -r  +  -W  +  -6  )  -  )  -í  +  -½  ,  -¥  ,  -g  +  -Q  %  -¤  -  -‡  *  -_  ,  -#  -  -  %  -£  ,  -”  -  -‡	    -9	    -	  !  -×    -£    -:  	  -÷    -Ã  
-  -    -[    -'    -é  %  -6  #  -ß  %  -À  #  -i  %  -L    -5    -    -ÿ    -A    -    -°    ^°    x    ^x    @    ^@        ^    Ğ    ^Ğ    ˜    ^˜    `    ^`    (    ^(    ğ    ^ğ  	  ¸    ^¸    €    ^€    H    ^H        ^  
-  Ø    ^Ø         ^     h    ^h    0    ^0     ø    ^ø    À    ^À    ˆ    ^ˆ    P    ^P  "      ^    à    ^à  !  ¨    ^¨    p    ^p    8    ^8         ^     È     ^È          ^     X     ^X           ^      \    È&      N    à&      J    ğ&      R    ø&      )     ¹      é     Ú	      5    Ê%      ¤    ª      ó    ÷      ¢     Ë      µ           ]     İ      b          C    ³#      ”     }!           j"      ×     ‹      â    ²           Z          É       j     p      s    ×      C     Ü      ²    M      À    †      Å     	#      Í    K                  ‰     ©          ±      €     V       O    K                ø     ã
-      -    }                   /             ;                           –             "             7              Q                            ƒ             v               _s21_strcpy _insertDecimalOx _numsCount _asciiToDigit _s21_memset _parse_Format _s21_strcat _formatFlags _parseFlags _wcstombs _toUpper _specifier _hexSpecifier _exponentSpecifier _floatSpecifier _pointerSpecifier _integerSpecifier _charSpecifier _widthCharSpecifier _octalSpecifier _stringSpecifier _widthStringSpecifier _gSpecifier _unsignedSpecifier _formatPrecision _parsePrecision _s21_strlen _modfl _roundl _atoi _digitToAscii _parse_Length _parse_Width _putExponentToString _integerToString _doubleToString _unsignedToString _s21_sprintf _s21_memmove _fmod _deleteZeroesFromEnd lC5 lC4 EH_frame1 lC0 s21_sscanf.o    1668431443  20591 4222  100644  12560     `
-Ïúíş           h             è                            '      ˆ       '                   __text          __TEXT                  Ò!      ˆ     ()  G     €            __eh_frame      __TEXT          Ø!      È      `#     `+  4     h            2                          -  %   P/  À     P                   
-                                                   UH‰åHƒì H‰}èÇEü    ÇEø    ë*‹EøH˜H‹UèHĞ¶ ¾À‰Çè    …Àu	ÇEü   ëƒEø‹EøH˜H‹UèHĞ¶ „ÀuÃ‹EüÉÃUH‰åHì  H‰½øşÿÿH‰µğşÿÿH‰•`ÿÿÿH‰hÿÿÿL‰…pÿÿÿL‰xÿÿÿ„Àt )E€)M)U )]°)eÀ)mĞ)uà)}ğH‹…øşÿÿH‰Çè    ‰…@ÿÿÿÇ…Lÿÿÿ    Ç…Hÿÿÿ    ƒ½@ÿÿÿ „h  Ç… ÿÿÿ   Ç…$ÿÿÿ0   HEH‰…(ÿÿÿH…PÿÿÿH‰…0ÿÿÿH‹…øşÿÿH‰Çè    H‰…8ÿÿÿÆ…Gÿÿÿ é  H‹…ğşÿÿ¶ <%…²   HÇ… ÿÿÿ    HÇ…ÿÿÿ    Ç…ÿÿÿ    H‹…ğşÿÿHƒÀH‰…ğşÿÿH• ÿÿÿH…ğşÿÿH‰ÖH‰Çè    ‹…ÿÿÿ…À…ª   ¾½GÿÿÿH ÿÿÿH• ÿÿÿH‹µ8ÿÿÿH…øşÿÿA‰øH‰Çè    ‹…ÿÿÿ…Àtƒ…Hÿÿÿƒ…Lÿÿÿ‹…ÿÿÿ…Àu]Æ…Gÿÿÿ ë=€½Gÿÿÿ tH‹…ğşÿÿ¶ 8…Gÿÿÿu:H‹…ğşÿÿ¶ ˆ…GÿÿÿH‹…ğşÿÿHƒÀH‰…ğşÿÿH‹…ğşÿÿ¶ „À…íşÿÿëëƒ½Lÿÿÿ t‹…Hÿÿÿë¸ÿÿÿÿÉÃUH‰åHƒì0H‰}èH‰uà‰UÜ‰MØD‰EÔÇEü    H‹Eà‹ …À…¶   ƒ}Ü„¬   H‹Eè¶ ¾À‰Çè    …À„“   ƒ}Ô …‰   ƒ}Øtƒ}Øƒ   ƒ}ØtQƒ}Ø
-t)ëuH‹EèHƒÀ¶ ¾À¾    ‰Çè    …ÀtPÇEü   ëGH‹EèHƒÀ¶ ¾À‰Çè    …Àt1ÇEü   ë(H‹EèHƒÀ¶ ¾À‰Çè    …ÀtÇEü   ë	ëëëƒ}ü tHƒEà‹EüÉÃUH‰åSHìh  H‰½¸ûÿÿH‰µ°ûÿÿH‰•¨ûÿÿH‰ ûÿÿD‰Àˆ…œûÿÿHÇ…àûÿÿ    H…èûÿÿºø  ¾    H‰Çè    ÆEë ÇEì    ÇEä    Ç…Üûÿÿ    HÇ…Àûÿÿ    HÇ…Èûÿÿ    Ç…Ğûÿÿ    ëH‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰H‹…¸ûÿÿH‹ ¶ ¾À‰Çè    …Àt H‹…¨ûÿÿ¶@	<ctH‹…¸ûÿÿH‹ ¶ „Àu­H‹…¸ûÿÿH‹ ¶ 8…œûÿÿuH‹…¸ûÿÿH‹ ¶ „Àu‡H‹…¸ûÿÿH‹ ¶ „À„c  H‹…¨ûÿÿ¶@	¾Àƒè%ƒøS‡~  ‰ÀH…    H   ‹H˜H   HĞÿà á  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  -
-  Y  -
-  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  (	  Y  Y  Y  Y  Y  Y  Y  Y  Y  Y  @  ›  -
-  -
-  -
-  Y  …  Y  Y  Y  Y  Æ
-  0  g  Y  Y    Y  “  Y  Y  (	  H‹…¸ûÿÿH‹ ¶ ‹UìHcÒˆ„àûÿÿH‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰ƒEìH‹…¨ûÿÿ‹ PÿH‹…¨ûÿÿ‰H‹…¸ûÿÿH‹ ¶ ¾À‰Çè    …Àu1H‹…¨ûÿÿ‹H‹…¸ûÿÿH‹8‹MìH…ÜûÿÿA‰È¹
-   H‰Æè    …ÀtH‹…¨ûÿÿ‹ …À…Xÿÿÿƒ}ì uH‹…¨ûÿÿÇ@   é,
-  H‹…¨ûÿÿ‹@…À…
-  H‹•¨ûÿÿH‹ ûÿÿH…àûÿÿH‰ÎH‰Çè    éõ	  H‹…¸ûÿÿH‹ ¶ ‹UìHcÒˆ„àûÿÿH‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰ƒEìH‹…¨ûÿÿ‹ PÿH‹…¨ûÿÿ‰H‹…¸ûÿÿH‹ ¶ ¾À‰Çè    …Àu1H‹…¨ûÿÿ‹H‹…¸ûÿÿH‹8‹MìH…ÜûÿÿA‰È¹
-   H‰Æè    …ÀtH‹…¨ûÿÿ‹ …À…Xÿÿÿƒ}ì uH‹…¨ûÿÿÇ@   é7	  H‹…¨ûÿÿ‹@…À…%	  H‹•¨ûÿÿH‹ ûÿÿH…àûÿÿH‰ÎH‰Çè    é 	  H‹…¸ûÿÿH‹ ¶ ¾À‰Çè    …ÀtWH‹…¸ûÿÿH‹ ¶ ˆEëH‹…¨ûÿÿ‹@…Àu¾EëH‹•¨ûÿÿH‹ ûÿÿH‰Î‰Çè    H‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰é§  H‹…¨ûÿÿÇ@   ëKH‹…¸ûÿÿH‹ ¶ ‹UìHcÒˆ„àûÿÿH‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰ƒEìH‹…¨ûÿÿ‹ PÿH‹…¨ûÿÿ‰H‹…¨ûÿÿ‹ …ÀtH‹…¸ûÿÿH‹ ¶ ¾À‰Çè    …Àtƒ}ì uH‹…¨ûÿÿÇ@   éõ  H‹…¨ûÿÿ‹@…À…ã  H‹•¨ûÿÿH‹ ûÿÿH…àûÿÿH‰ÎH‰Çè    é¾  H‹…¸ûÿÿH‹ ¶ <0…˜  H‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰H‹…¸ûÿÿH‹ ¶ <xtH‹…¸ûÿÿH‹ ¶ <X…b  H‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰ëKH‹…¸ûÿÿH‹ ¶ ‹UìHcÒˆ„àûÿÿH‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰ƒEìH‹…¨ûÿÿ‹ PÿH‹…¨ûÿÿ‰H‹…¸ûÿÿH‹ ¶ ¾À¾    ‰Çè    …Àu1H‹…¨ûÿÿ‹H‹…¸ûÿÿH‹8‹MìH…ÜûÿÿA‰È¹   H‰Æè    …ÀtH‹…¨ûÿÿ‹ …À…Sÿÿÿƒ}ì uH‹…¨ûÿÿÇ@   é'  H‹…¨ûÿÿ‹@…À…  H‹•¨ûÿÿH‹ ûÿÿH…àûÿÿH‰ÎH‰Çè    éğ  H‹…¸ûÿÿH‹ ¶ ‹UìHcÒˆ„àûÿÿH‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰ƒEìH‹…¨ûÿÿ‹ PÿH‹…¨ûÿÿ‰H‹…¸ûÿÿH‹ ¶ ¾À‰Çè    …Àu1H‹…¨ûÿÿ‹H‹…¸ûÿÿH‹8‹MìH…ÜûÿÿA‰È¹
-   H‰Æè    …ÀtH‹…¨ûÿÿ‹ …À…Xÿÿÿƒ}ì uH‹…¨ûÿÿÇ@   é–  H‹…¨ûÿÿ‹@…À…„  H‹•¨ûÿÿH‹ ûÿÿH…àûÿÿH‰ÎH‰Çè    é_  H‹…¸ûÿÿH‹ ¶ ‹UìHcÒˆ„àûÿÿH‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰ƒEìH‹…¨ûÿÿ‹ PÿH‹…¨ûÿÿ‰H‹…¸ûÿÿH‹ ¶ ¾À‰Çè    …Àu1H‹…¨ûÿÿ‹H‹…¸ûÿÿH‹8‹MìH…ÜûÿÿA‰È¹
-   H‰Æè    …ÀtH‹…¨ûÿÿ‹ …À…Xÿÿÿƒ}ì uH‹…¨ûÿÿÇ@   é  H‹…¨ûÿÿ‹@…À…Œ  H‹•¨ûÿÿH‹ ûÿÿH…àûÿÿH‰ÎH‰Çè    ég  éa  H‹…¸ûÿÿH‹ ¶ ‹UìHcÒˆ„àûÿÿH‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰ƒEìH‹…¨ûÿÿ‹ PÿH‹…¨ûÿÿ‰H‹…¸ûÿÿH‹ ¶ ¾À‰Çè    …Àu1H‹…¨ûÿÿ‹H‹…¸ûÿÿH‹8‹MìH…ÜûÿÿA‰È¹   H‰Æè    …ÀtH‹…¨ûÿÿ‹ …À…Xÿÿÿƒ}ì uH‹…¨ûÿÿÇ@   é£  H‹…¨ûÿÿ‹@…À…‘  H‹•¨ûÿÿH‹ ûÿÿH…àûÿÿH‰ÎH‰Çè    él  H‹…¸ûÿÿH‹ ¶ ‹UìHcÒˆ„àûÿÿH‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰ƒEìH‹…¨ûÿÿ‹ PÿH‹…¨ûÿÿ‰‹•Üûÿÿ‹EìÂH‹…¸ûÿÿH‹ ¶ ¾À‰Ö‰Çè    …Àu1H‹…¨ûÿÿ‹H‹…¸ûÿÿH‹8‹MìH…ÜûÿÿA‰È¹   H‰Æè    …ÀtH‹…¨ûÿÿ‹ …À…Kÿÿÿƒ}ì uH‹…¨ûÿÿÇ@   é¡  H‹…¨ûÿÿ‹@…À…  H‹•¨ûÿÿH‹ ûÿÿH…àûÿÿH‰ÎH‰Çè    éj  H‹…¸ûÿÿH‹ ¶ ‹UìHcÒˆ„àûÿÿH‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰ƒEìH‹…¨ûÿÿ‹ PÿH‹…¨ûÿÿ‰H‹…¸ûÿÿH‹ HƒÀ¶ ¾ÈH‹…¸ûÿÿH‹ ¶ ¾ÀH•Àûÿÿ‰Î‰Çè    …ÀtH‹…¨ûÿÿ‹ …À…lÿÿÿƒ}ì uH‹…¨ûÿÿÇ@   éÀ  H‹…¨ûÿÿ‹@…À…®  H‹•¨ûÿÿH‹ ûÿÿH…àûÿÿH‰ÎH‰Çè    é‰  H‹…°ûÿÿ‰ÃH‹…¸ûÿÿH‹ H‰Çè    ‰Â‰Ø)Ğ‰EäH‹…¨ûÿÿ‹@…À…V  H‹•¨ûÿÿH‹ ûÿÿ‹EäH‰Î‰Çè    é6  H‹…¸ûÿÿH‹ ¶ ‹UìHcÒˆ„àûÿÿH‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰ƒEìH‹…¨ûÿÿ‹ PÿH‹…¨ûÿÿ‰H‹…¸ûÿÿH‹ ¶ ¾À‹Uì‰Ö‰Çè    …ÀtH‹…¨ûÿÿ‹ …Àuˆƒ}ì uH‹…¨ûÿÿÇ@   é¨   H‹…¨ûÿÿ‹@…À…–   H‹•¨ûÿÿH‹ ûÿÿH…àûÿÿH‰ÎH‰Çè    ëtH‹…¸ûÿÿH‹ ¶ <%uH‹…¸ûÿÿH‹ HPH‹…¸ûÿÿH‰ƒEìƒ}ì uDH‹…¨ûÿÿÇ@   ë4H‹…¨ûÿÿ‹@PH‹…¨ûÿÿ‰Pëëëëëëë
-ëëëH‹]øÉÃUH‰åHƒì ‰}ì‰uèH‰UàÇEü   ‹Eì‰Çè    …ÀtH‹EàÇ@   éo  H‹Eà‹@…Àu@H‹Eà‹ …Àu6H‹Eà‹@…Àu+H‹Eà‹@…Àu ƒ}ì-tƒ}ì+uH‹Eà‹ PH‹Eà‰é$  H‹Eà‹ ƒøu#H‹Eà‹@…Àuƒ}ì-tƒ}ì+uÇEü    éö   H‹Eà‹@…Àu9H‹Eà‹@…Àt.H‹Eà‹@ƒøu"ƒ}ì-tƒ}ì+uH‹Eà‹@PH‹Eà‰Pé²   H‹Eà‹@ƒøu,ƒ}ì-tƒ}ì+u H‹Eà‹@ƒøuH‹Eà‹@…Àu	ÇEü    ëzH‹Eà‹@ƒøu*H‹Eà‹@…Àuƒ}ìetƒ}ìEuH‹Eà‹@PH‹Eà‰PëDH‹Eà‹@…Àu2H‹Eà‹@…Àu'ƒ}ì.u!‹Eè‰Çè    …ÀtH‹Eà‹@PH‹Eà‰PëÇEü    ‹EüÉÃUH‰å‰}üƒ}ü/~ƒ}ü9¸   ë¸    ]ÃUH‰å‰}ü‰uøƒ}ü/~ƒ}ü9~0ƒ}ü`~ƒ}üf~$ƒ}ü@~ƒ}üF~ƒ}üxuƒ}øtƒ}üXuƒ}øu¸   ë¸    ]ÃUH‰å‰}üƒ}ü/~ƒ}ü7¸   ë¸    ]ÃUH‰å‰}üƒ}ü xƒ}ü¸   ë¸    ]ÃUH‰å‰}üƒ}ü
-tƒ}ü tƒ}ü tƒ}ü	u¸   ë¸    ]ÃUH‰å‰}üƒ}ü+tƒ}ü-u¸   ë¸    ]ÃUH‰åSHƒì(H‰}èH‰uàH‰UØH‹EØ‹@PH‹EØ‰PH‹EØ¶@<hu]H‹EèH‰Çè    H‰ÂH‹Eà‹ ƒø/w$H‹EàH‹HH‹Eà‹ ‰ÀHÈH‹Mà‹	qH‹Mà‰1ëH‹EàH‹@HHH‹uàH‰NH‹ f‰éº   H‹EØ¶@<luWH‹Eà‹ ƒø/w$H‹EàH‹PH‹Eà‹ ‰ÀHĞH‹Uà‹JH‹Uà‰
-ëH‹EàH‹@HPH‹MàH‰QH‹H‹EèH‰Çè    H‰ëWH‹EèH‰Çè    H‰ÂH‹Eà‹ ƒø/w$H‹EàH‹HH‹Eà‹ ‰ÀHÈH‹Mà‹	qH‹Mà‰1ëH‹EàH‹@HHH‹uàH‰NH‹ ‰H‹]øÉÃUH‰åHƒì H‰}øH‰uğH‰UèH‹Eè‹@PH‹Eè‰PH‹Eè¶@<hu]H‹EøH‰Çè    H‰ÂH‹Eğ‹ ƒø/w$H‹EğH‹HH‹Eğ‹ ‰ÀHÈH‹Mğ‹	qH‹Mğ‰1ëH‹EğH‹@HHH‹uğH‰NH‹ f‰é½   H‹Eè¶@<luZH‹EøH‰Çè    H‰ÂH‹Eğ‹ ƒø/w$H‹EğH‹HH‹Eğ‹ ‰ÀHÈH‹Mğ‹	qH‹Mğ‰1ëH‹EğH‹@HHH‹uğH‰NH‹ H‰ëWH‹EøH‰Çè    H‰ÂH‹Eğ‹ ƒø/w$H‹EğH‹HH‹Eğ‹ ‰ÀHÈH‹Mğ‹	qH‹Mğ‰1ëH‹EğH‹@HHH‹uğH‰NH‹ ‰ÉÃUH‰åSHƒì(H‰}èH‰uàH‰UØH‹EØ‹@PH‹EØ‰PH‹EØ¶@<hu]H‹EèH‰Çè    H‰ÂH‹Eà‹ ƒø/w$H‹EàH‹HH‹Eà‹ ‰ÀHÈH‹Mà‹	qH‹Mà‰1ëH‹EàH‹@HHH‹uàH‰NH‹ f‰éº   H‹EØ¶@<luWH‹Eà‹ ƒø/w$H‹EàH‹PH‹Eà‹ ‰ÀHĞH‹Uà‹JH‹Uà‰
-ëH‹EàH‹@HPH‹MàH‰QH‹H‹EèH‰Çè    H‰ëWH‹EèH‰Çè    H‰ÂH‹Eà‹ ƒø/w$H‹EàH‹HH‹Eà‹ ‰ÀHÈH‹Mà‹	qH‹Mà‰1ëH‹EàH‹@HHH‹uàH‰NH‹ ‰H‹]øÉÃUH‰åHƒì H‰}øH‰uğH‰UèH‹Eè‹@PH‹Eè‰PH‹Eè¶@<hu]H‹EøH‰Çè    H‰ÂH‹Eğ‹ ƒø/w$H‹EğH‹HH‹Eğ‹ ‰ÀHÈH‹Mğ‹	qH‹Mğ‰1ëH‹EğH‹@HHH‹uğH‰NH‹ f‰é½   H‹Eè¶@<luZH‹EøH‰Çè    H‰ÂH‹Eğ‹ ƒø/w$H‹EğH‹HH‹Eğ‹ ‰ÀHÈH‹Mğ‹	qH‹Mğ‰1ëH‹EğH‹@HHH‹uğH‰NH‹ H‰ëWH‹EøH‰Çè    H‰ÂH‹Eğ‹ ƒø/w$H‹EğH‹HH‹Eğ‹ ‰ÀHÈH‹Mğ‹	qH‹Mğ‰1ëH‹EğH‹@HHH‹uğH‰NH‹ ‰ÉÃUH‰åSHƒì(H‰}èH‰uàH‰UØH‹EØ‹@PH‹EØ‰PH‹EØ¶@<huZH‹Eà‹ ƒø/w$H‹EàH‹PH‹Eà‹ ‰ÀHĞH‹Uà‹JH‹Uà‰
-ëH‹EàH‹@HPH‹MàH‰QH‹H‹EèH‰Çè    f‰é·   H‹EØ¶@<luWH‹Eà‹ ƒø/w$H‹EàH‹PH‹Eà‹ ‰ÀHĞH‹Uà‹JH‹Uà‰
-ëH‹EàH‹@HPH‹MàH‰QH‹H‹EèH‰Çè    H‰ëTH‹Eà‹ ƒø/w$H‹EàH‹PH‹Eà‹ ‰ÀHĞH‹Uà‹JH‹Uà‰
-ëH‹EàH‹@HPH‹MàH‰QH‹H‹EèH‰Çè    ‰H‹]øÉÃUH‰åSHƒì(H‰}èH‰uàH‰UØH‹EØ‹@PH‹EØ‰PH‹EØ¶@<huZH‹Eà‹ ƒø/w$H‹EàH‹PH‹Eà‹ ‰ÀHĞH‹Uà‹JH‹Uà‰
-ëH‹EàH‹@HPH‹MàH‰QH‹H‹EèH‰Çè    f‰é·   H‹EØ¶@<luWH‹Eà‹ ƒø/w$H‹EàH‹PH‹Eà‹ ‰ÀHĞH‹Uà‹JH‹Uà‰
-ëH‹EàH‹@HPH‹MàH‰QH‹H‹EèH‰Çè    H‰ëTH‹Eà‹ ƒø/w$H‹EàH‹PH‹Eà‹ ‰ÀHĞH‹Uà‹JH‹Uà‰
-ëH‹EàH‹@HPH‹MàH‰QH‹H‹EèH‰Çè    ‰H‹]øÉÃUH‰åHƒì0H‰}èH‰uàH‰UØH‹EØ‹@PH‹EØ‰PH‹Eà‹ ƒø/w$H‹EàH‹PH‹Eà‹ ‰ÀHĞH‹Uà‹JH‹Uà‰
-ëH‹EàH‹@HPH‹MàH‰QH‹ H‰EøH‹EèH‰Çè    H‰ÂH‹EøH‰ÉÃUH‰å‰}üH‰uğH‰UèH‹Eè¶@<huQH‹Eğ‹ ƒø/w$H‹EğH‹PH‹Eğ‹ ‰ÀHĞH‹Uğ‹JH‹Uğ‰
-ëH‹EğH‹@HPH‹MğH‰QH‹ ‹Uüf‰é§   H‹Eè¶@<luPH‹Eğ‹ ƒø/w$H‹EğH‹PH‹Eğ‹ ‰ÀHĞH‹Uğ‹JH‹Uğ‰
-ëH‹EğH‹@HPH‹MğH‰QH‹‹EüH˜H‰ëKH‹Eğ‹ ƒø/w$H‹EğH‹PH‹Eğ‹ ‰ÀHĞH‹Uğ‹JH‹Uğ‰
-ëH‹EğH‹@HPH‹MğH‰QH‹ ‹Uü‰]ÃUH‰åSHƒì(H‰}èH‰uàH‰UØH‹EØ‹@PH‹EØ‰PH‹EØ¶@<lucH‹EèH‰Çè    H‹Eà‹ ƒø/w$H‹EàH‹PH‹Eà‹ ‰ÀHĞH‹Uà‹JH‹Uà‰
-ëH‹EàH‹@HPH‹MàH‰QH‹ İ]ĞòEĞò éÀ   H‹EØ¶@<LuVH‹Eà‹ ƒø/w$H‹EàH‹PH‹Eà‹ ‰ÀHĞH‹Uà‹JH‹Uà‰
-ëH‹EàH‹@HPH‹MàH‰QH‹H‹EèH‰Çè    Û;ë^H‹EèH‰Çè    H‹Eà‹ ƒø/w$H‹EàH‹PH‹Eà‹ ‰ÀHĞH‹Uà‹JH‹Uà‰
-ëH‹EàH‹@HPH‹MàH‰QH‹ Ù]ĞóEĞó H‹]øÉÃUH‰å‰øH‰uğH‰UèˆEüH‹Eè‹@PH‹Eè‰PH‹Eğ‹ ƒø/w$H‹EğH‹PH‹Eğ‹ ‰ÀHĞH‹Uğ‹JH‹Uğ‰
-ëH‹EğH‹@HPH‹MğH‰QH‹¶Eüˆ]ÃUH‰åHƒì H‰}øH‰uğH‰UèH‹Eè‹@PH‹Eè‰PH‹Eğ‹ ƒø/w$H‹EğH‹PH‹Eğ‹ ‰ÀHĞH‹Uğ‹JH‹Uğ‰
-ëH‹EğH‹@HPH‹MğH‰QH‹ H‹UøH‰ÖH‰Çè    ÉÃUH‰åHƒìH‰}øH‰uğH‹EøH‹ H‹UğH‰ÖH‰Çè    H‹UøH‰H‹EøH‹ H‹UğH‰ÖH‰Çè    H‹UøH‰H‹EøH‹ H‹UğH‰ÖH‰Çè    H‹UøH‰ÉÃUH‰åHì   H‰½èıÿÿH‰µàıÿÿÇEü    ëOH‹…èıÿÿ¶ <*uH‹…àıÿÿÇ@   ë)H‹…àıÿÿ‹@…ÀuH‹…èıÿÿ¶ ‹UüHcÒˆ„ğıÿÿƒEüHƒ…èıÿÿH‹…èıÿÿ¶ <*t£H‹…èıÿÿ¶ </~H‹…èıÿÿ¶ <9~‡ƒ}ü tH…ğıÿÿH‰Çè    H‹•àıÿÿ‰H‹…àıÿÿ‹ …ÀuH‹…àıÿÿÇ ÿÿÿÿH‹…èıÿÿÉÃUH‰åH‰}øH‰uğH‹Eø¶ ¾ÀƒøltƒølHƒøLt3ƒøhu>H‹EğÆ@hHƒEøë/H‹EğÆ@lHƒEøH‹Eø¶ <luHƒEøëH‹EğÆ@LHƒEøëH‹Eø]ÃUH‰åH‰}ØH‰uĞH¸cdieEfgGH‰EàH¸osuxXpn%H‰EèÆEğ ÇEü   ÇEø    ë3H‹EØ¶‹EøH˜¶Dà8Âu‹EøH˜¶DàH‹UĞˆB	ÇEü    ë
-ƒEøƒ}ø~ÇH‹EĞ‹Uü‰PHƒEØH‹EØ]Ã             zR x  4      àÿÿÿÿÿÿÿ^           †   Y          4   T   ¨ÿÿÿÿÿÿÿ          †   
-         4   Œ   pÿÿÿÿÿÿÿÿ           †   ú          4   Ä   8ÿÿÿÿÿÿÿÀ          †      ƒ³  4   ü    ÿÿÿÿÿÿÿ«          †   ¦         4   4  Èşÿÿÿÿÿÿ!           †             4   l  şÿÿÿÿÿÿT           †   O          4   ¤  Xşÿÿÿÿÿÿ!           †             4   Ü   şÿÿÿÿÿÿ!           †             4     èıÿÿÿÿÿÿ-           †   (          4   L  °ıÿÿÿÿÿÿ!           †             4   „  xıÿÿÿÿÿÿP          †      ƒF  4   ¼  @ıÿÿÿÿÿÿN          †   I         4   ô  ıÿÿÿÿÿÿP          †      ƒF  4   ,  ĞüÿÿÿÿÿÿN          †   I         4   d  ˜üÿÿÿÿÿÿJ          †      ƒ@  4   œ  `üÿÿÿÿÿÿJ          †      ƒ@  4   Ô  (üÿÿÿÿÿÿˆ           †   ƒ          4     ğûÿÿÿÿÿÿ          †            4   D  ¸ûÿÿÿÿÿÿ\          †      ƒR  4   |  €ûÿÿÿÿÿÿq           †   l          4   ´  Hûÿÿÿÿÿÿ}           †   x          4   ì  ûÿÿÿÿÿÿj           †   e          4   $  ØúÿÿÿÿÿÿÜ           †   ×          4   \   úÿÿÿÿÿÿn           †   i          4   ”  húÿÿÿÿÿÿŠ           †   …          ª     -ğ    -Ó    -¶    -  "  -I    -9    -„    -#  $  -Ÿ    -H     -â  !  -U    -ş     -˜  !  -Æ    -l    -    -t    -c    -´    -(    -Î    -e    -Ö    -Å    -    -°    -K    -§    -K    -ß    -©  #  -‰    -)    -¥    -E    -    -   	  -@    -    -¢    -B    -    -ª    -J    -    -²
-    -R
-    -!
-    -H	  
-  -ù    -]    -    -    -£    -r    -    -«    -z    -*    -½    -A    -    -ı    -³    -Ñ    -•    -%  #  -Â     -1     -˜     ^˜    `     ^`    (     ^(    ğ     ^ğ    ¸     ^¸  
-  €     ^€    H     ^H         ^    Ø     ^Ø          ^     h     ^h    0     ^0  	  ø     ^ø    À     ^À    ˆ     ^ˆ    P     ^P         ^    à     ^à    ¨     ^¨    p     ^p    8     ^8          ^     È      ^È           ^     X      ^X            ^      ¯    Ø!      ·     ¦      v     J      4     Ü      Y    ,      ?     b      l          ’    4      b     z          Ê                M    ¬      Ë     m      '            ÷     m      J     ×      m     ,      -     ø      [     L      š           Ã     »      ƒ     ”           Ú       §     H!      4    l          ş      A    ^       S              ¥             ›             !              ì              â                                          Ö                             _s21_strcpy _s21_usigned_atohex _s21_atohex _isHex _assignHex _assignInt _isDigit _memset _isOct _assignOct _isFloat _assignFloat _parseFormat _s21_atos _isSeporator _parseSpecifier _assignChar _isSign _checkSign _s21_strlen _s21_atol _s21_atoii _isAscii _parseLength _parseWidth _assignString _checkString _parseString _s21_sscanf _assignVoid _assignHexUnsigned _assignIntUnsigned _assignOctUnsigned _assignN _s21_atoE _s21_ato8 EH_frame1        s21_strcat.o    1668431443  20591 4222  100644  704       `
-Ïúíş           h             è                           À       ˆ      À                    __text          __TEXT                  i       ˆ      H       €            __eh_frame      __TEXT          p       P       ø     X       h            2                         h     ˜  (      P                                                                      UH‰åHƒì H‰}èH‰uàH‹EèH‰Çè    H‰EğHÇEø    ë'H‹UàH‹EøHĞH‹MøH‹UğHÑH‹UèHÊ¶ ˆHƒEøH‹EàH‰Çè    H9EørÇH‹EèÉÃ              zR x  4      àÿÿÿÿÿÿÿi           †   d          Y     -     -       ^           p                                   _s21_strcat _s21_strlen EH_frame1      s21_strchr.o    1668431443  20591 4222  100644  712       `
-Ïúíş           h             è                           Ğ       ˆ      Ğ                    __text          __TEXT                         ˆ      X       €            __eh_frame      __TEXT          €       P            `       h            2                         p        (      P                                                                      UH‰åHƒì0H‰}Ø‰uÔHÇEø    ÇEô    H‹EØH‰Çè    H‰EàHÇEè    ë7H‹UØH‹EèHĞ¶ ¾À9EÔuƒ}ô uH‹UØH‹EèHĞH‰EøÇEô   HƒEèH‹EèH;Eàr¿H‹EøÉÃ        zR x  4      àÿÿÿÿÿÿÿ           †   z          &     -       ^           €                                   _s21_strchr _s21_strlen EH_frame1      s21_strcmp.o    1668431443  20591 4222  100644  728       `
-Ïúíş           h             è                                 ˆ                         __text          __TEXT                  ¸       ˆ                €            __eh_frame      __TEXT          ¸       P       @            h            2                               À        P                                                                       UH‰åH‰}ØH‰uĞÇEü    ÇEø   H‹EØH‰EèH‹EĞH‰EàHÇEğ    ëUH‹UèH‹EğHĞ¶H‹MàH‹EğHÈ¶ 8Ât0H‹UèH‹EğHĞ¶ ¶ĞH‹MàH‹EğHÈ¶ ¶È‰Ğ)È‰EüÇEø    HƒEğH‹UèH‹EğHĞ¶ „ÀuH‹UàH‹EğHĞ¶ „Àtƒ}ø u‹Eü]Ã       zR x  4      àÿÿÿÿÿÿÿ¸           †   ³                 ^           ¸                     _s21_strcmp EH_frame1  s21_strcpy.o    1668431443  20591 4222  100644  688       `
-Ïúíş           h             è                           ¸       ˆ      ¸                    __text          __TEXT                  h       ˆ      @       €            __eh_frame      __TEXT          h       P       ğ     H       h            2                         X     ˆ  (      P                                                                      UH‰åHƒì H‰}èH‰uàH‹EàH‰Çè    H‰EğHÇEø    ë H‹UàH‹EøHĞH‹MèH‹UøHÊ¶ ˆHƒEøH‹EøH;EğrÖH‹UèH‹EøHĞÆ  H‹EèÉÃ       zR x  4      àÿÿÿÿÿÿÿh           †   c               -       ^           h                                   _s21_strcpy _s21_strlen EH_frame1      s21_strcspn.o   1668431443  20591 4222  100644  760       `
-Ïúíş           h             è                           ğ       ˆ      ğ                    __text          __TEXT                  š       ˆ      x       €            __eh_frame      __TEXT                  P       (            h            2                               Ğ  (      P                                                                      UH‰åHƒì0H‰}ØH‰uĞH‹EØH‰Çè    H‰EøHÇEğ    ëXHÇEè    ë7H‹UØH‹EğHĞ¶H‹MĞH‹EèHÈ¶ 8ÂuH‹EøH;EğvH‹EğH‰EøHƒEèH‹EĞH‰Çè    H9Eèr·HƒEğH‹EØH‰Çè    H9Eğr–H‹EøÉÃ             zR x  4      àÿÿÿÿÿÿÿš           †   •          Š     -s     -     -       ^                                               _s21_strcspn _s21_strlen EH_frame1     s21_strerror.o  1668431443  20591 4222  100644  7624      `
-Ïúíş           X             Ø                          ¤      x      (                   __text          __TEXT                  q       x              €            __cstring       __TEXT          x       ù	      ğ                            __data          __DATA          €
-      X      ø     Ø  k                   __bss           __DATA          @      d                                     __eh_frame      __TEXT          Ø      P       P     0       h            2                         @  r   `  h     P       n   n      p                                                      UH‰åHƒì‰}üƒ}ü xƒ}üj~*‹EüA‰ÀH    ºd   ¾    H=    ¸    è    ë'‹EüH˜HÅ    H    H‹H‰ÆH=    è    H    ÉÃ       Undefined error: 0 Operation not permitted No such file or directory No such process Interrupted system call Input/output error Device not configured Argument list too long Exec format error Bad file descriptor No child processes Resource deadlock avoided Cannot allocate memory Permission denied Bad address Block device required Resource busy File exists Cross-device link  Operation not supported by device Not a directory Is a directory Invalid argument Too many open files in system Too many open files     Inappropriate ioctl for device Text file busy File too large No space left on device Illegal seek Read-only file system Too many links Broken pipe      Numerical argument out of domain Result too large       Resource temporarily unavailable Operation now in progress Operation already in progress        Socket operation on non-socket Destination address required Message too long    Protocol wrong type for socket Protocol not available Protocol not supported Socket type not supported Operation not supported Protocol family not supported    Address family not supported by protocol family Address already in use  Can't assign requested address Network is down Network is unreachable   Network dropped connection on reset     Software caused connection abort Connection reset by peer No buffer space available Socket is already connected Socket is not connected Can't send after socket shutdown        Too many references: can't splice Operation timed out Connection refused        Too many levels of symbolic links File name too long Host is down No route to host Directory not empty Too many processes Too many users Disc quota exceeded Stale NFS file handle      Too many levels of remote in path RPC struct is bad RPC version wrong RPC prog. not avail Program version wrong Bad procedure for program No locks available Function not implemented   Inappropriate file type or format Authentication error Need authenticator Device power is off Device error      Value too large to be stored in data type       Bad executable (or shared library) Bad CPU type in executable   Shared library version mismatch Malformed Mach-o file Operation canceled Identifier removed No message of desired type Illegal byte sequence Attribute not found Bad message EMULTIHOP (Reserved)       No message available on STREAM ENOLINK (Reserved) No STREAM resources Not a STREAM Protocol error STREAM ioctl timeout  Operation not supported on socket Policy not found State not recoverable Previous owner died    Interface output queue is full Unknown error: %d                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               zR x  4      àÿÿÿÿÿÿÿq           †   l          k   l  d   q  -_   l  Q   o  ;   p  -1   l      k  P  j  H  i  @  h  8  g  0  f  (  e     d    c    b    a     `  ø  _  ğ  ^  è  ]  à  \  Ø  [  Ğ  Z  È  Y  À  X  ¸  W  °  V  ¨  U     T  ˜  S    R  ˆ  Q  €  P  x  O  p  N  h  M  `  L  X  K  P  J  H  I  @  H  8  G  0  F  (  E     D    C    B    A     @  ø  ?  ğ  >  è  =  à  <  Ø  ;  Ğ  :  È  9  À  8  ¸  7  °  6  ¨  5     4  ˜  3    2  ˆ  1  €  0  x  /  p  .  h  -  `  ,  X  +  P  *  H  )  @  (  8  '  0  &  (  %     $    #    "    !        ø     ğ     è     à     Ø     Ğ     È     À     ¸     °     ¨           ˜          ˆ     €     x     p     h     `     X     P   
-  H   	  @     8     0     (                                     m  ^    n  (    x       ñ    ‹       °    £       y    ½       B    Í           å       Ô     ø                  l     %      ;     7      T    K          ^      Ü    x      ¥          n    ¡      7    ­           Ã      É     Ñ      ˜     İ      g     ğ      O              "      ×    1           B      i    `      2    x      û     —      Ä     ¦      “     µ      b     Í      J    Ú          ğ      Ò    ÿ      ›          d    1      -    H      ö     i      ¿     ƒ           ¨      ]     Ç      E    ä          ø      Í          –    .      _    E      (    _      ñ     w      º     ˜      ‰     È      X     à      @    ÿ      	          È    (      ‘    P      Z    q      #    Š      ì     ¤      µ     À      „     Ø      S            ;    "          6      Ã    P      Œ    r      U    …          ’      ç     £      °     ·           Ê      N     Ù      6    í      ÿ          ¾    *      ‡    <      P    N          b      â     x      «     ’      z     ¥      I     À      1    â      ú    ÷      ¹    
-      ‚          K    0          `      İ     ƒ      ¦            u     À      D     Ö      ,    é      õ    ü      ´    	      }    -	      F    A	          M	      Ø     h	      ¡     ‡	      p     š	      ?     ®	      Y    »	      "    Ê	      á    à	      ª    
-      s    
-      <    )
-          @
-      Î     _
-      _    @      ç    Ø                        €
-      ,                             _s21_strcpy _s21_sys_errlist _s21_strerror ___sprintf_chk lC9 lC99 lC89 lC79 lC69 lC59 lC49 lC39 lC29 lC19 lC8 lC98 lC88 lC78 lC68 lC58 lC48 lC38 lC28 lC18 lC7 lC97 lC87 lC77 lC67 lC57 lC47 lC37 lC27 lC17 lC107 lC6 lC96 lC86 lC76 lC66 lC56 lC46 lC36 lC26 lC16 lC106 lC5 lC95 lC85 lC75 lC65 lC55 lC45 lC35 lC25 lC15 lC105 lC4 lC94 lC84 lC74 lC64 lC54 lC44 lC34 lC24 lC14 lC104 lC3 lC93 lC83 lC73 lC63 lC53 lC43 lC33 lC23 lC13 lC103 lC2 lC92 lC82 lC72 lC62 lC52 lC42 lC32 lC22 lC12 lC102 EH_frame1 lC1 lC91 lC81 lC71 lC61 lC51 lC41 lC31 lC21 lC11 lC101 lC0 lC90 lC80 lC70 lC60 lC50 lC40 lC30 lC20 lC10 lC100 _err.0   s21_strlen.o    1668431443  20591 4222  100644  600       `
-Ïúíş           h             è                           ˆ       ˆ      ˆ                    __text          __TEXT                  6       ˆ                €            __eh_frame      __TEXT          8       P       À            h            2                               @        P                                                                       UH‰åH‰}èHÇEø    Hƒ}è tëHƒEøH‹UèH‹EøHĞ¶ „ÀuéH‹Eø]Ã         zR x  4      àÿÿÿÿÿÿÿ6           †   1                 ^           8                     _s21_strlen EH_frame1  s21_strncat.o   1668431443  20591 4222  100644  712       `
-Ïúíş           h             è                           Ğ       ˆ      Ğ                    __text          __TEXT                  z       ˆ      X       €            __eh_frame      __TEXT          €       P            `       h            2                         p        (      P                                                                      UH‰åHƒì0H‰}èH‰uàH‰UØH‹EèH‰Çè    H‰EğHÇEø    ë'H‹UàH‹EøHĞH‹MøH‹UğHÑH‹UèHÊ¶ ˆHƒEøH‹EøH;EØrÏH‹UøH‹EğHÂH‹EèHĞÆ  H‹EèÉÃ             zR x  4      àÿÿÿÿÿÿÿz           †   u               -       ^           €                                   _s21_strncat _s21_strlen EH_frame1     s21_strncmp.o   1668431443  20591 4222  100644  712       `
-Ïúíş           h             è                           ø       ˆ      ø                    __text          __TEXT                  ¢       ˆ                €            __eh_frame      __TEXT          ¨       P       0     €       h            2                              °        P                                                                       UH‰åH‰}ØH‰uĞH‰UÈÇEü    ÇEø   H‹EØH‰EèH‹EĞH‰EàHÇEğ    ëUH‹UèH‹EğHĞ¶H‹MàH‹EğHÈ¶ 8Ât0H‹UèH‹EğHĞ¶ ¶ĞH‹MàH‹EğHÈ¶ ¶È‰Ğ)È‰EüÇEø    HƒEğH‹EğH;EÈsƒ}ø u›‹Eü]Ã             zR x  4      àÿÿÿÿÿÿÿ¢           †                    ^           ¨                     _s21_strncmp EH_frame1 s21_strncpy.o   1668431443  20591 4222  100644  624       `
-Ïúíş           h             è                                   ˆ                           __text          __TEXT                  J       ˆ                €            __eh_frame      __TEXT          P       P       Ø     (       h            2                         8     X        P                                                                       UH‰åH‰}èH‰uàH‰UØHÇEø    ë H‹UàH‹EøHĞH‹MèH‹UøHÊ¶ ˆHƒEøH‹EøH;EØrÖH‹Eè]Ã             zR x  4      àÿÿÿÿÿÿÿJ           †   E                 ^           P                     _s21_strncpy EH_frame1 s21_strpbrk.o   1668431443  20591 4222  100644  792       `
-Ïúíş           h             è                                 ˆ                         __text          __TEXT                  ³       ˆ             €            __eh_frame      __TEXT          ¸       P       @     °       h            2                         À     ğ  (      P                                                                      UH‰åHƒì0H‰}ØH‰uĞHÇEø    HÇEğ    ëuHÇEè    ëTH‹UØH‹EğHĞ¶H‹MĞH‹EèHÈ¶ 8Âu/H‹UØH‹EğHĞH‰EøH‹EĞH‰Çè    H‰EèH‹EØH‰Çè    H‰EğHƒEèH‹EĞH‰Çè    H9EèršHƒEğH‹EØH‰Çè    H9Eğ‚uÿÿÿH‹EøÉÃ            zR x  4      àÿÿÿÿÿÿÿ³           †   ®          Ÿ     -ˆ     -s     -c     -       ^           ¸                                   _s21_strlen _s21_strpbrk EH_frame1     s21_strrchr.o   1668431444  20591 4222  100644  704       `
-Ïúíş           h             è                           È       ˆ      È                    __text          __TEXT                  t       ˆ      P       €            __eh_frame      __TEXT          x       P             X       h            2                         h     ˜  (      P                                                                      UH‰åHƒì0H‰}Ø‰uÔHÇEø    ÇEô    H‹EØH‰Çè    H‰Eèë7H‹UØH‹EèHĞ¶ ¾À9EÔuƒ}ô uH‹UØH‹EèHĞH‰EøÇEô   HƒmèHƒ}è uÂH‹EøÉÃ           zR x  4      àÿÿÿÿÿÿÿt           †   o          &     -       ^           x                                   _s21_strrchr _s21_strlen EH_frame1     s21_strspn.o    1668431444  20591 4222  100644  752       `
-Ïúíş           h             è                           ğ       ˆ      ğ                    __text          __TEXT                         ˆ      x       €            __eh_frame      __TEXT                  P       (     ˆ       h            2                         ˜     È  (      P                                                                      UH‰åHƒì0H‰}ØH‰uĞHÇEø    HÇEè    ëaÇEô    HÇEà    ë3H‹UØH‹EèHĞ¶H‹MĞH‹EàHÈ¶ 8ÂuHƒEøÇEô   ëHƒEàH‹EĞH‰Çè    H9Eàr»ƒ}ô tHƒEèH‹EØH‰Çè    H9EèrëH‹EøÉÃ         zR x  4      àÿÿÿÿÿÿÿ           †   ™          ‹     -n     -       ^                                               _s21_strspn _s21_strlen EH_frame1      s21_strstr.o    1668431444  20591 4222  100644  880       `
-Ïúíş           h             è                           p      ˆ      p                   __text          __TEXT                        ˆ      ø       €            __eh_frame      __TEXT                 P       ¨            h            2                              H  (      P                                                                      UH‰åSHƒì8H‰}ÈH‰uÀÇEä    H‹EÀH‰Çè    H‰ÃH‹EÈH‰Çè    H9ÃvHÇEè    éË   H‹EÀ¶ „ÀuH‹EÈH‰Eèé³   HÇEè    ÇEà    H‹EÈH‰EĞé€   ÇEÜ    ‹Eà‰EØëƒEØƒEÜ‹EØH˜H‹UĞHĞ¶‹EÜH˜H‹MÀHÈ¶ 8Âu‹EØH˜H‹UĞHĞ¶ „ÀuÃ‹EÜH˜H‹UÀHĞ¶ „Àuƒ}ä u‹EàH˜H‹UĞHĞH‰EèÇEä   ƒEà‹EàH˜H‹UĞHĞ¶ „À…iÿÿÿH‹EèH‹]øÉÃ             zR x  4      àÿÿÿÿÿÿÿ          †      ƒ  /     -      -       ^                                              _s21_strstr _s21_strlen EH_frame1      s21_strtok.o    1668431444  20591 4222  100644  1096      `
-Ïúíş           ¸             8                          À      Ø      ¸                   __text          __TEXT                  )      Ø             €            __bss           __DATA          ¸                                           __eh_frame      __TEXT          0      ˆ            ¸       h            2                         Ø       0      P                                                                       UH‰å‰øH‰uàˆEìÇEü    ëH‹Eà¶ 8EìuÇEü   HƒEàH‹Eà¶ „Àuİ‹Eü]ÃUH‰åHƒì H‰}èH‰uàHƒ}è uH‹    H‰EèHƒ}è „¸   H‹Eè¶ „ÀtHƒ}è uHÇEø    é™   H‹Eè¶ ¾ÀH‹UàH‰Ö‰Çè    …ÀtHƒEèëİH‹Eè¶ „ÀuHÇEè    H‹EèH‰EøëQH‹Eè¶ „ÀuH‹EèH‰    ë@H‹Eè¶ ¾ÀH‹UàH‰Ö‰Çè    …ÀtH‹EèÆ  H‹EèHƒÀH‰    ëHƒEèHƒ}è u¨H‹EøÉÃ              zR x  4      àÿÿÿÿÿÿÿ>           †   9          4   T   ¨ÿÿÿÿÿÿÿë           †   æ              ÷      -İ           -X     X     ^X           ^                    "     ¸           0           >        _s21_delim _s21_strtok EH_frame1 _st_ch.0      s21_to_lower.o  1668431444  20591 4222  100644  856       `
-Ïúíş           h             è                                 ˆ                         __text          __TEXT                  ¾       ˆ      ˜       €            __eh_frame      __TEXT          À       P       H     ¸       h            2                         È       @      P                                                                      UH‰åHƒì H‰}èHÇEø    Hƒ}è „™   H‹EèH‰Çè    HƒÀH‰Çè    H‰EøHƒ}ø tvH‹UèH‹EøH‰ÖH‰Çè    HÇEğ    ëGH‹UøH‹EğHĞ¶ <@~0H‹UøH‹EğHĞ¶ <ZH‹UøH‹EğHĞ¶ P H‹MøH‹EğHÈˆHƒEğH‹EèH‰Çè    H9Eğr§H‹EøÉÃ         zR x  4      àÿÿÿÿÿÿÿ¾           †   ¹          ®     -Q     -3     -'     -       ^      /     À                    '                                           _s21_strcpy _s21_to_lower _s21_strlen _malloc EH_frame1        s21_to_upper.o  1668431444  20591 4222  100644  856       `
-Ïúíş           h             è                                 ˆ                         __text          __TEXT                  ¾       ˆ      ˜       €            __eh_frame      __TEXT          À       P       H     ¸       h            2                         È       @      P                                                                      UH‰åHƒì H‰}èHÇEø    Hƒ}è „™   H‹EèH‰Çè    HƒÀH‰Çè    H‰EøHƒ}ø tvH‹UèH‹EøH‰ÖH‰Çè    HÇEğ    ëGH‹UøH‹EğHĞ¶ <`~0H‹UøH‹EğHĞ¶ <zH‹UøH‹EğHĞ¶ PàH‹MøH‹EğHÈˆHƒEğH‹EèH‰Çè    H9Eğr§H‹EøÉÃ         zR x  4      àÿÿÿÿÿÿÿ¾           †   ¹          ®     -Q     -3     -'     -       ^      /     À                    '                                           _s21_strcpy _s21_to_upper _s21_strlen _malloc EH_frame1        s21_trim.o      1668431444  20591 4222  100644  1784      `
-Ïúíş           h             è                           ø      ˆ      ø                   __text          __TEXT                  û      ˆ      €       €            __eh_frame      __TEXT                 ø       ˆ     Ø       h            2                              ˜  `      P                                                                      UH‰åH‰}èHÇEø    ë$H‹EøHPH‹EèHĞH‹MèH‹UøHÊ¶ ˆHƒEøH‹UèH‹EøHĞ¶ „ÀuÊ]ÃUH‰åHƒì@H‰}ØH‰uĞH‰UÈH‹EÈH‰Çè    H‰EèH‹EØH‰Çè    H‰EàH‹Eàƒè‰Eüé’   ÇEø    HÇEğ    ëm‹EüH˜H‹UØHĞ¶H‹MÈH‹EğHÈ¶ 8Âu‹EüH˜H‹UØHĞÆ  ëEH‹EèHƒèH9Eğu(‹EüH˜H‹UĞHĞ¶H‹MÈH‹EèHÈ¶ 8ÂtÇEø   HƒEğH‹EğH;Eèr‰ƒ}ø uƒmüƒ}ü ‰dÿÿÿëÉÃUH‰åHƒìPH‰}ÈH‰uÀH‰U¸H‹E¸H‰Çè    H‰EàH‹EÀH‰Çè    H‰EØHÇEø    é   ÇEô    HÇEè    ëhH‹UÀH‹EøHĞ¶H‹M¸H‹EèHÈ¶ 8ÂuH‹EÈH‰Çè    ëDH‹EàHƒèH9Eèu'H‹UÀH‹EøHĞ¶H‹M¸H‹EàHÈ¶ 8ÂtÇEô   HƒEèH‹EèH;Eàrƒ}ô uHƒEøH‹EøH;EØ‚dÿÿÿëÉÃUH‰åHƒì0H‰}ØH‰uĞÇEü    HÇEğ    Hƒ}Ø „£   H¸ 	
-  H‰EæfÇEî  Hƒ}Ğ tH‹EĞH‰Çè    H…ÀuHEæH‰EĞH‹EØH‰Çè    HƒÀ
-H‰Çè    H‰EğHƒ}ğ u	ÇEü   ëJH‹UØH‹EğH‰ÖH‰Çè    H‹UĞH‹MØH‹EğH‰ÎH‰Çè    H‹UĞH‹MØH‹EğH‰ÎH‰Çè    ëÇEü   ƒ}ü uH‹Eğë¸    ÉÃ            zR x  4      àÿÿÿÿÿÿÿL           †   G          4   T   ¨ÿÿÿÿÿÿÿå           †   à          4   Œ   pÿÿÿÿÿÿÿã           †   Ş          4   Ä   8ÿÿÿÿÿÿÿç           †   â          Û    -Ä    -­    -†    -z    -a    -«    -]    -M    -x     -h     -È      ^È           ^     X      ^X            ^      U            "                  1           L       C           M                            7               _s21_strcpy _rightpart _leftpart _delete_first_letter _s21_strlen _s21_trim _malloc EH_frame1  

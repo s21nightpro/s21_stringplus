@@ -4,35 +4,36 @@
 // A format specifier for print functions follows this prototype:
 // %[flags][width][.precision][length]specifier
 
-// int main() {
-//   start();
-//   return 0;
-// }
+int main() {
+  start();
+  return 0;
+}
 
-// void start() {
-//   // char *stroka;
-//   // char *stroka2;
-//   // stroka = (char *)malloc(300 * sizeof(char));
-//   // stroka2 = (char *)malloc(300 * sizeof(char));
-//   char str1[SIZE] = {'\0'};
-//   char str2[SIZE] = {'\0'};
-//   char format[] = "%.5g";
-//   double hex = 0.123000;
-//   int a = 0;
-//   int b = 0;
-//   a = s21_sprintf(str1, format, hex);
-//   b = sprintf(str2, format, hex);
-//   // ck_assert_str_eq(str1, str2);
-//   // double num = -.00123;
-//   // s21_sprintf(stroka, "Hello, %e", num);
-//   printf("s21_sprintf: %d\n", a);
-//   printf("sprintf: %d\n", b);
-//   printf("s21_sprintf: %sEND\n", str1);
-//   // sprintf(stroka2, "Hello, %e", num);
-//   printf("sprintf: %sEND\n", str2);
-//   // free(stroka);
-//   // free(stroka2);
-// }
+void start() {
+  // char *stroka;
+  // char *stroka2;
+  // stroka = (char *)malloc(300 * sizeof(char));
+  // stroka2 = (char *)malloc(300 * sizeof(char));
+  char str1[SIZE] = {'\0'};
+  char str2[SIZE] = {'\0'};
+  char format[] = "%#-5.10x";
+  // long double k = 333.33213;
+  int a = 0;
+  int b = 0;
+  unsigned val = 858158158;
+  a = s21_sprintf(str1, format, val);
+  b = sprintf(str2, format, val);
+  // ck_assert_str_eq(str1, str2);
+  // double num = -.00123;
+  // s21_sprintf(stroka, "Hello, %e", num);
+  printf("s21_sprintf: %d\n", a);
+  printf("sprintf: %d\n", b);
+  // printf("s21_sprintf: %sEND\n", str1);
+  //  sprintf(stroka2, "Hello, %e", num);
+  // printf("sprintf: %sEND\n", str2);
+  //  free(stroka);
+  //  free(stroka2);
+}
 
 int s21_sprintf(char *str, const char *format, ...) {
   // s21_memset(str, '\0', 1024);
@@ -97,7 +98,7 @@ const char *parse_Width(const char *format, flags *f, va_list var) {
     format++;
     f->width = va_arg(var, int);
   } else if (*format >= 48 && *format <= 57) {
-    char tempWidth[BUFFER_SIZE] = "";
+    char tempWidth[BUFFER_SIZE] = {'\0'};
     for (int i = 0; *format >= 48 && *format <= 57; i++, format++) {
       tempWidth[i] = *format;
     }
@@ -303,7 +304,7 @@ int numsCount(int64_t num) {
 /// ?DELETE?
 
 void integerToString(char *buffer, int64_t num, int notation) {
-  char temp[BUFFER_SIZE] = "";
+  char temp[BUFFER_SIZE] = {'\0'};
   int sign = 0;
   bool negative = num < 0 ? true : false;
   num = negative ? -num : num;
@@ -472,7 +473,7 @@ void doubleToString(char *buffer, long double num, flags *flag) {
   long double l = 0, r = modfl(num, &l);
   for (int p = 0; p < flag->precision; p++) {
     r = r * 10;
-    tempRightPart[p] = digitToAscii((int)r);
+    tempRightPart[p] = digitToAscii(((int)r) % 10);
   }
   long long rightPart = roundl(r);
   if (!rightPart) {
