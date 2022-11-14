@@ -14,11 +14,12 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
 
 int checkSign(const char *a, int *sign, int width, int base, int i);
 
+int checkString(const char *str);
 int isSign(int a);
 int isDigit(int a);
 int isAscii(int a);
 int isSeporator(int a);
-int isHex(int a);
+int isHex(int a, int i);
 int isOct(int a);
 int isFloat(int a, int next, float_flags_t *fl);
 
@@ -34,48 +35,63 @@ void assignOctUnsigned(char *str, va_list var, flags_t *f);
 void assignHexUnsigned(char *str, va_list var, flags_t *f);
 void assignVoid(char *str, va_list var, flags_t *f);
 
-int main() {
-  int num1, num2;
+// int main() {
+// #include <locale.h>
+//   setlocale(LC_ALL, "");
+//   unsigned long long int a1, a2;
+//   const char str[] = "faaaaaaaaaaaaf";
+//   const char fstr[] = "%llx";
+//   uint16_t res1 = s21_sscanf(str, fstr, &a1);
+//   uint16_t res2 = sscanf(str, fstr, &a2);
+//   printf("%d %d\n", res1, res2);
+//   printf("%llx %llx\n", a1, a2);
+// }
 
-  float a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
+int checkString(const char *str) {
+  int res = 0;
 
-  const char str[] = "inf 1.31e+4 NaN 0.444e-5";
-  const char fstr[] = "%G %G %G %G";
-
-  num1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
-  num2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
-  printf("%f %f\n", a2, c2);
-  printf("%d %d", num1, num2);
-  //  printf("%d %d %d", num1, num2, num3);
-}
-
-int s21_sscanf(const char *str, const char *format, ...) {
-  int success = 0;
-  int convertions = 0;
-  va_list var;
-  va_start(var, format);
-  const s21_size_t str_len = s21_strlen(str);
-  char skip = '\0';
-  while (*format != '\0') {
-    if (*format == '%') {
-      flags_t flag_format = {0};
-      format++;
-      parseFormat(&format, &flag_format);
-      parseString(&str, str_len, &flag_format, var, skip);
-      if (flag_format.convertions || flag_format.asterics) convertions++;
-      if (flag_format.error) break;
-      if (!flag_format.asterics) success++;
-      skip = '\0';
-    } else if (skip == '\0' || skip == *format) {
-      skip = *format;
-      format++;
-    } else {
+  for (int i = 0; str[i]; i++) {
+    if (!isSeporator(str[i])) {
+      res = 1;
       break;
     }
   }
-  va_end(var);
 
-  return convertions ? success : -1;
+  return res;
+}
+
+int s21_sscanf(const char *str, const char *format, ...) {
+  int non_empty_string = checkString(str);
+  int success = 0;
+  int convertions = 0;
+
+  if (non_empty_string) {
+    va_list var;
+    va_start(var, format);
+    const s21_size_t str_len = s21_strlen(str);
+    char skip = '\0';
+    while (*format != '\0') {
+      if (*format == '%') {
+        flags_t flag_format = {0};
+        format++;
+        parseFormat(&format, &flag_format);
+        if (flag_format.error) break;
+        parseString(&str, str_len, &flag_format, var, skip);
+        if (flag_format.convertions) convertions++;
+        success++;
+        if (flag_format.error) break;
+        skip = '\0';
+      } else if (skip == '\0' || skip == *format) {
+        skip = *format;
+        format++;
+      } else {
+        break;
+      }
+    }
+    va_end(var);
+  }
+
+  return success ? convertions : -1;
 }
 
 int checkSign(const char *a, int *sign, int width, int base, int i) {
@@ -83,7 +99,7 @@ int checkSign(const char *a, int *sign, int width, int base, int i) {
   if (!(*sign) && width != 1 && isSign(*a) && !i) {
     switch (base) {
       case HEX:
-        if (isHex(*(a + 1))) res = 1;
+        if (isHex(*(a + 1), 0)) res = 1;
         break;
       case DEC:
         if (isDigit(*(a + 1))) res = 1;
@@ -164,8 +180,9 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
           (*str)++;
           if ((**str) == 'x' || (**str) == 'X') {
             (*str)++;
-            while ((isHex(**str) || checkSign(*str, &sign, f->width, HEX, i)) &&
-                   (f->width != 0)) {
+            while (
+                (isHex(**str, 0) || checkSign(*str, &sign, f->width, HEX, i)) &&
+                (f->width != 0)) {
               str_temp[i] = **str;
               (*str)++;
               i++;
@@ -219,7 +236,8 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
 
       case 'x':
       case 'X':
-        while (((isHex(**str)) || checkSign(*str, &sign, f->width, HEX, i)) &&
+        while (((isHex(**str, i + sign)) ||
+                checkSign(*str, &sign, f->width, HEX, i)) &&
                (f->width != 0)) {
           str_temp[i] = **str;
           (*str)++;
@@ -237,7 +255,8 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
       case 'f':
       case 'g':
       case 'G':
-        while (isFloat(**str, *(*str + 1), &float_struct) && (f->width != 0)) {
+        while (isFloat(**str, *(*str + 1), &float_struct) &&
+               (f->width != 0)) {  // добавить nan и inf
           str_temp[i] = **str;
           (*str)++;
           i++;
@@ -255,7 +274,7 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
         break;
 
       case 'p':
-        while ((isHex(**str)) && (f->width != 0)) {
+        while ((isHex(**str, i)) && (f->width != 0)) {
           str_temp[i] = **str;
           (*str)++;
           i++;
@@ -265,6 +284,14 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
           f->error = 1;
         else if (!f->asterics)
           assignVoid(str_temp, var, f);
+        break;
+
+      case '%':
+        if (**str == '%') {
+          (*str)++;
+          i++;
+        }
+        if (!i) f->error = 1;
         break;
     }
   } else {
@@ -313,9 +340,10 @@ n - количество считанных символов
 
 int isDigit(int a) { return (a >= '0' && a <= '9'); }
 
-int isHex(int a) {
+int isHex(int a, int i) {
   return ((a >= '0' && a <= '9') || (a >= 'a' && a <= 'f') ||
-          (a >= 'A' && a <= 'F'));
+          (a >= 'A' && a <= 'F')) ||
+         (a == 'x' && i == 1) || (a == 'X' && i == 1);
 }
 
 int isOct(int a) { return (a >= '0' && a <= '7'); }
@@ -342,11 +370,11 @@ void assignHex(char *str, va_list var, flags_t *f) {
 void assignHexUnsigned(char *str, va_list var, flags_t *f) {
   f->convertions++;
   if (f->length == 'h') {
-    *va_arg(var, unsigned short *) = (unsigned short)s21_usigned_atohex(str);
+    *va_arg(var, unsigned short *) = (unsigned short)s21_atohex(str);
   } else if (f->length == 'l') {
-    *va_arg(var, unsigned long *) = s21_usigned_atohex(str);
+    *va_arg(var, unsigned long *) = s21_atohex(str);
   } else {
-    *va_arg(var, unsigned int *) = (unsigned int)s21_usigned_atohex(str);
+    *va_arg(var, unsigned int *) = (unsigned int)s21_atohex(str);
   }
 }
 
@@ -364,11 +392,11 @@ void assignOct(char *str, va_list var, flags_t *f) {
 void assignOctUnsigned(char *str, va_list var, flags_t *f) {
   f->convertions++;
   if (f->length == 'h') {
-    *va_arg(var, unsigned short *) = (unsigned short)s21_unsigned_ato8(str);
+    *va_arg(var, unsigned short *) = (unsigned short)s21_ato8(str);
   } else if (f->length == 'l') {
-    *va_arg(var, unsigned long *) = s21_unsigned_ato8(str);
+    *va_arg(var, unsigned long *) = s21_ato8(str);
   } else {
-    *va_arg(var, unsigned int *) = (unsigned int)s21_unsigned_ato8(str);
+    *va_arg(var, unsigned int *) = (unsigned int)s21_ato8(str);
   }
 }
 
@@ -402,7 +430,7 @@ void assignVoid(char *str, va_list var, flags_t *f) {
 }
 
 void assignN(int n, va_list var, flags_t *f) {
-  f->convertions++;
+  // f->convertions++;
   if (f->length == 'h') {
     *va_arg(var, short *) = n;
   } else if (f->length == 'l') {
@@ -476,9 +504,9 @@ const char *parseLength(const char *format, flags_t *f) {
 }
 
 const char *parseSpecifier(const char *format, flags_t *f) {
-  char specList[16] = "cdieEfgGosuxXpn";
+  char specList[17] = "cdieEfgGosuxXpn%";
   int unmatch = 1;
-  for (int i = 0; i < 15; i++) {
+  for (int i = 0; i < 16; i++) {
     if (*format == specList[i]) {
       f->specifier = specList[i];
       unmatch = 0;
