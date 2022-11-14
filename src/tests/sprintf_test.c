@@ -920,24 +920,23 @@ START_TEST(sprintf_float_flags) {
 }
 END_TEST
 
-// START_TEST(sprintf_float_many) {
-//   char str1[SIZE] = {'\0'};
-//   char str2[SIZE] = {'\0'};
-//   printf("1\n");
-//   char *format = "% .0f %.lf %Lf %f %lf %Lf";
-//   float val = 0;
-//   double val1 = 0;
-//   long double val2 = 3515315.153151;
-//   float val3 = 5.5;
-//   double val4 = 9851.51351;
-//   long double val5 = 95919539159.53151351131;
-//   ck_assert_int_eq(s21_sprintf(str1, format, val, val1, val2, val3, val4,
-//   val5),
-//                    sprintf(str2, format, val, val1, val2, val3, val4, val5));
+START_TEST(sprintf_float_many) {
+  char str1[SIZE] = {'\0'};
+  char str2[SIZE] = {'\0'};
+  printf("1\n");
+  char *format = "% .0f %.lf %Lf %f %lf %Lf";
+  float val = 0;
+  double val1 = 0;
+  long double val2 = 3515315.153151;
+  float val3 = 5.5;
+  double val4 = 9851.51351;
+  long double val5 = 95919539159.53151351131;
+  ck_assert_int_eq(s21_sprintf(str1, format, val, val1, val2, val3, val4, val5),
+                   sprintf(str2, format, val, val1, val2, val3, val4, val5));
 
-//   ck_assert_str_eq(str1, str2);
-// }
-// END_TEST
+  ck_assert_str_eq(str1, str2);
+}
+END_TEST
 
 START_TEST(sprintf_e_precision) {
   char str1[SIZE] = {'\0'};
@@ -1010,50 +1009,47 @@ START_TEST(sprintf_e_huge) {
 }
 END_TEST
 
-// START_TEST(sprintf_e_flags) {
-//   char str1[SIZE] = {'\0'};
-//   char str2[SIZE] = {'\0'};
-//   printf("1\n");
-//   char *format = "%015E";
-//   float val = 0;
-//   ck_assert_int_eq(s21_sprintf(str1, format, val), sprintf(str2, format,
-//   val));
+START_TEST(sprintf_e_flags) {
+  char str1[SIZE] = {'\0'};
+  char str2[SIZE] = {'\0'};
+  printf("1\n");
+  char *format = "%015E";
+  float val = 0;
+  ck_assert_int_eq(s21_sprintf(str1, format, val), sprintf(str2, format, val));
 
-//   ck_assert_str_eq(str1, str2);
-// }
-// END_TEST
+  ck_assert_str_eq(str1, str2);
+}
+END_TEST
 
-// START_TEST(sprintf_e_width) {
-//   char str1[SIZE] = {'\0'};
-//   char str2[SIZE] = {'\0'};
-//   printf("1\n");
-//   char *format = "%15e";
-//   float val = 0;
-//   ck_assert_int_eq(s21_sprintf(str1, format, val), sprintf(str2, format,
-//   val));
+START_TEST(sprintf_e_width) {
+  char str1[SIZE] = {'\0'};
+  char str2[SIZE] = {'\0'};
+  printf("1\n");
+  char *format = "%15e";
+  float val = 0;
+  ck_assert_int_eq(s21_sprintf(str1, format, val), sprintf(str2, format, val));
 
-//   ck_assert_str_eq(str1, str2);
-// }
-// END_TEST
+  ck_assert_str_eq(str1, str2);
+}
+END_TEST
 
-// START_TEST(sprintf_e_many) {
-//   char str1[SIZE] = {'\0'};
-//   char str2[SIZE] = {'\0'};
-//   printf("1\n");
-//   char *format = "% .0e %.le %Le %e %le %Le";
-//   float val = 0;
-//   double val1 = 0;
-//   long double val2 = 3515315.153151;
-//   float val3 = 5.5;
-//   double val4 = 0.094913941;
-//   long double val5 = 95919539159.53151351131;
-//   ck_assert_int_eq(s21_sprintf(str1, format, val, val1, val2, val3, val4,
-//   val5),
-//                    sprintf(str2, format, val, val1, val2, val3, val4, val5));
+START_TEST(sprintf_e_many) {
+  char str1[SIZE] = {'\0'};
+  char str2[SIZE] = {'\0'};
+  printf("1\n");
+  char *format = "% .0e %.le %Le %e %le %Le";
+  float val = 0;
+  double val1 = 0;
+  long double val2 = 3515315.153151;
+  float val3 = 5.5;
+  double val4 = 0.094913941;
+  long double val5 = 95919539159.53151351131;
+  ck_assert_int_eq(s21_sprintf(str1, format, val, val1, val2, val3, val4, val5),
+                   sprintf(str2, format, val, val1, val2, val3, val4, val5));
 
-//   ck_assert_str_eq(str1, str2);
-// }
-// END_TEST
+  ck_assert_str_eq(str1, str2);
+}
+END_TEST
 
 START_TEST(sprintf_E_int) {
   char str1[SIZE] = {'\0'};
@@ -2194,18 +2190,6 @@ START_TEST(sprintf_g_precision_zero) {
 }
 END_TEST
 
-START_TEST(sprintf_g_precision_missing) {
-  char str1[SIZE] = {'\0'};
-  char str2[SIZE] = {'\0'};
-  printf("1\n");
-  char format[] = "%.g";
-  double hex = 0.123000;
-  ck_assert_int_eq(s21_sprintf(str1, format, hex), sprintf(str2, format, hex));
-
-  ck_assert_str_eq(str1, str2);
-}
-END_TEST
-
 START_TEST(sprintf_g_many_zeroes_in_front) {
   char str1[SIZE] = {'\0'};
   char str2[SIZE] = {'\0'};
@@ -2507,16 +2491,16 @@ Suite *suite_sprintf(void) {
   tcase_add_test(tc, sprintf_float_precision_huge_negative);
   tcase_add_test(tc, sprintf_float_huge);
   tcase_add_test(tc, sprintf_float_flags);
-  // tcase_add_test(tc, sprintf_float_many);
+  tcase_add_test(tc, sprintf_float_many);
   tcase_add_test(tc, sprintf_e_precision);
   tcase_add_test(tc, sprintf_e_precision_zero);
   tcase_add_test(tc, sprintf_e_precision_empty);
   tcase_add_test(tc, sprintf_e_precision_huge);
   tcase_add_test(tc, sprintf_e_precision_huge_negative);
   tcase_add_test(tc, sprintf_e_huge);
-  // tcase_add_test(tc, sprintf_e_many);
-  // tcase_add_test(tc, sprintf_e_width);
-  // tcase_add_test(tc, sprintf_e_flags);
+  tcase_add_test(tc, sprintf_e_many);
+  tcase_add_test(tc, sprintf_e_width);
+  tcase_add_test(tc, sprintf_e_flags);
   tcase_add_test(tc, sprintf_E_int);
   tcase_add_test(tc, sprintf_all_empty);
   tcase_add_test(tc, sprintf_empty_format_and_parameters);
@@ -2603,7 +2587,6 @@ Suite *suite_sprintf(void) {
   tcase_add_test(tc, sprintf_g_small);
   tcase_add_test(tc, sprintf_g_precision);
   tcase_add_test(tc, sprintf_g_precision_zero);
-  tcase_add_test(tc, sprintf_g_precision_missing);
   tcase_add_test(tc, sprintf_g_many_zeroes_in_front);
   tcase_add_test(tc, sprintf_g_one_zero);
   tcase_add_test(tc, sprintf_g_mantiss);
