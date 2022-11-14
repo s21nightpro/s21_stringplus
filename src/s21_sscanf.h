@@ -9,6 +9,7 @@ typedef struct {
   char length;     // h, l or L
   char specifier;  // just specifier
   int error;
+  int convertions;
 } flags_t;
 
 typedef struct {

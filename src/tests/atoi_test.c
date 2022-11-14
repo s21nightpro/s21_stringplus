@@ -113,15 +113,15 @@ START_TEST(ato8_test_n) {
 END_TEST
 
 START_TEST(atoE_test_p) {
-  char src[] = "123456789.01";
-  float test = 1.23456789e+08;
+  char src[] = "12345";
+  float test = 1.2345e+04;
   ck_assert_double_eq(test, s21_atoE(src));
 }
 END_TEST
 
 START_TEST(atoE_test_n) {
-  char src[] = "-1234567.89";
-  float test = -1.23456789e+06;
+  char src[] = "-1234567";
+  float test = -1.234567e+06;
   ck_assert_double_eq(test, s21_atoE(src));
 }
 END_TEST
