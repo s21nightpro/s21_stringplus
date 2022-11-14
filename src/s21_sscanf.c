@@ -13,6 +13,7 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
                  va_list var, char skip);
 
 int checkSign(const char *a, int *sign, int width, int base, int i);
+int checkScience(const char *str, int width);
 
 int checkString(const char *str);
 int isSign(int a);
@@ -34,18 +35,36 @@ void assignIntUnsigned(char *str, va_list var, flags_t *f);
 void assignOctUnsigned(char *str, va_list var, flags_t *f);
 void assignHexUnsigned(char *str, va_list var, flags_t *f);
 void assignVoid(char *str, va_list var, flags_t *f);
+void assignScience(va_list var, flags_t *f, int flag);
 
-// int main() {
-// #include <locale.h>
-//   setlocale(LC_ALL, "");
-//   unsigned long long int a1, a2;
-//   const char str[] = "faaaaaaaaaaaaf";
-//   const char fstr[] = "%llx";
-//   uint16_t res1 = s21_sscanf(str, fstr, &a1);
-//   uint16_t res2 = sscanf(str, fstr, &a2);
-//   printf("%d %d\n", res1, res2);
-//   printf("%llx %llx\n", a1, a2);
-// }
+int main() {
+#include <locale.h>
+
+  float a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
+
+  const char str[] = "inf 1.31e+4 NaN 0.444e-5";
+  const char fstr[] = "%G %G %G %G";
+
+  int16_t res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
+  int16_t res2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
+
+  printf("%d %d\n", res1, res2);
+  printf("%lf %lf\n", a1, a2);
+  printf("%lf %lf\n", b1, b2);
+
+  for (int i = 0; i < 1; i++) {
+    float a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
+
+    const char str[] =
+        "nAN           INF                   -0.1111         1e-10";
+    const char fstr[] = "%G %G %G %G";
+
+    int16_t res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
+    int16_t res2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
+    printf("%d %d\n", res1, res2);
+    printf("%lf %lf\n", a1, a2);
+  }
+}
 
 int checkString(const char *str) {
   int res = 0;
@@ -120,6 +139,7 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
   int i = 0;
   int n = 0;
   int sign = 0;
+  int science_flag = 0;
   float_flags_t float_struct = {0};
 
   while ((isSeporator(**str) && f->specifier != 'c' && **str != '\0') ||
@@ -255,17 +275,22 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
       case 'f':
       case 'g':
       case 'G':
-        while (isFloat(**str, *(*str + 1), &float_struct) &&
-               (f->width != 0)) {  // добавить nan и inf
-          str_temp[i] = **str;
-          (*str)++;
-          i++;
-          f->width--;
+        if ((science_flag = checkScience(*str, f->width)) != 0) {
+          *str = (*str) + 3;
+          if (!f->asterics) assignScience(var, f, science_flag);
+        } else {
+          while (isFloat(**str, *(*str + 1), &float_struct) &&
+                 (f->width != 0)) {  // добавить nan и inf
+            str_temp[i] = **str;
+            (*str)++;
+            i++;
+            f->width--;
+          }
+          if (!i)
+            f->error = 1;
+          else if (!f->asterics)
+            assignFloat(str_temp, var, f);
         }
-        if (!i)
-          f->error = 1;
-        else if (!f->asterics)
-          assignFloat(str_temp, var, f);
         break;
 
       case 'n':
@@ -297,6 +322,19 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
   } else {
     f->error++;
   }
+}
+
+int checkScience(const char *str, int width) {
+  int res = 0;
+  if (width > 2 || width == -1) {
+    if (*str == 'n' || *str == 'N')
+      if (*(str + 1) == 'a' || *(str + 1) == 'A')
+        if (*(str + 2) == 'n' || *(str + 2) == 'N') res = 1;
+    if (*str == 'i' || *str == 'I')
+      if (*(str + 1) == 'n' || *(str + 1) == 'N')
+        if (*(str + 2) == 'f' || *(str + 2) == 'F') res = 2;
+  }
+  return res;
 }
 
 int isFloat(int a, int next, float_flags_t *fl) {
@@ -448,6 +486,28 @@ void assignFloat(char *str, va_list var, flags_t *f) {
     *va_arg(var, long double *) = s21_atoE(str);
   } else {
     *va_arg(var, float *) = (float)s21_atoE(str);
+  }
+}
+
+void assignScience(va_list var, flags_t *f, int flag) {
+  f->convertions++;
+  if (flag == 1) {
+    if (f->length == 'l') {
+      *va_arg(var, double *) = (double)NAN;
+    } else if (f->length == 'L') {
+      *va_arg(var, long double *) = NAN;
+    } else {
+      *va_arg(var, float *) = (float)NAN;
+    }
+  }
+  if (flag == 2) {
+    if (f->length == 'l') {
+      *va_arg(var, double *) = (double)INFINITY;
+    } else if (f->length == 'L') {
+      *va_arg(var, long double *) = INFINITY;
+    } else {
+      *va_arg(var, float *) = (float)INFINITY;
+    }
   }
 }
 
