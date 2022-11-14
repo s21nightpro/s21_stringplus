@@ -61,3 +61,4 @@ char digitToAscii(int a);
 int asciiToDigit(char a);
 void gSpecifier(char *buffer, flags *flag, va_list var);
 void deleteZeroesFromEnd(char *buffer);
+// void PutgForShortDigit(char *buffer, int pow, long double num)
