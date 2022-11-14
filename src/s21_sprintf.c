@@ -1,5 +1,5 @@
 #include "s21_sprintf.h"
-
+#define SIZE 512
 #include <limits.h>
 // A format specifier for print functions follows this prototype:
 // %[flags][width][.precision][length]specifier
@@ -14,29 +14,33 @@
 //   // char *stroka2;
 //   // stroka = (char *)malloc(300 * sizeof(char));
 //   // stroka2 = (char *)malloc(300 * sizeof(char));
-//   char test_original[1024] = {0};
-//   char test_your[1024] = {0};
-//   sprintf(test_original, "H%ldello %s", 1234567890123456789,
-//           "abcdefghtabcdefghtabcdefghtabcdefghtabcdefghtabcdefght"),
-//       s21_sprintf(test_your, "H%ldello %s", 1234567890123456789,
-//                   "abcdefghtabcdefghtabcdefghtabcdefghtabcdefghtabcdefght");
+//   char str1[SIZE] = {'\0'};
+//   char str2[SIZE] = {'\0'};
+//   char format[] = "%.5g";
+//   double hex = 0.123000;
+//   int a = 0;
+//   int b = 0;
+//   a = s21_sprintf(str1, format, hex);
+//   b = sprintf(str2, format, hex);
 //   // ck_assert_str_eq(str1, str2);
 //   // double num = -.00123;
 //   // s21_sprintf(stroka, "Hello, %e", num);
-//   printf("%sEND\n", test_original);
+//   printf("s21_sprintf: %d\n", a);
+//   printf("sprintf: %d\n", b);
+//   printf("s21_sprintf: %sEND\n", str1);
 //   // sprintf(stroka2, "Hello, %e", num);
-//   printf("%sEND\n", test_your);
+//   printf("sprintf: %sEND\n", str2);
 //   // free(stroka);
 //   // free(stroka2);
 // }
 
 int s21_sprintf(char *str, const char *format, ...) {
   // s21_memset(str, '\0', 1024);
-  flags flag = {0};
   va_list var;
   va_start(var, format);
   char *strStart = str;
   while (*format) {
+    flags flag = {0};
     if (*format != '%') {
       *str++ = *format++;
     } else {
@@ -153,20 +157,21 @@ char *specifier(char *str, flags *flag, va_list var) {
   } else if (flag->specifier == 'e' || flag->specifier == 'E') {
     exponentSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'g' || flag->specifier == 'G') {
+    gSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'x' || flag->specifier == 'X') {
     hexSpecifier(buffer, flag, var);
   } else if (flag->specifier == 's') {
-    // if (flag->length == 'l') {
-    //   widthStringSpecifier(buffer, flag, var);
-    // } else {
-    stringSpecifier(buffer, flag, var);
-    // }
+    if (flag->length == 'l') {
+      widthStringSpecifier(buffer, flag, var);
+    } else {
+      stringSpecifier(buffer, flag, var);
+    }
   } else if (flag->specifier == 'c') {
-    // if (flag->length == 'l') {
-    //   widthCharSpecifier(buffer, flag, var);
-    // } else {
-    charSpecifier(buffer, flag, var);
-    // }
+    if (flag->length == 'l') {
+      widthCharSpecifier(buffer, flag, var);
+    } else {
+      charSpecifier(buffer, flag, var);
+    }
   } else {
     buffer[0] = flag->specifier;
   }
@@ -348,6 +353,19 @@ void formatPrecision(char *buffer, flags *flag) {
 
   if (flag->precision > len) {
     int i;
+    // if (flag->specifier == 'x') {
+    //   temp[i] = '0';
+    //   i++;
+    //   temp[i] = 'x';
+    //   i++;
+    //   sign += 2;
+    // } else if (flag->specifier == 'X') {
+    //   temp[i] = '0';
+    //   i++;
+    //   temp[i] = 'X';
+    //   i++;
+    //   sign += 2;
+    // }
     for (i = sign; i < flag->precision - len + sign; i++) {
       temp[i] = '0';
     }
@@ -546,7 +564,14 @@ void hexSpecifier(char *buffer, flags *flag, va_list var) {
   } else if (flag->length == 'h') {
     num = (uint16_t)num;
   }
-
+  // *buffer = '0';
+  // buffer++;
+  // if (flag-specifier == 'x') {
+  //   *buffer = 'x';
+  // } else {
+  //   *buffer = 'X';
+  // }
+  // buffer
   unsignedToString(buffer, num, 16);
   formatPrecision(buffer, flag);
   if (flag->hashtag) {
