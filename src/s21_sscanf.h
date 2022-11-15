@@ -1,6 +1,5 @@
 #include <math.h>
 #include <stdarg.h>
-#include <stdbool.h>
 
 #include "s21_string.h"
 

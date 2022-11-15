@@ -28,6 +28,8 @@ START_TEST(strerror_all_std_errors) {
   for (int i = -1000; i < 150; i++) {
     char *got = s21_strerror(i);
     char *expected = strerror(i);
+    // printf("%s\n", got);
+    // printf("%s\n", expected);
     ck_assert_str_eq(got, expected);
   }
 }

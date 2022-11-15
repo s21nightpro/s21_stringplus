@@ -1760,28 +1760,6 @@ START_TEST(sprintf_test_sprintf25) {
 }
 END_TEST
 
-START_TEST(sprintf_test_sprintf26) {
-  char str1[SIZE] = {'\0'};
-  char str2[SIZE] = {'\0'};
-  char format[] = "%%";
-
-  ck_assert_int_eq(s21_sprintf(str1, format), sprintf(str2, format));
-
-  ck_assert_str_eq(str1, str2);
-}
-END_TEST
-
-START_TEST(sprintf_test_sprintf27) {
-  char str1[SIZE] = {'\0'};
-  char str2[SIZE] = {'\0'};
-  char format[] = "%%%%%%%%";
-
-  ck_assert_int_eq(s21_sprintf(str1, format), sprintf(str2, format));
-
-  ck_assert_str_eq(str1, str2);
-}
-END_TEST
-
 START_TEST(sprintf_test_sprintf28) {
   char str1[SIZE] = {'\0'};
   char str2[SIZE] = {'\0'};
@@ -2298,8 +2276,6 @@ Suite *suite_sprintf(void) {
   tcase_add_test(tc, sprintf_test_sprintf42);
   tcase_add_test(tc, sprintf_test_sprintf43);
   tcase_add_test(tc, sprintf_test_sprintf44);
-  tcase_add_test(tc, sprintf_test_sprintf26);
-  tcase_add_test(tc, sprintf_test_sprintf27);
   tcase_add_test(tc, sprintf_g_trailing_zero);
   tcase_add_test(tc, sprintf_g_large);
   tcase_add_test(tc, sprintf_g_small);

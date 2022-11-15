@@ -48,7 +48,7 @@ rebuild:
 	make all
 
 cppcheck:
-	cppcheck --enable=all --suppress=missingIncludeSystem /Users/nightpro/C2_s21_stringplus-0/src
+	cppcheck --enable=all --suppress=missingIncludeSystem /Users/suzibill/C2_s21_stringplus-0/src/
 
 leak:
 	CK_FORK=no leaks --atExit -- ./$(NAME)   

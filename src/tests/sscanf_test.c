@@ -987,24 +987,8 @@ START_TEST(sscanf_n5) {
 END_TEST
 
 // [%f] / [%g] / %[%G] //
+
 START_TEST(sscanf_floats1) {
-  long double a1 = 1, a2 = 0, b1 = 1, b2 = 0, c1 = 1, c2 = 0, d1 = 1, d2 = 0;
-
-  const char str[] = "53.1 -4.1135 41.3333 +2.0001";
-  const char fstr[] = "%Lf %Lf %Lf %Lf";
-
-  int16_t res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
-  int16_t res2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
-
-  ck_assert_int_eq(res1, res2);
-  ck_assert_double_eq(a1, a2);
-  ck_assert_double_eq(b1, b2);
-  ck_assert_double_eq(c1, c2);
-  ck_assert_double_eq(d1, d2);
-}
-END_TEST
-
-START_TEST(sscanf_floats2) {
   double a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
 
   const char str[] = "0.00001 -4123123 4. .";
@@ -1021,7 +1005,7 @@ START_TEST(sscanf_floats2) {
 }
 END_TEST
 
-START_TEST(sscanf_floats3) {
+START_TEST(sscanf_floats2) {
   float a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
 
   const char str[] = ". . . .";
@@ -1038,24 +1022,7 @@ START_TEST(sscanf_floats3) {
 }
 END_TEST
 
-START_TEST(sscanf_floats4) {
-  long double a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0, d1 = 0, d2 = 0;
-
-  const char str[] = "513.41 -4.14135 414.3333 +112.0001";
-  const char fstr[] = "%Lf %Lf %Lf %Lf";
-
-  int16_t res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
-  int16_t res2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
-
-  ck_assert_int_eq(res1, res2);
-  ck_assert_double_eq(a1, a2);
-  ck_assert_double_eq(b1, b2);
-  ck_assert_double_eq(c1, c2);
-  ck_assert_double_eq(d1, d2);
-}
-END_TEST
-
-START_TEST(sscanf_floats5) {
+START_TEST(sscanf_floats3) {
   float a1 = 0, a2 = 0, b1 = 0, b2 = 0, c1 = 0, c2 = 0;
 
   const char str[] = "53.1 -4.1135 411231.333 +2.0001";
@@ -2091,8 +2058,6 @@ Suite *suite_sscanf() {
   tcase_add_test(tc, sscanf_floats1);
   tcase_add_test(tc, sscanf_floats2);
   tcase_add_test(tc, sscanf_floats3);
-  tcase_add_test(tc, sscanf_floats4);
-  tcase_add_test(tc, sscanf_floats5);
 
   tcase_add_test(tc, sscanf_floats_sci1);
 
