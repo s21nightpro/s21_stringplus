@@ -54,7 +54,7 @@ void parseFormat(const char **format, flags_t *f) {
 }
 
 const char *parseWidth(const char *format, flags_t *f) {
-  char tempWidth[512];
+  char tempWidth[512] = {'\0'};
   int i = 0;
   while (*format == '*' || (*format >= 48 && *format <= 57)) {
     if (*format == '*') {
