@@ -10,7 +10,7 @@ static int s21_delim(char c, const char *delim) {
 }
 
 char *s21_strtok(char *s, const char *delim) {
-  static char *st_ch;
+  static char *st_ch = s21_NULL;
   char *ch_pointer;
   if (!s) s = st_ch;
   if (*s == '\0') {
@@ -25,7 +25,7 @@ char *s21_strtok(char *s, const char *delim) {
       break;
     }
     ch_pointer = s;
-    while (1) {
+    while (s != s21_NULL) {
       if (*s == '\0') {
         st_ch = s;
         break;
@@ -38,5 +38,6 @@ char *s21_strtok(char *s, const char *delim) {
       s++;
     }
   }
+
   return (ch_pointer);
 }
