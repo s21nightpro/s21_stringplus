@@ -63,3 +63,4 @@ char digitToAscii(int a);
 int asciiToDigit(char a);
 void gSpecifier(char *buffer, flags *flag, va_list var);
 void deleteZeroesFromEnd(char *buffer);
+int s21_atoisprint(char *str);

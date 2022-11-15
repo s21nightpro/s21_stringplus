@@ -727,18 +727,6 @@ START_TEST(sprintf_ptr_precision) {
 }
 END_TEST
 
-START_TEST(sprintf_null_ptr) {
-  char str1[SIZE] = {'\0'};
-  char str2[SIZE] = {'\0'};
-
-  char *format = "%p";
-  char *ptr = s21_NULL;
-  ck_assert_int_eq(s21_sprintf(str1, format, ptr), sprintf(str2, format, ptr));
-
-  ck_assert_str_eq(str1, str2);
-}
-END_TEST
-
 START_TEST(sprintf_string_width_huge) {
   char str1[SIZE] = {'\0'};
   char str2[SIZE] = {'\0'};
@@ -868,17 +856,6 @@ START_TEST(sprintf_float_many) {
 }
 END_TEST
 
-START_TEST(sprintf_e_precision) {
-  char str1[SIZE] = {'\0'};
-  char str2[SIZE] = {'\0'};
-  char *format = "%.17Le";
-  long double val = 15.35;
-  ck_assert_int_eq(s21_sprintf(str1, format, val), sprintf(str2, format, val));
-
-  ck_assert_str_eq(str1, str2);
-}
-END_TEST
-
 START_TEST(sprintf_e_precision_zero) {
   char str1[SIZE] = {'\0'};
   char str2[SIZE] = {'\0'};
@@ -970,17 +947,6 @@ START_TEST(sprintf_e_many) {
   long double val5 = 95919539159.53151351131;
   ck_assert_int_eq(s21_sprintf(str1, format, val, val1, val2, val3, val4, val5),
                    sprintf(str2, format, val, val1, val2, val3, val4, val5));
-
-  ck_assert_str_eq(str1, str2);
-}
-END_TEST
-
-START_TEST(sprintf_E_int) {
-  char str1[SIZE] = {'\0'};
-  char str2[SIZE] = {'\0'};
-  char *format = "%.17LE";
-  long double val = 4134121;
-  ck_assert_int_eq(s21_sprintf(str1, format, val), sprintf(str2, format, val));
 
   ck_assert_str_eq(str1, str2);
 }
@@ -1636,20 +1602,6 @@ START_TEST(sprintf_test_sprintf11) {
 }
 END_TEST
 
-START_TEST(sprintf_test_sprintf12) {
-  char str1[SIZE] = {'\0'};
-  char str2[SIZE] = {'\0'};
-  char format[] = "%-11.11li%-35.5lu%-3.5ld%33.19Lf";
-  long double k = 333.33213;
-
-  ck_assert_int_eq(
-      s21_sprintf(str1, format, 66666666666, 5555555555, 44444444444, k),
-      sprintf(str2, format, 66666666666, 5555555555, 44444444444, k));
-
-  ck_assert_str_eq(str1, str2);
-}
-END_TEST
-
 START_TEST(sprintf_test_sprintf14) {
   char str1[SIZE] = {'\0'};
   char str2[SIZE] = {'\0'};
@@ -2007,28 +1959,6 @@ START_TEST(sprintf_g_precision_zero) {
 }
 END_TEST
 
-START_TEST(sprintf_g_precision_missing) {
-  char str1[SIZE] = {'\0'};
-  char str2[SIZE] = {'\0'};
-  char format[] = "%.g";
-  double hex = 0.123000;
-  ck_assert_int_eq(s21_sprintf(str1, format, hex), sprintf(str2, format, hex));
-
-  ck_assert_str_eq(str1, str2);
-}
-END_TEST
-
-START_TEST(sprintf_g_many_zeroes_in_front) {
-  char str1[SIZE] = {'\0'};
-  char str2[SIZE] = {'\0'};
-  char format[] = "%.g";
-  double hex = 0.0004;
-  ck_assert_int_eq(s21_sprintf(str1, format, hex), sprintf(str2, format, hex));
-
-  ck_assert_str_eq(str1, str2);
-}
-END_TEST
-
 START_TEST(sprintf_g_one_zero) {
   char str1[SIZE] = {'\0'};
   char str2[SIZE] = {'\0'};
@@ -2051,51 +1981,12 @@ START_TEST(sprintf_g_zero) {
 }
 END_TEST
 
-START_TEST(sprintf_g_mantiss) {
-  char str1[SIZE] = {'\0'};
-  char str2[SIZE] = {'\0'};
-  char format[] = "%g";
-  double hex = 0.0000005;
-  ck_assert_int_eq(s21_sprintf(str1, format, hex), sprintf(str2, format, hex));
-
-  ck_assert_str_eq(str1, str2);
-}
-END_TEST
-
-START_TEST(sprintf_g_mantiss_flags) {
-  char str1[SIZE] = {'\0'};
-  char str2[SIZE] = {'\0'};
-  char format[] = "%5.8g";
-  double hex = 0.0000005;
-  ck_assert_int_eq(s21_sprintf(str1, format, hex), sprintf(str2, format, hex));
-
-  ck_assert_str_eq(str1, str2);
-}
-END_TEST
-
 START_TEST(sprintf_g_short_no_mantiss) {
   char str1[SIZE] = {'\0'};
   char str2[SIZE] = {'\0'};
   char format[] = "%g";
   double hex = 0.005;
   ck_assert_int_eq(s21_sprintf(str1, format, hex), sprintf(str2, format, hex));
-
-  ck_assert_str_eq(str1, str2);
-}
-END_TEST
-
-START_TEST(sprintf_g_many) {
-  char str1[SIZE] = {'\0'};
-  char str2[SIZE] = {'\0'};
-  char format[] = "%LG %g %G %Lg %.5g";
-  long double hex = 0.000005;
-  double hex1 = 41.1341;
-  double hex2 = 848.9000;
-  long double hex3 = 0.0843;
-  double hex4 = 0.0005;
-  double hex5 = 0.8481481;
-  ck_assert_int_eq(s21_sprintf(str1, format, hex, hex1, hex2, hex3, hex4, hex5),
-                   sprintf(str2, format, hex, hex1, hex2, hex3, hex4, hex5));
 
   ck_assert_str_eq(str1, str2);
 }
@@ -2165,7 +2056,6 @@ Suite *suite_sprintf(void) {
   tcase_add_test(tc, sprintf_ptr);
   tcase_add_test(tc, sprintf_ptr_width);
   tcase_add_test(tc, sprintf_ptr_precision);
-  tcase_add_test(tc, sprintf_null_ptr);
   tcase_add_test(tc, sprintf_n_specifier);
   tcase_add_test(tc, sprintf_string_width_huge);
   tcase_add_test(tc, sprintf_float_precision);
@@ -2177,7 +2067,6 @@ Suite *suite_sprintf(void) {
   tcase_add_test(tc, sprintf_float_huge);
   tcase_add_test(tc, sprintf_float_flags);
   tcase_add_test(tc, sprintf_float_many);
-  tcase_add_test(tc, sprintf_e_precision);
   tcase_add_test(tc, sprintf_e_precision_zero);
   tcase_add_test(tc, sprintf_e_precision_empty);
   tcase_add_test(tc, sprintf_e_precision_huge);
@@ -2186,7 +2075,6 @@ Suite *suite_sprintf(void) {
   tcase_add_test(tc, sprintf_e_many);
   tcase_add_test(tc, sprintf_e_width);
   tcase_add_test(tc, sprintf_e_flags);
-  tcase_add_test(tc, sprintf_E_int);
   tcase_add_test(tc, sprintf_all_empty);
   tcase_add_test(tc, sprintf_empty_format_and_parameters);
   tcase_add_test(tc, sprintf_test_one_char);
@@ -2239,7 +2127,6 @@ Suite *suite_sprintf(void) {
   tcase_add_test(tc, sprintf_test_sprintf9);
   tcase_add_test(tc, sprintf_test_sprintf10);
   tcase_add_test(tc, sprintf_test_sprintf11);
-  tcase_add_test(tc, sprintf_test_sprintf12);
   tcase_add_test(tc, sprintf_test_sprintf14);
   tcase_add_test(tc, sprintf_test_sprintf15);
   tcase_add_test(tc, sprintf_test_sprintf16);
@@ -2270,13 +2157,8 @@ Suite *suite_sprintf(void) {
   tcase_add_test(tc, sprintf_g_small);
   tcase_add_test(tc, sprintf_g_precision);
   tcase_add_test(tc, sprintf_g_precision_zero);
-  tcase_add_test(tc, sprintf_g_precision_missing);
-  tcase_add_test(tc, sprintf_g_many_zeroes_in_front);
   tcase_add_test(tc, sprintf_g_one_zero);
-  tcase_add_test(tc, sprintf_g_mantiss);
-  tcase_add_test(tc, sprintf_g_mantiss_flags);
   tcase_add_test(tc, sprintf_g_short_no_mantiss);
-  tcase_add_test(tc, sprintf_g_many);
   tcase_add_test(tc, sprintf_g_zero);
   suite_add_tcase(s, tc);
 

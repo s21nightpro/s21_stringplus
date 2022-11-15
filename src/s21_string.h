@@ -31,7 +31,6 @@ void *s21_to_lower(const char *str);
 void *s21_to_upper(const char *str);
 
 int s21_sprintf(char *str, const char *format, ...);
-
 int s21_sscanf(const char *str, const char *format, ...);
 
 int s21_atoii(const char *str);
