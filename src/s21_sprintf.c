@@ -1,4 +1,6 @@
 #include "s21_sprintf.h"
+
+#include "s21_string.h"
 #define SIZE 512
 #include <limits.h>
 // A format specifier for print functions follows this prototype:
@@ -10,32 +12,21 @@
 // }
 
 // void start() {
-//   // char *stroka;
-//   // char *stroka2;
-//   // stroka = (char *)malloc(300 * sizeof(char));
-//   // stroka2 = (char *)malloc(300 * sizeof(char));
 //   char str1[SIZE] = {'\0'};
 //   char str2[SIZE] = {'\0'};
-//   char format[] = "%g";
-//   double val = 0.003;
+//   char format[] = "%3.1G";
+//   double val = 0.000005;
 //   int a = 0;
 //   int b = 0;
 //   a = s21_sprintf(str1, format, val);
 //   b = sprintf(str2, format, val);
-//   // ck_assert_str_eq(str1, str2);
-//   // double num = -.00123;
-//   // s21_sprintf(stroka, "Hello, %e", num);
 //   printf("s21_sprintf: %d\n", a);
 //   printf("sprintf: %d\n", b);
 //   printf("s21_sprintf: %sEND\n", str1);
-//   // sprintf(stroka2, "Hello, %e", num);
 //   printf("origsprintf: %sEND\n", str2);
-//   // free(stroka);
-//   // free(stroka2);
 // }
 
 int s21_sprintf(char *str, const char *format, ...) {
-  // s21_memset(str, '\0', 1024);
   va_list var;
   va_start(var, format);
   char *strStart = str;
@@ -101,7 +92,7 @@ const char *parse_Width(const char *format, flags *f, va_list var) {
     for (int i = 0; *format >= 48 && *format <= 57; i++, format++) {
       tempWidth[i] = *format;
     }
-    f->width = atoi(tempWidth);
+    f->width = s21_atoisprint(tempWidth);
   }
   return format;
 }
@@ -118,7 +109,7 @@ const char *parsePrecision(const char *format, flags *f, va_list var) {
       for (int i = 0; *format >= 48 && *format <= 57; i++, format++) {
         tempPrecision[i] = *format;
       }
-      f->precision = atoi(tempPrecision);
+      f->precision = s21_atoisprint(tempPrecision);
     } else {
       f->precision = -1;
     }
@@ -145,7 +136,7 @@ const char *parse_Length(const char *format, flags *f) {
 }
 
 char *specifier(char *str, flags *flag, va_list var) {
-  char buffer[BUFFER_SIZE] = "";
+  char buffer[BUFFER_SIZE] = "\0";
   if (flag->specifier == 'd' || flag->specifier == 'i') {
     integerSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'u') {
@@ -159,6 +150,7 @@ char *specifier(char *str, flags *flag, va_list var) {
   } else if (flag->specifier == 'e' || flag->specifier == 'E') {
     exponentSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'g' || flag->specifier == 'G') {
+    // if (flag->precision == -1) flag->precision = 0;
     gSpecifier(buffer, flag, var);
   } else if (flag->specifier == 'x' || flag->specifier == 'X') {
     hexSpecifier(buffer, flag, var);
@@ -183,8 +175,9 @@ char *specifier(char *str, flags *flag, va_list var) {
     toUpper(buffer);
   }
 
-  for (int i = 0; buffer[i]; i++, str++) {
+  for (s21_size_t i = 0; i < s21_strlen(buffer); i++) {
     *str = buffer[i];
+    str++;
   }
   *str = '\0';
   return str;
@@ -356,19 +349,6 @@ void formatPrecision(char *buffer, flags *flag) {
 
   if (flag->precision > len) {
     int i;
-    // if (flag->specifier == 'x') {
-    //   temp[i] = '0';
-    //   i++;
-    //   temp[i] = 'x';
-    //   i++;
-    //   sign += 2;
-    // } else if (flag->specifier == 'X') {
-    //   temp[i] = '0';
-    //   i++;
-    //   temp[i] = 'X';
-    //   i++;
-    //   sign += 2;
-    // }
     for (i = sign; i < flag->precision - len + sign; i++) {
       temp[i] = '0';
     }
@@ -476,6 +456,7 @@ void doubleToString(char *buffer, long double num, flags *flag) {
     }
     if (index == 0 || (negative && index == 1)) {
       buffer[index++] = '0';
+      if (flag->specifier == 'g' || flag->specifier == 'G') flag->precision++;
     }
     int tempIndex = index;
     buffer[index++] = '.';
@@ -576,14 +557,6 @@ void hexSpecifier(char *buffer, flags *flag, va_list var) {
   } else if (flag->length == 'h') {
     num = (uint16_t)num;
   }
-  // *buffer = '0';
-  // buffer++;
-  // if (flag-specifier == 'x') {
-  //   *buffer = 'x';
-  // } else {
-  //   *buffer = 'X';
-  // }
-  // buffer
   unsignedToString(buffer, num, 16);
   formatPrecision(buffer, flag);
   if (flag->hashtag) {
@@ -599,7 +572,6 @@ void insertDecimalOx(char *buffer, flags *flag) {
       isAllDigitsIsZeroes++;
     }
   }
-  // if ((s21_strlen(buffer) != 1 && buffer[0] != '0')) {
   if (((isAllDigitsIsZeroes != s21_strlen(buffer)) || flag->specifier == 'p') &&
       flag->specifier != 'x' && flag->specifier != 'X') {
     s21_memmove(buffer + 2, buffer, s21_strlen(buffer));
@@ -658,8 +630,7 @@ void gSpecifier(char *buffer, flags *flag, va_list var) {
     }
     flag->precision--;
 
-    // if (pow > 0 && pow < 5) {
-    // putGforshortdigit(buffer, pow, num);
+    if (pow > 0 && pow < 5) flag->precision = pow;
     doubleToString(buffer, num, flag);
     // } else {
     //   doubleToString(buffer, num, flag);
@@ -710,3 +681,21 @@ void deleteZeroesFromEnd(char *buffer) {
 //     buffer[i] = '0'
 //   }
 // }
+
+int s21_atoisprint(char *str) {
+  int atoint = 0;
+  int sign = 1;  //если подают отрицательное число
+  if (*str == '-' && *(str + 1) != '+') {
+    sign = -1;
+    str++;
+  } else if (*str == '+') {
+    sign = 1;
+    str++;
+  }
+  while (*str && *str >= '0' && *str <= '9') {
+    atoint = atoint * 10 + (*str - '0');
+    str++;
+  }
+  if (sign < 0) atoint *= sign;
+  return (atoint);
+}
