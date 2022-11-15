@@ -8,10 +8,10 @@
 #define OCT 8
 
 typedef struct {
-  int width;       // minimum number of character to be printed, -1 if not set
-  int asterics;    // read but not assign
-  char length;     // h, l or L
-  char specifier;  // just specifier
+  int width;      // minimum number of character to be printed, -1 if not set
+  int asterics;   // read but not assign
+  char length;    // h, l or L
+  char specifier; // just specifier
   int error;
   int convertions;
 } flags_t;

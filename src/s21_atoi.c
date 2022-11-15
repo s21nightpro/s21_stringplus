@@ -4,7 +4,7 @@
 
 int s21_atoii(const char *str) {
   int atoint = 0;
-  int sign = 1;  //если подают отрицательное число
+  int sign = 1; //если подают отрицательное число
   if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
     str++;
@@ -16,13 +16,14 @@ int s21_atoii(const char *str) {
     atoint = atoint * 10 + (*str - '0');
     str++;
   }
-  if (sign < 0) atoint *= sign;
+  if (sign < 0)
+    atoint *= sign;
   return (atoint);
 }
 
 long s21_atol(const char *str) {
   long atol = 0;
-  int sign = 1;  //если подают отрицательное число
+  int sign = 1; //если подают отрицательное число
 
   if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
@@ -35,13 +36,14 @@ long s21_atol(const char *str) {
     atol = atol * 10 + (*str - '0');
     str++;
   }
-  if (sign < 0) atol *= sign;
+  if (sign < 0)
+    atol *= sign;
   return (atol);
 }
 
 long long s21_atoll(const char *str) {
   long long atol = 0;
-  int sign = 1;  //если подают отрицательное число
+  int sign = 1; //если подают отрицательное число
   // int zero = 0;
 
   //   while (*str != ' ') {
@@ -57,13 +59,14 @@ long long s21_atoll(const char *str) {
     atol = atol * 10 + (*str - '0');
     str++;
   }
-  if (sign < 0) atol *= sign;
+  if (sign < 0)
+    atol *= sign;
   return (atol);
 }
 
 short s21_atos(const char *str) {
   short atos = 0;
-  int sign = 1;  //если подают отрицательное число
+  int sign = 1; //если подают отрицательное число
   if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
     str++;
@@ -75,7 +78,8 @@ short s21_atos(const char *str) {
     atos = atos * 10 + (*str - '0');
     str++;
   }
-  if (sign < 0) atos *= sign;
+  if (sign < 0)
+    atos *= sign;
   //   if (atoint >)
   return (atos);
 }
@@ -83,7 +87,7 @@ short s21_atos(const char *str) {
 float s21_atof(const char *str) {
   float atof = 0;
   float fraction = 0;
-  int n = 0;  //кол-во знаков после запятой
+  int n = 0; //кол-во знаков после запятой
   int sign = 1;
   if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
@@ -109,14 +113,15 @@ float s21_atof(const char *str) {
     // printf("%f\n", fraction / pow(10, n));
   }
   //   atof += (fraction / n);
-  if (sign < 0) atof *= sign;
+  if (sign < 0)
+    atof *= sign;
   return (atof);
 }
 
 double s21_atod(const char *str) {
   double atod = 0;
   double fraction = 0;
-  int n = 0;  //кол-во знаков после запятой
+  int n = 0; //кол-во знаков после запятой
   int sign = 1;
   if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
@@ -140,14 +145,15 @@ double s21_atod(const char *str) {
     str++;
     // printf("%f\n", fraction / pow(10, n));
   }
-  if (sign < 0) atod *= sign;
+  if (sign < 0)
+    atod *= sign;
   return (atod);
 }
 
 long double s21_atold(const char *str) {
   long double atold = 0;
   long double fraction = 0;
-  int n = 0;  //кол-во знаков после запятой
+  int n = 0; //кол-во знаков после запятой
   int sign = 1;
   if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
@@ -170,7 +176,8 @@ long double s21_atold(const char *str) {
     str++;
     // printf("%Lf\n", fraction / pow(10, n));
   }
-  if (sign < 0) atold *= sign;
+  if (sign < 0)
+    atold *= sign;
   return (atold);
 }
 
@@ -212,7 +219,8 @@ long s21_atohex(const char *str) {
     degree--;
     str++;
   }
-  if (sign < 0) hex *= sign;
+  if (sign < 0)
+    hex *= sign;
   return hex;
 }
 
@@ -234,14 +242,15 @@ long s21_ato8(const char *str) {
     degree--;
     str++;
   }
-  if (sign < 0) hex *= sign;
+  if (sign < 0)
+    hex *= sign;
   return hex;
 }
 
 long double s21_atoE(const char *str) {
   long double atold = 0;
   long double fraction = 0;
-  int n = 0;  //кол-во знаков после запятой
+  int n = 0; //кол-во знаков после запятой
   int sign = 1;
   int degree = 0;
   int sign_degree = 1;
@@ -286,11 +295,13 @@ long double s21_atoE(const char *str) {
     degree = degree * 10 + (*str - '0');
     str++;
   }
-  if (sign_degree < 0) degree *= sign_degree;
+  if (sign_degree < 0)
+    degree *= sign_degree;
   // printf("\n");
   // printf("atold:%f degree:%d\n", atold, degree);
   atold = atold * pow(10, degree);
-  if (sign < 0) atold *= sign;
+  if (sign < 0)
+    atold *= sign;
   return (atold);
 }
 
@@ -326,7 +337,8 @@ unsigned long s21_usigned_atohex(const char *str) {
     degree--;
     str++;
   }
-  if (sign < 0) hex *= sign;
+  if (sign < 0)
+    hex *= sign;
   return hex;
 }
 
@@ -342,6 +354,7 @@ unsigned long s21_unsigned_ato8(const char *str) {
     degree--;
     str++;
   }
-  if (sign < 0) hex *= sign;
+  if (sign < 0)
+    hex *= sign;
   return hex;
 }

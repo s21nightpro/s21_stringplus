@@ -34,7 +34,8 @@ START_TEST(insert_test1) {
   char expected[] = "I love my Shlepa. He is very kind!";
   char *got = (char *)s21_insert(src, str, index);
   ck_assert_str_eq(got, expected);
-  if (got) free(got);
+  if (got)
+    free(got);
 }
 END_TEST
 
@@ -45,7 +46,8 @@ START_TEST(insert_test2) {
   char expected[] = "Hello, Aboba!";
   char *got = (char *)s21_insert(src, str, index);
   ck_assert_str_eq(got, expected);
-  if (got) free(got);
+  if (got)
+    free(got);
 }
 END_TEST
 
@@ -56,7 +58,8 @@ START_TEST(insert_test3) {
   char *expected = s21_NULL;
   char *got = (char *)s21_insert(src, str, index);
   ck_assert_pstr_eq(got, expected);
-  if (got) free(got);
+  if (got)
+    free(got);
 }
 END_TEST
 
@@ -67,7 +70,8 @@ START_TEST(insert_test4) {
   char *expected = s21_NULL;
   char *got = (char *)s21_insert(src, str, index);
   ck_assert_ptr_eq(got, expected);
-  if (got) free(got);
+  if (got)
+    free(got);
 }
 END_TEST
 
@@ -78,7 +82,8 @@ START_TEST(insert_test5) {
   char expected[] = "Space Monkey ";
   char *got = (char *)s21_insert(src, str, index);
   ck_assert_str_eq(got, expected);
-  if (got) free(got);
+  if (got)
+    free(got);
 }
 END_TEST
 
@@ -89,7 +94,8 @@ START_TEST(insert_str_null) {
   char expected[] = "Space  ";
   char *got = (char *)s21_insert(src, str, index);
   ck_assert_str_eq(got, expected);
-  if (got) free(got);
+  if (got)
+    free(got);
 }
 END_TEST
 

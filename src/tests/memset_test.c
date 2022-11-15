@@ -83,12 +83,10 @@ START_TEST(memset_replace_on_register_num) {
 END_TEST
 
 START_TEST(memset_long_string) {
-  char res[] =
-      "a1oas[pifjaosidfj oapisjdfpoi asjdfoij ouh12oi3 uh12i3 "
-      "hiajhIOUAHSDiouAHSdu1).bA";
-  char expected[] =
-      "a1oas[pifjaosidfj oapisjdfpoi asjdfoij ouh12oi3 uh12i3 "
-      "hiajhIOUAHSDiouAHSdu1).bA";
+  char res[] = "a1oas[pifjaosidfj oapisjdfpoi asjdfoij ouh12oi3 uh12i3 "
+               "hiajhIOUAHSDiouAHSdu1).bA";
+  char expected[] = "a1oas[pifjaosidfj oapisjdfpoi asjdfoij ouh12oi3 uh12i3 "
+                    "hiajhIOUAHSDiouAHSdu1).bA";
   char replace = '1';
   s21_size_t n_byte = 5;
   s21_memset(res, replace, n_byte);

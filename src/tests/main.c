@@ -7,7 +7,8 @@ int main() {
 
 void run_testcase(Suite *testcase) {
   static int counter_testcase = 1;
-  if (counter_testcase > 1) printf("\n");
+  if (counter_testcase > 1)
+    printf("\n");
   printf("%s%d%s", "CURRENT TEST: ", counter_testcase, "\n");
   counter_testcase++;
 

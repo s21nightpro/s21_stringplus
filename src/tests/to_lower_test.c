@@ -21,7 +21,8 @@ START_TEST(to_lower_test1) {
   char expected[] = "shlepa v taz1ke?";
   char *got = s21_to_lower(str);
   ck_assert_str_eq(got, expected);
-  if (got) free(got);
+  if (got)
+    free(got);
 }
 END_TEST
 
@@ -30,7 +31,8 @@ START_TEST(to_lower_test2) {
   char expected[] = "123456789q";
   char *got = s21_to_lower(str);
   ck_assert_str_eq(got, expected);
-  if (got) free(got);
+  if (got)
+    free(got);
 }
 END_TEST
 
@@ -39,7 +41,8 @@ START_TEST(to_lower_test3) {
   char expected[] = "space created";
   char *got = s21_to_lower(str);
   ck_assert_str_eq(got, expected);
-  if (got) free(got);
+  if (got)
+    free(got);
 }
 END_TEST
 
@@ -48,7 +51,8 @@ START_TEST(to_lower_test4) {
   char expected[] = "";
   char *got = s21_to_lower(str);
   ck_assert_str_eq(got, expected);
-  if (got) free(got);
+  if (got)
+    free(got);
 }
 END_TEST
 
@@ -57,7 +61,8 @@ START_TEST(to_lower_test5) {
   char expected[] = "";
   char *got = s21_to_lower(str);
   ck_assert_str_eq(got, expected);
-  if (got) free(got);
+  if (got)
+    free(got);
 }
 END_TEST
 

@@ -39,4 +39,4 @@ Suite *suite_sprintf(void);
 void run_tests(void);
 void run_testcase(Suite *testcase);
 
-#endif  // SRC_TESTS_INCLUDES_S21_TESTS_H_
+#endif // SRC_TESTS_INCLUDES_S21_TESTS_H_

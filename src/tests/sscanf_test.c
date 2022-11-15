@@ -832,9 +832,8 @@ START_TEST(sscanf_strings_mixed1) {
   long long d1 = 0, d2 = 0;
   long double e1 = 0, e2 = 0;
 
-  const char str[] =
-      "4444444"
-      "eeeeeee\teeeeeee";
+  const char str[] = "4444444"
+                     "eeeeeee\teeeeeee";
   const char fstr[] = "%5s %1s %*s %*s %llu %s %llu %llu %lld %Lf %33s";
 
   char s1[SIZE] = {'\0'};
@@ -1944,12 +1943,10 @@ START_TEST(sscanf_hard2) {
   char b1, b2;
   char c1, c2;
   char d1, d2;
-  const char str[] =
-      "%%$Char!StressssVIm User Aboba %% %%% %%% %% % % %% % "
-      "% % %% % % %% %T%%estus!%%&&&";
-  const char fstr[] =
-      "%% %*c%*c%*c%*c%*c %c %c %c %c %% %% %% %% %% %% %% "
-      "%% %% %% %% %% %% %% %% %% ### %*c";
+  const char str[] = "%%$Char!StressssVIm User Aboba %% %%% %%% %% % % %% % "
+                     "% % %% % % %% %T%%estus!%%&&&";
+  const char fstr[] = "%% %*c%*c%*c%*c%*c %c %c %c %c %% %% %% %% %% %% %% "
+                      "%% %% %% %% %% %% %% %% %% ### %*c";
 
   int32_t res1 = s21_sscanf(str, fstr, &a1, &b1, &c1, &d1);
   int32_t res2 = sscanf(str, fstr, &a2, &b2, &c2, &d2);
@@ -1983,12 +1980,12 @@ Suite *suite_sscanf() {
   tcase_add_test(tc, sscanf_special_symbols_as_chars1);
   tcase_add_test(tc, sscanf_special_symbols_as_chars2);
   tcase_add_test(tc, sscanf_special_symbols_as_chars3);
-  tcase_add_test(tc, sscanf_chars_flags1);  // Precision flags lead to fail
+  tcase_add_test(tc, sscanf_chars_flags1); // Precision flags lead to fail
   tcase_add_test(tc,
-                 sscanf_chars_flags2);      // Width flags do nothing (if <= 1)
-  tcase_add_test(tc, sscanf_chars_flags3);  // Demonstrates how (*) works. * -
-  tcase_add_test(tc, sscanf_chars_flags4);  // Length flags do
-  tcase_add_test(tc, sscanf_chars_flags5);  // * flags - ignores char
+                 sscanf_chars_flags2);     // Width flags do nothing (if <= 1)
+  tcase_add_test(tc, sscanf_chars_flags3); // Demonstrates how (*) works. * -
+  tcase_add_test(tc, sscanf_chars_flags4); // Length flags do
+  tcase_add_test(tc, sscanf_chars_flags5); // * flags - ignores char
   // // Test cases specifically for (%*c), as this is very important concept
   tcase_add_test(tc, sscanf_chars_aster1);
   tcase_add_test(tc, sscanf_chars_aster2);

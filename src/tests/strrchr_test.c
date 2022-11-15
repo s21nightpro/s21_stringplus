@@ -35,7 +35,7 @@ START_TEST(strrchr_empty) {
   char str2 = '\0';
   ck_assert_pstr_eq(s21_strrchr(str1, str2), strrchr(str1, str2));
 }
-END_TEST  // FAIL
+END_TEST // FAIL
 
 START_TEST(strrchr_floppy_) {
   char str1[] = "floppy";

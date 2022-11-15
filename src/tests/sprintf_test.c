@@ -265,10 +265,10 @@ START_TEST(sprintf_unsigned_val_many) {
 
   char *format = "%lu, %u, %hu, %.5u, %5.u";
   unsigned long int val = 949149114140;
-  ck_assert_int_eq(
-      s21_sprintf(str1, format, val, 14, 1441, 14414, 9681),
-      sprintf(str2, format, val, (unsigned)14, (unsigned short)1441,
-              (unsigned)14414, (unsigned)9681));
+  ck_assert_int_eq(s21_sprintf(str1, format, val, 14, 1441, 14414, 9681),
+                   sprintf(str2, format, val, (unsigned)14,
+                           (unsigned short)1441, (unsigned)14414,
+                           (unsigned)9681));
 
   ck_assert_str_eq(str1, str2);
 }
@@ -375,10 +375,10 @@ START_TEST(sprintf_octal_many) {
 
   char *format = "%lo, %o, %ho, %.5o, %5.o";
   long int val = 949149114140;
-  ck_assert_int_eq(
-      s21_sprintf(str1, format, val, 14, 1441, 14414, 9681),
-      sprintf(str2, format, val, (unsigned)14, (unsigned short)1441,
-              (unsigned)14414, (unsigned)9681));
+  ck_assert_int_eq(s21_sprintf(str1, format, val, 14, 1441, 14414, 9681),
+                   sprintf(str2, format, val, (unsigned)14,
+                           (unsigned short)1441, (unsigned)14414,
+                           (unsigned)9681));
 
   ck_assert_str_eq(str1, str2);
 }
