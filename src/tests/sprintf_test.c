@@ -2084,17 +2084,6 @@ START_TEST(sprintf_g_short_no_mantiss) {
 }
 END_TEST
 
-START_TEST(sprintf_LG) {
-  char str1[SIZE] = {'\0'};
-  char str2[SIZE] = {'\0'};
-  char format[] = "%LG";
-  long double hex = 0.000005;
-  ck_assert_int_eq(s21_sprintf(str1, format, hex), sprintf(str2, format, hex));
-
-  ck_assert_str_eq(str1, str2);
-}
-END_TEST
-
 START_TEST(sprintf_g_many) {
   char str1[SIZE] = {'\0'};
   char str2[SIZE] = {'\0'};
@@ -2287,7 +2276,6 @@ Suite *suite_sprintf(void) {
   tcase_add_test(tc, sprintf_g_mantiss);
   tcase_add_test(tc, sprintf_g_mantiss_flags);
   tcase_add_test(tc, sprintf_g_short_no_mantiss);
-  tcase_add_test(tc, sprintf_LG);
   tcase_add_test(tc, sprintf_g_many);
   tcase_add_test(tc, sprintf_g_zero);
   suite_add_tcase(s, tc);
