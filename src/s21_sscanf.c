@@ -1,65 +1,5 @@
 #include "s21_sscanf.h"
 
-#define HEX 16
-#define DEC 10
-#define OCT 8
-
-void parseFormat(const char **format, flags_t *f);
-const char *parseWidth(const char *format, flags_t *f);
-const char *parseLength(const char *format, flags_t *f);
-const char *parseSpecifier(const char *format, flags_t *f);
-
-void parseString(const char **str, const s21_size_t str_len, flags_t *f,
-                 va_list var, char skip);
-
-int checkSign(const char *a, int *sign, int width, int base, int i);
-
-int checkString(const char *str);
-int isSign(int a);
-int isDigit(int a);
-int isAscii(int a);
-int isSeporator(int a);
-int isHex(int a, int i);
-int isOct(int a);
-int isFloat(int a, int next, float_flags_t *fl);
-
-void assignChar(char ch, va_list var, flags_t *f);
-void assignString(char *str, va_list var, flags_t *f);
-void assignFloat(char *str, va_list var, flags_t *f);
-void assignN(int n, va_list var, flags_t *f);
-void assignInt(char *str, va_list var, flags_t *f);
-void assignHex(char *str, va_list var, flags_t *f);
-void assignOct(char *str, va_list var, flags_t *f);
-void assignIntUnsigned(char *str, va_list var, flags_t *f);
-void assignOctUnsigned(char *str, va_list var, flags_t *f);
-void assignHexUnsigned(char *str, va_list var, flags_t *f);
-void assignVoid(char *str, va_list var, flags_t *f);
-
-// int main() {
-// #include <locale.h>
-//   setlocale(LC_ALL, "");
-//   unsigned long long int a1, a2;
-//   const char str[] = "faaaaaaaaaaaaf";
-//   const char fstr[] = "%llx";
-//   uint16_t res1 = s21_sscanf(str, fstr, &a1);
-//   uint16_t res2 = sscanf(str, fstr, &a2);
-//   printf("%d %d\n", res1, res2);
-//   printf("%llx %llx\n", a1, a2);
-// }
-
-int checkString(const char *str) {
-  int res = 0;
-
-  for (int i = 0; str[i]; i++) {
-    if (!isSeporator(str[i])) {
-      res = 1;
-      break;
-    }
-  }
-
-  return res;
-}
-
 int s21_sscanf(const char *str, const char *format, ...) {
   int non_empty_string = checkString(str);
   int success = 0;
@@ -94,23 +34,74 @@ int s21_sscanf(const char *str, const char *format, ...) {
   return success ? convertions : -1;
 }
 
-int checkSign(const char *a, int *sign, int width, int base, int i) {
+int checkString(const char *str) {
   int res = 0;
-  if (!(*sign) && width != 1 && isSign(*a) && !i) {
-    switch (base) {
-      case HEX:
-        if (isHex(*(a + 1), 0)) res = 1;
-        break;
-      case DEC:
-        if (isDigit(*(a + 1))) res = 1;
-        break;
-      case OCT:
-        if (isOct(*(a + 1))) res = 1;
-        break;
+
+  for (int i = 0; str[i]; i++) {
+    if (!isSeporator(str[i])) {
+      res = 1;
+      break;
     }
   }
-  if (res) sign++;
+
   return res;
+}
+
+void parseFormat(const char **format, flags_t *f) {
+  *format = parseWidth(*format, f);
+  *format = parseLength(*format, f);
+  *format = parseSpecifier(*format, f);
+}
+
+const char *parseWidth(const char *format, flags_t *f) {
+  char tempWidth[512];
+  int i = 0;
+  while (*format == '*' || (*format >= 48 && *format <= 57)) {
+    if (*format == '*') {
+      f->asterics = 1;
+    } else if (!f->asterics) {
+      tempWidth[i] = *format;
+      i++;
+    }
+    format++;
+  }
+  if (i) f->width = s21_atoii(tempWidth);
+  if (f->width == 0) f->width = -1;
+  return format;
+}
+
+const char *parseLength(const char *format, flags_t *f) {
+  switch (*format) {
+    case 'h':
+      f->length = 'h';
+      format++;
+      break;
+    case 'l':
+      f->length = 'l';
+      format++;
+      if ((*format) == 'l') format++;
+      break;
+    case 'L':
+      f->length = 'L';
+      format++;
+      break;
+  }
+  return format;
+}
+
+const char *parseSpecifier(const char *format, flags_t *f) {
+  char specList[17] = "cdieEfgGosuxXpn%";
+  int unmatch = 1;
+  for (int i = 0; i < 16; i++) {
+    if (*format == specList[i]) {
+      f->specifier = specList[i];
+      unmatch = 0;
+      break;
+    }
+  }
+  f->error = unmatch;
+
+  return ++format;
 }
 
 void parseString(const char **str, const s21_size_t str_len, flags_t *f,
@@ -120,6 +111,7 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
   int i = 0;
   int n = 0;
   int sign = 0;
+  int science_flag = 0;
   float_flags_t float_struct = {0};
 
   while ((isSeporator(**str) && f->specifier != 'c' && **str != '\0') ||
@@ -255,17 +247,22 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
       case 'f':
       case 'g':
       case 'G':
-        while (isFloat(**str, *(*str + 1), &float_struct) &&
-               (f->width != 0)) {  // добавить nan и inf
-          str_temp[i] = **str;
-          (*str)++;
-          i++;
-          f->width--;
+        if ((science_flag = checkScience(*str, f->width)) != 0) {
+          *str = (*str) + 3;
+          if (!f->asterics) assignScience(var, f, science_flag);
+        } else {
+          while (isFloat(**str, *(*str + 1), &float_struct) &&
+                 (f->width != 0)) {  // добавить nan и inf
+            str_temp[i] = **str;
+            (*str)++;
+            i++;
+            f->width--;
+          }
+          if (!i)
+            f->error = 1;
+          else if (!f->asterics)
+            assignFloat(str_temp, var, f);
         }
-        if (!i)
-          f->error = 1;
-        else if (!f->asterics)
-          assignFloat(str_temp, var, f);
         break;
 
       case 'n':
@@ -299,6 +296,38 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
   }
 }
 
+int checkSign(const char *a, int *sign, int width, int base, int i) {
+  int res = 0;
+  if (!(*sign) && width != 1 && isSign(*a) && !i) {
+    switch (base) {
+      case HEX:
+        if (isHex(*(a + 1), 0)) res = 1;
+        break;
+      case DEC:
+        if (isDigit(*(a + 1))) res = 1;
+        break;
+      case OCT:
+        if (isOct(*(a + 1))) res = 1;
+        break;
+    }
+  }
+  if (res) sign++;
+  return res;
+}
+
+int checkScience(const char *str, int width) {
+  int res = 0;
+  if (width > 2 || width == -1) {
+    if (*str == 'n' || *str == 'N')
+      if (*(str + 1) == 'a' || *(str + 1) == 'A')
+        if (*(str + 2) == 'n' || *(str + 2) == 'N') res = 1;
+    if (*str == 'i' || *str == 'I')
+      if (*(str + 1) == 'n' || *(str + 1) == 'N')
+        if (*(str + 2) == 'f' || *(str + 2) == 'F') res = 2;
+  }
+  return res;
+}
+
 int isFloat(int a, int next, float_flags_t *fl) {
   int flag = 1;
   if (isDigit(a)) {
@@ -323,20 +352,6 @@ int isFloat(int a, int next, float_flags_t *fl) {
   }
   return flag;
 }
-
-/*
-c - считывает 1 символ
-s - считывает строку
-d - считывает 10тичное число
-i - знаковое 10тичное, 8ричное, 16ричное
-
-eEfgG - десятичное с плаваюшей или научная нотация
-o - беззнак 8ричное
-u - беззнак десятичное целое
-xX - беззнак 16ричное целое
-p - адрес указателя
-n - количество считанных символов
-*/
 
 int isDigit(int a) { return (a >= '0' && a <= '9'); }
 
@@ -430,7 +445,6 @@ void assignVoid(char *str, va_list var, flags_t *f) {
 }
 
 void assignN(int n, va_list var, flags_t *f) {
-  // f->convertions++;
   if (f->length == 'h') {
     *va_arg(var, short *) = n;
   } else if (f->length == 'l') {
@@ -451,6 +465,28 @@ void assignFloat(char *str, va_list var, flags_t *f) {
   }
 }
 
+void assignScience(va_list var, flags_t *f, int flag) {
+  f->convertions++;
+  if (flag == 1) {
+    if (f->length == 'l') {
+      *va_arg(var, double *) = (double)NAN;
+    } else if (f->length == 'L') {
+      *va_arg(var, long double *) = NAN;
+    } else {
+      *va_arg(var, float *) = (float)NAN;
+    }
+  }
+  if (flag == 2) {
+    if (f->length == 'l') {
+      *va_arg(var, double *) = (double)INFINITY;
+    } else if (f->length == 'L') {
+      *va_arg(var, long double *) = INFINITY;
+    } else {
+      *va_arg(var, float *) = (float)INFINITY;
+    }
+  }
+}
+
 void assignChar(char ch, va_list var, flags_t *f) {
   f->convertions++;
   *va_arg(var, char *) = ch;
@@ -459,61 +495,4 @@ void assignChar(char ch, va_list var, flags_t *f) {
 void assignString(char *str, va_list var, flags_t *f) {
   f->convertions++;
   s21_strcpy(va_arg(var, char *), str);
-}
-
-void parseFormat(const char **format, flags_t *f) {
-  *format = parseWidth(*format, f);
-  *format = parseLength(*format, f);
-  *format = parseSpecifier(*format, f);
-}
-
-const char *parseWidth(const char *format, flags_t *f) {
-  char tempWidth[512];
-  int i = 0;
-  while (*format == '*' || (*format >= 48 && *format <= 57)) {
-    if (*format == '*') {
-      f->asterics = 1;
-    } else if (!f->asterics) {
-      tempWidth[i] = *format;
-      i++;
-    }
-    format++;
-  }
-  if (i) f->width = s21_atoii(tempWidth);
-  if (f->width == 0) f->width = -1;
-  return format;
-}
-
-const char *parseLength(const char *format, flags_t *f) {
-  switch (*format) {
-    case 'h':
-      f->length = 'h';
-      format++;
-      break;
-    case 'l':
-      f->length = 'l';
-      format++;
-      if ((*format) == 'l') format++;
-      break;
-    case 'L':
-      f->length = 'L';
-      format++;
-      break;
-  }
-  return format;
-}
-
-const char *parseSpecifier(const char *format, flags_t *f) {
-  char specList[17] = "cdieEfgGosuxXpn%";
-  int unmatch = 1;
-  for (int i = 0; i < 16; i++) {
-    if (*format == specList[i]) {
-      f->specifier = specList[i];
-      unmatch = 0;
-      break;
-    }
-  }
-  f->error = unmatch;
-
-  return ++format;
 }

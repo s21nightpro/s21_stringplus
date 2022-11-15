@@ -4,36 +4,35 @@
 // A format specifier for print functions follows this prototype:
 // %[flags][width][.precision][length]specifier
 
-int main() {
-  start();
-  return 0;
-}
+// int main() {
+//   start();
+//   return 0;
+// }
 
-void start() {
-  // char *stroka;
-  // char *stroka2;
-  // stroka = (char *)malloc(300 * sizeof(char));
-  // stroka2 = (char *)malloc(300 * sizeof(char));
-  char str1[SIZE] = {'\0'};
-  char str2[SIZE] = {'\0'};
-  char format[] = "%#-5.10x";
-  // long double k = 333.33213;
-  int a = 0;
-  int b = 0;
-  unsigned val = 858158158;
-  a = s21_sprintf(str1, format, val);
-  b = sprintf(str2, format, val);
-  // ck_assert_str_eq(str1, str2);
-  // double num = -.00123;
-  // s21_sprintf(stroka, "Hello, %e", num);
-  printf("s21_sprintf: %d\n", a);
-  printf("sprintf: %d\n", b);
-  // printf("s21_sprintf: %sEND\n", str1);
-  //  sprintf(stroka2, "Hello, %e", num);
-  // printf("sprintf: %sEND\n", str2);
-  //  free(stroka);
-  //  free(stroka2);
-}
+// void start() {
+//   // char *stroka;
+//   // char *stroka2;
+//   // stroka = (char *)malloc(300 * sizeof(char));
+//   // stroka2 = (char *)malloc(300 * sizeof(char));
+//   char str1[SIZE] = {'\0'};
+//   char str2[SIZE] = {'\0'};
+//   char format[] = "%g";
+//   double val = 0.003;
+//   int a = 0;
+//   int b = 0;
+//   a = s21_sprintf(str1, format, val);
+//   b = sprintf(str2, format, val);
+//   // ck_assert_str_eq(str1, str2);
+//   // double num = -.00123;
+//   // s21_sprintf(stroka, "Hello, %e", num);
+//   printf("s21_sprintf: %d\n", a);
+//   printf("sprintf: %d\n", b);
+//   printf("s21_sprintf: %sEND\n", str1);
+//   // sprintf(stroka2, "Hello, %e", num);
+//   printf("origsprintf: %sEND\n", str2);
+//   // free(stroka);
+//   // free(stroka2);
+// }
 
 int s21_sprintf(char *str, const char *format, ...) {
   // s21_memset(str, '\0', 1024);
@@ -98,7 +97,7 @@ const char *parse_Width(const char *format, flags *f, va_list var) {
     format++;
     f->width = va_arg(var, int);
   } else if (*format >= 48 && *format <= 57) {
-    char tempWidth[BUFFER_SIZE] = {'\0'};
+    char tempWidth[BUFFER_SIZE] = "";
     for (int i = 0; *format >= 48 && *format <= 57; i++, format++) {
       tempWidth[i] = *format;
     }
@@ -120,6 +119,8 @@ const char *parsePrecision(const char *format, flags *f, va_list var) {
         tempPrecision[i] = *format;
       }
       f->precision = atoi(tempPrecision);
+    } else {
+      f->precision = -1;
     }
   }
   return format;
@@ -173,6 +174,7 @@ char *specifier(char *str, flags *flag, va_list var) {
     } else {
       charSpecifier(buffer, flag, var);
     }
+  } else if (flag->specifier == 'n') {
   } else {
     buffer[0] = flag->specifier;
   }
@@ -442,55 +444,64 @@ void floatSpecifier(char *buffer, flags *flag, va_list var) {
 }
 
 void doubleToString(char *buffer, long double num, flags *flag) {
-  char temp[BUFFER_SIZE] = "";
-  int sign = 0;
-  int notation = 10;
-  bool negative = num < 0 ? true : false;
-  num = negative ? -num : num;
-  long double tempNum = num;
-  while (tempNum) {
-    if (tempNum < 1) {
-      break;
+  if ((flag->precision == -1 || flag->precision == 0) &&
+      (flag->specifier == 'e' || flag->specifier == 'E')) {
+    num = round(num);
+    *buffer = digitToAscii((int)num);
+  } else if (flag->precision == -1 && flag->specifier == 'f' && num < 10) {
+    num = round(num);
+    *buffer = digitToAscii((int)num);
+  } else {
+    char temp[BUFFER_SIZE] = "";
+    int sign = 0;
+    int notation = 10;
+    bool negative = num < 0 ? true : false;
+    num = negative ? -num : num;
+    long double tempNum = num;
+    while (tempNum) {
+      if (tempNum < 1) {
+        break;
+      }
+      temp[sign] = digitToAscii((int)fmod(tempNum, notation));
+      tempNum /= notation;
+      sign++;
     }
-    temp[sign] = digitToAscii((int)fmod(tempNum, notation));
-    tempNum /= notation;
-    sign++;
-  }
-  if (negative) {
-    temp[sign] = '-';
-  }
-  int len = s21_strlen(temp);
-  int index = 0;
-  for (int j = len - 1; index < len; index++, j--) {
-    buffer[index] = temp[j];
-  }
-  if (index == 0 || (negative && index == 1)) {
-    buffer[index++] = '0';
-  }
-  int tempIndex = index;
-  buffer[index++] = '.';
-  char tempRightPart[BUFFER_SIZE] = "";
-  long double l = 0, r = modfl(num, &l);
-  for (int p = 0; p < flag->precision; p++) {
-    r = r * 10;
-    tempRightPart[p] = digitToAscii(((int)r) % 10);
-  }
-  long long rightPart = roundl(r);
-  if (!rightPart) {
-    for (int i = 0; i < flag->precision; i++) {
+    if (negative) {
+      temp[sign] = '-';
+    }
+    int len = s21_strlen(temp);
+    int index = 0;
+    for (int j = len - 1; index < len; index++, j--) {
+      buffer[index] = temp[j];
+    }
+    if (index == 0 || (negative && index == 1)) {
       buffer[index++] = '0';
     }
-  } else {
-    int len = s21_strlen(tempRightPart);
-    for (int i = len, j = 0; rightPart || i > 0; rightPart /= 10, i--, j++) {
-      tempRightPart[j] = digitToAscii((int)(rightPart % 10 + 0.5));
+    int tempIndex = index;
+    buffer[index++] = '.';
+    char tempRightPart[BUFFER_SIZE] = "";
+    long double l = 0, r = modfl(num, &l);
+    for (int p = 0; p < flag->precision; p++) {
+      r = r * 10;
+      tempRightPart[p] = digitToAscii(((int)r) % 10);
     }
-    for (int i = len; i > 0; i--) {
-      buffer[index++] = tempRightPart[i - 1];
+    long long rightPart = roundl(r);
+    if (!rightPart) {
+      for (int i = 0; i < flag->precision; i++) {
+        buffer[index++] = '0';
+      }
+    } else {
+      int len = s21_strlen(tempRightPart);
+      for (int i = len, j = 0; rightPart || i > 0; rightPart /= 10, i--, j++) {
+        tempRightPart[j] = digitToAscii((int)(rightPart % 10 + 0.5));
+      }
+      for (int i = len; i > 0; i--) {
+        buffer[index++] = tempRightPart[i - 1];
+      }
     }
-  }
-  if (tempIndex == index - 1 && !flag->hashtag) {
-    buffer[tempIndex] = '\0';
+    if (tempIndex == index - 1 && !flag->hashtag) {
+      buffer[tempIndex] = '\0';
+    }
   }
 }
 
@@ -582,17 +593,28 @@ void hexSpecifier(char *buffer, flags *flag, va_list var) {
 }
 
 void insertDecimalOx(char *buffer, flags *flag) {
-  bool isAllDigitsIsZeroes = false;
+  s21_size_t isAllDigitsIsZeroes = 0;
   for (int i = 0; buffer[i]; i++) {
     if (buffer[i] == '0') {
-      isAllDigitsIsZeroes = true;
-      break;
+      isAllDigitsIsZeroes++;
     }
   }
-  if (!isAllDigitsIsZeroes || flag->specifier == 'p') {
+  // if ((s21_strlen(buffer) != 1 && buffer[0] != '0')) {
+  if (((isAllDigitsIsZeroes != s21_strlen(buffer)) || flag->specifier == 'p') &&
+      flag->specifier != 'x' && flag->specifier != 'X') {
     s21_memmove(buffer + 2, buffer, s21_strlen(buffer));
     buffer[0] = '0';
     buffer[1] = 'x';
+  }
+  if ((isAllDigitsIsZeroes != s21_strlen(buffer)) && flag->specifier == 'x') {
+    s21_memmove(buffer + 2, buffer, s21_strlen(buffer));
+    buffer[0] = '0';
+    buffer[1] = 'x';
+  }
+  if ((isAllDigitsIsZeroes != s21_strlen(buffer)) && flag->specifier == 'X') {
+    s21_memmove(buffer + 2, buffer, s21_strlen(buffer));
+    buffer[0] = '0';
+    buffer[1] = 'X';
   }
 }
 
@@ -635,8 +657,14 @@ void gSpecifier(char *buffer, flags *flag, va_list var) {
       num /= 10;
     }
     flag->precision--;
+
+    // if (pow > 0 && pow < 5) {
+    // putGforshortdigit(buffer, pow, num);
     doubleToString(buffer, num, flag);
+    // } else {
+    //   doubleToString(buffer, num, flag);
     putExponentToString(buffer, pow, sign);
+    // }
   } else {
     flag->precision = flag->precision - digitCount;
     doubleToString(buffer, num, flag);
@@ -666,3 +694,19 @@ void deleteZeroesFromEnd(char *buffer) {
     buffer[len - i - 1] = '\0';
   }
 }
+
+// void PutgForShortDigit(char *buffer, int pow, long double num) {
+//   s21_size_t i = 0;
+//   bool negative = num < 0 ? true : false;
+//   if (negative) {
+//     buffer[i] = '-';
+//     i++;
+//   }
+//   buffer[i] = '0';
+//   i++;
+//   buffer[i] = '.';
+//   i++;
+//   while (pow > 0) {
+//     buffer[i] = '0'
+//   }
+// }

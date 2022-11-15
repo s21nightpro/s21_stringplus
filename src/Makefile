@@ -18,12 +18,14 @@ else
 	TEST_FLAGS = -lcheck -lpthread -pthread -lrt -lm -lsubunit
 endif
 
-all: test 
+all: test run
 
-test: 
+test: clean
 		$(CC) $(TEST_FLAGS) $(CFLAGS)  $(TEST) -o test
+
 debug: 
-	$(CC) $(CFLAGS) $(SRC) s21_sprintf.c -o test1 -g
+	$(CC) $(CFLAGS) $(SRC) s21_sprintf.c -o test -g
+
 gcov_report: clean
 		$(CC) --coverage $(TEST_FLAGS) $(CFLAGS) $(TEST) -o test
 		./test
@@ -32,13 +34,14 @@ gcov_report: clean
 		open report/index.html
 clean:
 	rm -rf test
-	rm -rf *.a *.out *.o report *.gc* libs21_string.a
+	rm -rf *.a *.out *.o report *.gc* s21_string.a *.info
+
 run:
 	./test
+
 s21_string.a: clean
 		$(CC) $(CFLAGS) *.c -c 
-		ar rc s21_string.a *.o
-		ranlib s21_string.a
+		ar rcs s21_string.a *.o
 
 rebuild:
 	make clean
