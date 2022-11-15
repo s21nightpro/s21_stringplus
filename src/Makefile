@@ -39,7 +39,7 @@ rebuild:
 	make all
 
 leak:
-	CK_FORK=no leaks --atExit -- ./$(NAME)   
+	CK_FORK=no leaks --atExit -- ./test 
 
 linter:
 	cp ../materials/linters/.clang-format ..
