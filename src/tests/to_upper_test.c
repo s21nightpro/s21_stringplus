@@ -20,8 +20,7 @@ START_TEST(to_upper_test1) {
   char expected[] = "GOOD JOB";
   char *got = s21_to_upper(str);
   ck_assert_str_eq(got, expected);
-  if (got)
-    free(got);
+  if (got) free(got);
 }
 END_TEST
 
@@ -30,8 +29,7 @@ START_TEST(to_upper_test2) {
   char expected[] = "EMPTY";
   char *got = s21_to_upper(str);
   ck_assert_str_eq(got, expected);
-  if (got)
-    free(got);
+  if (got) free(got);
 }
 END_TEST
 
@@ -40,8 +38,7 @@ START_TEST(to_upper_test3) {
   char expected[] = "1+1*1";
   char *got = s21_to_upper(str);
   ck_assert_str_eq(got, expected);
-  if (got)
-    free(got);
+  if (got) free(got);
 }
 END_TEST
 
@@ -50,8 +47,7 @@ START_TEST(to_upper_test4) {
   char expected[] = " ";
   char *got = s21_to_upper(str);
   ck_assert_str_eq(got, expected);
-  if (got)
-    free(got);
+  if (got) free(got);
 }
 END_TEST
 
@@ -60,8 +56,7 @@ START_TEST(to_upper_test5) {
   char expected[] = "";
   char *got = s21_to_upper(str);
   ck_assert_str_eq(got, expected);
-  if (got)
-    free(got);
+  if (got) free(got);
 }
 END_TEST
 

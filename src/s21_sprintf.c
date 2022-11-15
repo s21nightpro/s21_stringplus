@@ -62,21 +62,21 @@ const char *parseFlags(const char *format, flags *f) {
   while (*format == '-' || *format == '+' || *format == ' ' || *format == '#' ||
          *format == '0') {
     switch (*format) {
-    case '-':
-      f->minus = true;
-      break;
-    case '+':
-      f->plus = true;
-      break;
-    case ' ':
-      f->space = true;
-      break;
-    case '#':
-      f->hashtag = true;
-      break;
-    case '0':
-      f->zero = true;
-      break;
+      case '-':
+        f->minus = true;
+        break;
+      case '+':
+        f->plus = true;
+        break;
+      case ' ':
+        f->space = true;
+        break;
+      case '#':
+        f->hashtag = true;
+        break;
+      case '0':
+        f->zero = true;
+        break;
     }
     format++;
   }
@@ -119,18 +119,18 @@ const char *parsePrecision(const char *format, flags *f, va_list var) {
 
 const char *parse_Length(const char *format, flags *f) {
   switch (*format) {
-  case 'h':
-    f->length = 'h';
-    format++;
-    break;
-  case 'l':
-    f->length = 'l';
-    format++;
-    break;
-  case 'L':
-    f->length = 'L';
-    format++;
-    break;
+    case 'h':
+      f->length = 'h';
+      format++;
+      break;
+    case 'l':
+      f->length = 'l';
+      format++;
+      break;
+    case 'L':
+      f->length = 'L';
+      format++;
+      break;
   }
   return format;
 }
@@ -212,7 +212,7 @@ void widthCharSpecifier(char *buffer, flags *flag, va_list var) {
     }
   } else if (flag->width) {
     char temp[BUFFER_SIZE] = "";
-    wcstombs(temp, &ch, BUFFER_SIZE); // ? нельзя
+    wcstombs(temp, &ch, BUFFER_SIZE);  // ? нельзя
     for (size_t i = 0; i < flag->width - s21_strlen(temp); i++) {
       buffer[i] = ' ';
     }
@@ -456,8 +456,7 @@ void doubleToString(char *buffer, long double num, flags *flag) {
     }
     if (index == 0 || (negative && index == 1)) {
       buffer[index++] = '0';
-      if (flag->specifier == 'g' || flag->specifier == 'G')
-        flag->precision++;
+      if (flag->specifier == 'g' || flag->specifier == 'G') flag->precision++;
     }
     int tempIndex = index;
     buffer[index++] = '.';
@@ -631,8 +630,7 @@ void gSpecifier(char *buffer, flags *flag, va_list var) {
     }
     flag->precision--;
 
-    if (pow > 0 && pow < 5)
-      flag->precision = pow;
+    if (pow > 0 && pow < 5) flag->precision = pow;
     doubleToString(buffer, num, flag);
     // } else {
     //   doubleToString(buffer, num, flag);
@@ -686,7 +684,7 @@ void deleteZeroesFromEnd(char *buffer) {
 
 int s21_atoisprint(char *str) {
   int atoint = 0;
-  int sign = 1; //если подают отрицательное число
+  int sign = 1;  //если подают отрицательное число
   if (*str == '-' && *(str + 1) != '+') {
     sign = -1;
     str++;
@@ -698,7 +696,6 @@ int s21_atoisprint(char *str) {
     atoint = atoint * 10 + (*str - '0');
     str++;
   }
-  if (sign < 0)
-    atoint *= sign;
+  if (sign < 0) atoint *= sign;
   return (atoint);
 }

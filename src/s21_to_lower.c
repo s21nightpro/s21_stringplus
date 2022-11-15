@@ -7,8 +7,7 @@ void *s21_to_lower(const char *str) {
     if (ch) {
       s21_strcpy(ch, str);
       for (s21_size_t i = 0; i < s21_strlen(str); i++) {
-        if (ch[i] >= 'A' && ch[i] <= 'Z')
-          ch[i] += 32;
+        if (ch[i] >= 'A' && ch[i] <= 'Z') ch[i] += 32;
       }
     }
   }

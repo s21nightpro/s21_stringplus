@@ -11,8 +11,7 @@ s21_size_t s21_strspn(const char *str1, const char *str2) {
         break;
       }
     }
-    if (!flag)
-      break;
+    if (!flag) break;
   }
   return strs;
 }

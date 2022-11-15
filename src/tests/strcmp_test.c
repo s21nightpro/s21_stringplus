@@ -59,14 +59,10 @@ START_TEST(strcmp_Heloboba_Heloboba) {
   char b[] = "Heloboba";
   int got = s21_strcmp(a, b);
   int expected = strcmp(a, b);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST
@@ -76,14 +72,10 @@ START_TEST(strcmp_HEloboba_Heloboba) {
   char b[] = "Heloboba";
   int got = s21_strcmp(a, b);
   int expected = strcmp(a, b);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST
@@ -93,14 +85,10 @@ START_TEST(strcmp_Hel0boba_Helob0ba) {
   char b[] = "Helob0ba";
   int got = s21_strcmp(a, b);
   int expected = strcmp(a, b);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST
@@ -110,14 +98,10 @@ START_TEST(strcmp_Heloboba_) {
   char b[] = "";
   int got = s21_strcmp(a, b);
   int expected = strcmp(a, b);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST
@@ -127,14 +111,10 @@ START_TEST(strcmp_empty_) {
   char b[] = "";
   int got = s21_strcmp(a, b);
   int expected = strcmp(a, b);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST
@@ -144,14 +124,10 @@ START_TEST(strcmp__Heloboba) {
   char b[] = "Heloboba";
   int got = s21_strcmp(a, b);
   int expected = strcmp(a, b);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST
@@ -161,14 +137,10 @@ START_TEST(strcmp_Heloboba) {
   char b[] = "L(8)L";
   int got = s21_strcmp(a, b);
   int expected = strcmp(a, b);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST
@@ -178,14 +150,10 @@ START_TEST(strcmp_empty) {
   char b[] = "";
   int got = s21_strcmp(a, b);
   int expected = strcmp(a, b);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST
@@ -195,14 +163,10 @@ START_TEST(strcmp_only_num) {
   char b[] = "1234567890";
   int got = s21_strcmp(a, b);
   int expected = strcmp(a, b);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST

@@ -6,14 +6,10 @@ START_TEST(strncmp_empty) {
   s21_size_t n_byte = 0;
   int got = s21_strncmp(str1, str2, n_byte);
   int expected = strncmp(str1, str2, n_byte);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST
@@ -24,14 +20,10 @@ START_TEST(strncmp_floppa_) {
   s21_size_t n_byte = 0;
   int got = s21_strncmp(str1, str2, n_byte);
   int expected = strncmp(str1, str2, n_byte);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST
@@ -42,14 +34,10 @@ START_TEST(strncmp__floppa) {
   s21_size_t n_byte = 0;
   int got = s21_strncmp(str1, str2, n_byte);
   int expected = strncmp(str1, str2, n_byte);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST
@@ -60,14 +48,10 @@ START_TEST(strncmp_floppa_floppa) {
   s21_size_t n_byte = 6;
   int got = s21_strncmp(str1, str2, n_byte);
   int expected = strncmp(str1, str2, n_byte);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST
@@ -78,14 +62,10 @@ START_TEST(strncmp_floppa_floppa_zero_byte) {
   s21_size_t n_byte = 10;
   int got = s21_strncmp(str1, str2, n_byte);
   int expected = strncmp(str1, str2, n_byte);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST
@@ -96,14 +76,10 @@ START_TEST(strncmp_floppa_floppa_one_byte) {
   s21_size_t n_byte = 1;
   int got = s21_strncmp(str1, str2, n_byte);
   int expected = strncmp(str1, str2, n_byte);
-  if (got > 1)
-    got = 1;
-  if (expected > 1)
-    expected = 1;
-  if (got < -1)
-    got = -1;
-  if (expected < -1)
-    expected = -1;
+  if (got > 1) got = 1;
+  if (expected > 1) expected = 1;
+  if (got < -1) got = -1;
+  if (expected < -1) expected = -1;
   ck_assert_int_eq(got, expected);
 }
 END_TEST

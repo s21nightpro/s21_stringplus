@@ -15,14 +15,11 @@ int s21_sscanf(const char *str, const char *format, ...) {
         flags_t flag_format = {0};
         format++;
         parseFormat(&format, &flag_format);
-        if (flag_format.error)
-          break;
+        if (flag_format.error) break;
         parseString(&str, str_len, &flag_format, var, skip);
-        if (flag_format.convertions)
-          convertions++;
+        if (flag_format.convertions) convertions++;
         success++;
-        if (flag_format.error)
-          break;
+        if (flag_format.error) break;
         skip = '\0';
       } else if (skip == '\0' || skip == *format) {
         skip = *format;
@@ -68,29 +65,26 @@ const char *parseWidth(const char *format, flags_t *f) {
     }
     format++;
   }
-  if (i)
-    f->width = s21_atoii(tempWidth);
-  if (f->width == 0)
-    f->width = -1;
+  if (i) f->width = s21_atoii(tempWidth);
+  if (f->width == 0) f->width = -1;
   return format;
 }
 
 const char *parseLength(const char *format, flags_t *f) {
   switch (*format) {
-  case 'h':
-    f->length = 'h';
-    format++;
-    break;
-  case 'l':
-    f->length = 'l';
-    format++;
-    if ((*format) == 'l')
+    case 'h':
+      f->length = 'h';
       format++;
-    break;
-  case 'L':
-    f->length = 'L';
-    format++;
-    break;
+      break;
+    case 'l':
+      f->length = 'l';
+      format++;
+      if ((*format) == 'l') format++;
+      break;
+    case 'L':
+      f->length = 'L';
+      format++;
+      break;
   }
   return format;
 }
@@ -126,85 +120,7 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
   }
   if (**str != '\0') {
     switch (f->specifier) {
-    case 'd':
-      while ((isDigit(**str) || checkSign(*str, &sign, f->width, DEC, i)) &&
-             (f->width != 0)) {
-        str_temp[i] = **str;
-        (*str)++;
-        i++;
-        f->width--;
-      }
-      if (!i)
-        f->error = 1;
-      else if (!f->asterics)
-        assignInt(str_temp, var, f);
-      break;
-    case 'u':
-      while ((isDigit(**str) || checkSign(*str, &sign, f->width, DEC, i)) &&
-             (f->width != 0)) {
-        str_temp[i] = **str;
-        (*str)++;
-        i++;
-        f->width--;
-      }
-      if (!i)
-        f->error = 1;
-      else if (!f->asterics)
-        assignIntUnsigned(str_temp, var, f);
-      break;
-    case 'c':
-      if (isAscii(**str)) {
-        ch = **str;
-        if (!f->asterics)
-          assignChar(ch, var, f);
-        (*str)++;
-        break;
-      } else {
-        f->error = 1;
-      }
-    case 's':
-      while ((f->width != 0 && !isSeporator(**str))) {
-        str_temp[i] = **str;
-        (*str)++;
-        i++;
-        f->width--;
-      }
-      if (!i)
-        f->error = 1;
-      else if (!f->asterics)
-        assignString(str_temp, var, f);
-      break;
-    case 'i':
-      if (**str == '0') {
-        (*str)++;
-        if ((**str) == 'x' || (**str) == 'X') {
-          (*str)++;
-          while (
-              (isHex(**str, 0) || checkSign(*str, &sign, f->width, HEX, i)) &&
-              (f->width != 0)) {
-            str_temp[i] = **str;
-            (*str)++;
-            i++;
-            f->width--;
-          }
-          if (!i)
-            f->error = 1;
-          else if (!f->asterics)
-            assignHex(str_temp, var, f);
-        } else {
-          while ((isOct(**str) || checkSign(*str, &sign, f->width, DEC, i)) &&
-                 (f->width != 0)) {
-            str_temp[i] = **str;
-            (*str)++;
-            i++;
-            f->width--;
-          }
-          if (!i)
-            f->error = 1;
-          else if (!f->asterics)
-            assignOct(str_temp, var, f);
-        }
-      } else {
+      case 'd':
         while ((isDigit(**str) || checkSign(*str, &sign, f->width, DEC, i)) &&
                (f->width != 0)) {
           str_temp[i] = **str;
@@ -216,51 +132,10 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
           f->error = 1;
         else if (!f->asterics)
           assignInt(str_temp, var, f);
-      }
-      break;
-
-    case 'o':
-      while ((isOct(**str) || checkSign(*str, &sign, f->width, OCT, i)) &&
-             (f->width != 0)) {
-        str_temp[i] = **str;
-        (*str)++;
-        i++;
-        f->width--;
-      }
-      if (!i)
-        f->error = 1;
-      else if (!f->asterics)
-        assignOctUnsigned(str_temp, var, f);
-      break;
-
-    case 'x':
-    case 'X':
-      while (((isHex(**str, i + sign)) ||
-              checkSign(*str, &sign, f->width, HEX, i)) &&
-             (f->width != 0)) {
-        str_temp[i] = **str;
-        (*str)++;
-        i++;
-        f->width--;
-      }
-      if (!i)
-        f->error = 1;
-      else if (!f->asterics)
-        assignHexUnsigned(str_temp, var, f);
-      break;
-
-    case 'e':
-    case 'E':
-    case 'f':
-    case 'g':
-    case 'G':
-      if ((science_flag = checkScience(*str, f->width)) != 0) {
-        *str = (*str) + 3;
-        if (!f->asterics)
-          assignScience(var, f, science_flag);
-      } else {
-        while (isFloat(**str, *(*str + 1), &float_struct) &&
-               (f->width != 0)) { // добавить nan и inf
+        break;
+      case 'u':
+        while ((isDigit(**str) || checkSign(*str, &sign, f->width, DEC, i)) &&
+               (f->width != 0)) {
           str_temp[i] = **str;
           (*str)++;
           i++;
@@ -269,37 +144,152 @@ void parseString(const char **str, const s21_size_t str_len, flags_t *f,
         if (!i)
           f->error = 1;
         else if (!f->asterics)
-          assignFloat(str_temp, var, f);
-      }
-      break;
+          assignIntUnsigned(str_temp, var, f);
+        break;
+      case 'c':
+        if (isAscii(**str)) {
+          ch = **str;
+          if (!f->asterics) assignChar(ch, var, f);
+          (*str)++;
+          break;
+        } else {
+          f->error = 1;
+        }
+      case 's':
+        while ((f->width != 0 && !isSeporator(**str))) {
+          str_temp[i] = **str;
+          (*str)++;
+          i++;
+          f->width--;
+        }
+        if (!i)
+          f->error = 1;
+        else if (!f->asterics)
+          assignString(str_temp, var, f);
+        break;
+      case 'i':
+        if (**str == '0') {
+          (*str)++;
+          if ((**str) == 'x' || (**str) == 'X') {
+            (*str)++;
+            while (
+                (isHex(**str, 0) || checkSign(*str, &sign, f->width, HEX, i)) &&
+                (f->width != 0)) {
+              str_temp[i] = **str;
+              (*str)++;
+              i++;
+              f->width--;
+            }
+            if (!i)
+              f->error = 1;
+            else if (!f->asterics)
+              assignHex(str_temp, var, f);
+          } else {
+            while ((isOct(**str) || checkSign(*str, &sign, f->width, DEC, i)) &&
+                   (f->width != 0)) {
+              str_temp[i] = **str;
+              (*str)++;
+              i++;
+              f->width--;
+            }
+            if (!i)
+              f->error = 1;
+            else if (!f->asterics)
+              assignOct(str_temp, var, f);
+          }
+        } else {
+          while ((isDigit(**str) || checkSign(*str, &sign, f->width, DEC, i)) &&
+                 (f->width != 0)) {
+            str_temp[i] = **str;
+            (*str)++;
+            i++;
+            f->width--;
+          }
+          if (!i)
+            f->error = 1;
+          else if (!f->asterics)
+            assignInt(str_temp, var, f);
+        }
+        break;
 
-    case 'n':
-      n = str_len - s21_strlen(*str);
-      if (!f->asterics)
-        assignN(n, var, f);
-      break;
+      case 'o':
+        while ((isOct(**str) || checkSign(*str, &sign, f->width, OCT, i)) &&
+               (f->width != 0)) {
+          str_temp[i] = **str;
+          (*str)++;
+          i++;
+          f->width--;
+        }
+        if (!i)
+          f->error = 1;
+        else if (!f->asterics)
+          assignOctUnsigned(str_temp, var, f);
+        break;
 
-    case 'p':
-      while ((isHex(**str, i)) && (f->width != 0)) {
-        str_temp[i] = **str;
-        (*str)++;
-        i++;
-        f->width--;
-      }
-      if (!i)
-        f->error = 1;
-      else if (!f->asterics)
-        assignVoid(str_temp, var, f);
-      break;
+      case 'x':
+      case 'X':
+        while (((isHex(**str, i + sign)) ||
+                checkSign(*str, &sign, f->width, HEX, i)) &&
+               (f->width != 0)) {
+          str_temp[i] = **str;
+          (*str)++;
+          i++;
+          f->width--;
+        }
+        if (!i)
+          f->error = 1;
+        else if (!f->asterics)
+          assignHexUnsigned(str_temp, var, f);
+        break;
 
-    case '%':
-      if (**str == '%') {
-        (*str)++;
-        i++;
-      }
-      if (!i)
-        f->error = 1;
-      break;
+      case 'e':
+      case 'E':
+      case 'f':
+      case 'g':
+      case 'G':
+        if ((science_flag = checkScience(*str, f->width)) != 0) {
+          *str = (*str) + 3;
+          if (!f->asterics) assignScience(var, f, science_flag);
+        } else {
+          while (isFloat(**str, *(*str + 1), &float_struct) &&
+                 (f->width != 0)) {  // добавить nan и inf
+            str_temp[i] = **str;
+            (*str)++;
+            i++;
+            f->width--;
+          }
+          if (!i)
+            f->error = 1;
+          else if (!f->asterics)
+            assignFloat(str_temp, var, f);
+        }
+        break;
+
+      case 'n':
+        n = str_len - s21_strlen(*str);
+        if (!f->asterics) assignN(n, var, f);
+        break;
+
+      case 'p':
+        while ((isHex(**str, i)) && (f->width != 0)) {
+          str_temp[i] = **str;
+          (*str)++;
+          i++;
+          f->width--;
+        }
+        if (!i)
+          f->error = 1;
+        else if (!f->asterics)
+          assignVoid(str_temp, var, f);
+        break;
+
+      case '%':
+        if (**str == '%') {
+          (*str)++;
+          i++;
+        }
+        if (!i) f->error = 1;
+        break;
     }
   } else {
     f->error++;
@@ -310,22 +300,18 @@ int checkSign(const char *a, int *sign, int width, int base, int i) {
   int res = 0;
   if (!(*sign) && width != 1 && isSign(*a) && !i) {
     switch (base) {
-    case HEX:
-      if (isHex(*(a + 1), 0))
-        res = 1;
-      break;
-    case DEC:
-      if (isDigit(*(a + 1)))
-        res = 1;
-      break;
-    case OCT:
-      if (isOct(*(a + 1)))
-        res = 1;
-      break;
+      case HEX:
+        if (isHex(*(a + 1), 0)) res = 1;
+        break;
+      case DEC:
+        if (isDigit(*(a + 1))) res = 1;
+        break;
+      case OCT:
+        if (isOct(*(a + 1))) res = 1;
+        break;
     }
   }
-  if (res)
-    sign++;
+  if (res) sign++;
   return res;
 }
 
@@ -334,12 +320,10 @@ int checkScience(const char *str, int width) {
   if (width > 2 || width == -1) {
     if (*str == 'n' || *str == 'N')
       if (*(str + 1) == 'a' || *(str + 1) == 'A')
-        if (*(str + 2) == 'n' || *(str + 2) == 'N')
-          res = 1;
+        if (*(str + 2) == 'n' || *(str + 2) == 'N') res = 1;
     if (*str == 'i' || *str == 'I')
       if (*(str + 1) == 'n' || *(str + 1) == 'N')
-        if (*(str + 2) == 'f' || *(str + 2) == 'F')
-          res = 2;
+        if (*(str + 2) == 'f' || *(str + 2) == 'F') res = 2;
   }
   return res;
 }
